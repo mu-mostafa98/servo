@@ -118,7 +118,8 @@ impl VirtualMethods for SVGElement {
     fn attribute_affects_presentational_hints(&self, attr: AttrRef<'_>) -> bool {
         matches!(
             attr.local_name(),
-            &local_name!("fill") |
+            &local_name!("display") |
+                &local_name!("fill") |
                 &local_name!("fill-opacity") |
                 &local_name!("fill-rule") |
                 &local_name!("stroke") |
@@ -132,6 +133,11 @@ impl VirtualMethods for SVGElement {
                 &local_name!("display") |
                 &local_name!("visibility") |
                 &local_name!("opacity") |
+                &local_name!("vector-effect") |
+                &local_name!("shape-rendering") |
+                &local_name!("clip-path") |
+                &local_name!("mask") |
+                &local_name!("filter") |
                 &local_name!("cx") |
                 &local_name!("cy") |
                 &local_name!("r") |
@@ -141,7 +147,11 @@ impl VirtualMethods for SVGElement {
                 &local_name!("y") |
                 &local_name!("width") |
                 &local_name!("height") |
-                &local_name!("d")
+                &local_name!("d") |
+                &local_name!("font-size") |
+                &local_name!("font-family") |
+                &local_name!("font-style") |
+                &local_name!("font-weight")
         ) || self
             .super_type()
             .unwrap()
@@ -313,6 +323,35 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             push,
         );
 
+        // Font presentation attributes (SVG spec §10.10). These are required so
+        // that `<text>` and `<tspan>` `font-size`/`font-family`/`font-style`/
+        // `font-weight` attributes reach the computed `font` used by the SVG
+        // engine's text shaper. Without this, every span uses the default font.
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-size",
+            longhands::font_size::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-family",
+            longhands::font_family::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-style",
+            longhands::font_style::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-weight",
+            longhands::font_weight::parse_declared,
+            push,
+        );
+
         self.parse_svg_attribute(
             &parser_context,
             "stroke",
@@ -377,6 +416,36 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             &parser_context,
             "opacity",
             longhands::opacity::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "vector-effect",
+            longhands::vector_effect::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "shape-rendering",
+            longhands::shape_rendering::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "clip-path",
+            longhands::clip_path::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "mask",
+            longhands::mask_image::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "filter",
+            longhands::filter::parse_declared,
             push,
         );
 

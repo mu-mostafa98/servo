@@ -1,0 +1,371 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+//! SVG render tree construction — assembles an [`SvgTree`] from DOM nodes.
+//!
+//! Uses the **Builder pattern**: [`SvgTreeBuilder`] accumulates state
+//! (CSS rules, definition maps) through chained methods, then produces the
+//! final tree via [`build`](SvgTreeBuilder::build).
+//!
+//! This module is split into five layers:
+//! - [`mod`] — orchestration: the builder struct and tag dispatch.
+//! - [`resolve`] — child/`<use>`/`<switch>` resolution.
+//! - [`references`] — the post-build reference-resolution pass.
+//! - [`text`] — `<text>`/`<tspan>` node assembly and font shaping.
+//! - [`image`] — `<image>` element assembly and image-key resolution.
+
+use std::collections::HashMap;
+use std::sync::Arc;
+
+use html5ever::local_name;
+use layout_api::{LayoutElement, LayoutNode};
+use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
+use servo_svg::document::*;
+use servo_svg::element::*;
+use servo_svg::style::NodeStyle;
+use servo_svg::units::Id;
+use servo_svg::resource::ResourceKey;
+use svgtypes::Color as SvgColor;
+use web_atoms::ns;
+
+use crate::context::LayoutContext;
+use crate::svg::defines::{
+    ClipPathParser, DefinitionCollector, FilterParser, GradientParser, MarkerParser, MaskParser,
+    PatternParser, resolve_gradient_hrefs,
+};
+use crate::svg::primitives::attrs::{conditional_processing_passes, is_unknown_svg_element};
+use crate::svg::primitives::css::collect_svg_css_rules;
+use crate::svg::primitives::geometry::build_shape;
+use crate::svg::primitives::viewport::{
+    extract_nested_viewport, extract_viewport_info, viewport_reference,
+};
+use crate::svg::style::build_style;
+
+mod image;
+mod references;
+mod resolve;
+mod text;
+
+// ======================= Builder =======================
+
+/// Builds an [`SvgTree`] from a DOM SVG element.
+pub(crate) struct SvgTreeBuilder<'dom, 'a> {
+    root_node: ServoLayoutNode<'dom>,
+    context: &'a LayoutContext<'a>,
+    css_rules: HashMap<String, HashMap<String, String>>,
+    /// Document-wide `id → DOM node` map, built once so `<use href="#id">`
+    /// references resolve in O(1) instead of re-walking the document.
+    element_ids: HashMap<String, ServoLayoutNode<'dom>>,
+    /// The root viewport (resolved `width`/`height` + viewBox + aspect ratio),
+    /// computed once in [`new`](SvgTreeBuilder::new) and reused by [`build`](SvgTreeBuilder::build).
+    root_viewport: ViewportInfo,
+    /// Root viewport percentage-resolution reference dimensions (viewBox extent
+    /// when present, else the viewport `width`/`height` attributes).
+    root_vw: f32,
+    root_vh: f32,
+}
+
+impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
+    /// Start building from an SVG DOM element node.
+    ///
+    /// `root_width`/`root_height` are the resolved viewport dimensions (user
+    /// units) supplied by CSS layout; they feed the root [`ViewportInfo`] and,
+    /// when no viewBox is present, the percentage-resolution reference.
+    pub(crate) fn new(
+        node: ServoLayoutNode<'dom>,
+        context: &'a LayoutContext<'a>,
+        root_width: f32,
+        root_height: f32,
+    ) -> Self {
+        let css_rules = collect_svg_css_rules(node);
+        let element_ids = build_element_id_map(node);
+        let root_viewport = extract_viewport_info(node, root_width, root_height);
+        let (root_vw, root_vh) = viewport_reference(&root_viewport);
+        SvgTreeBuilder {
+            root_node: node,
+            context,
+            css_rules,
+            element_ids,
+            root_viewport,
+            root_vw,
+            root_vh,
+        }
+    }
+
+    /// Build the complete [`SvgTree`].
+    pub(crate) fn build(self) -> Option<Arc<SvgTree>> {
+        let root = self.build_render_node(
+            self.root_node,
+            self.root_node,
+            &mut resolve::ResolveState::default(),
+            None,
+            None,
+            self.root_vw,
+            self.root_vh,
+        )?;
+        let viewport = self.root_viewport.clone();
+        let definitions = collect_definitions(self.root_node, &self);
+
+        let mut tree = SvgTree {
+            root,
+            viewport,
+            gradients: definitions.gradients,
+            clip_paths: definitions.clip_paths,
+            patterns: definitions.patterns,
+            masks: definitions.masks,
+            filters: definitions.filters,
+            markers: definitions.markers,
+        };
+
+        // Resolve transient `PaintServer::Ref { id, .. }` / `DefRef::Ref(id)`
+        // values into typed `Arc` handles now that the definition maps are collected.
+        references::resolve_references(&mut tree);
+
+        Some(Arc::new(tree))
+    }
+
+    /// Recursively build a render node from a DOM node.
+    fn build_render_node(
+        &self,
+        node: ServoLayoutNode<'dom>,
+        root_node: ServoLayoutNode<'dom>,
+        state: &mut resolve::ResolveState,
+        inherited: Option<&NodeStyle>,
+        inherited_color: Option<SvgColor>,
+        vw: f32,
+        vh: f32,
+    ) -> Option<SvgNode> {
+        // Global expansion budget: cap the total work of a single build so that
+        // pathological `<use>` graphs — exponential "billion laughs" fan-out,
+        // quadratic blow-up, command amplification — terminate (§5.6; README
+        // §9.2, issues #4–#6). Each invocation consumes one unit of budget; the
+        // cap is generous enough that legitimate documents are unaffected.
+        if state.nodes >= resolve::MAX_TOTAL_NODES {
+            return None;
+        }
+        state.nodes += 1;
+
+        let element = node.as_element()?;
+
+        // §5.7 conditional processing: an element whose `requiredExtensions`,
+        // `systemLanguage`, or `requiredFeatures` test fails is not rendered
+        // anywhere — including as a child of a `<switch>` or inside a definition
+        // container.
+        if !conditional_processing_passes(&element) {
+            return None;
+        }
+
+        let tag_name = element.local_name().as_ref().to_owned();
+
+        // Text / tspan — extract text content from DOM children.
+        if tag_name == "text" || tag_name == "tspan" {
+            return text::build_text_node(node, self.context, &self.css_rules);
+        }
+
+        // A nested `<svg>` (any `<svg>` except the root) establishes its own
+        // viewport; its own geometry and its children resolve percentages
+        // against that viewport. The root's viewport is handled via
+        // `SvgTree::viewport`.
+        let viewport = if tag_name == "svg" && node != root_node {
+            extract_nested_viewport(node, vw, vh)
+        } else {
+            None
+        };
+        let (vw, vh) = match viewport.as_ref() {
+            Some(vp) => viewport_reference(&vp.viewport),
+            None => (vw, vh),
+        };
+
+        let computed = element
+            .style_data()
+            .is_some()
+            .then(|| node.style(&self.context.style_context));
+        let tag = build_tag(&element, computed.as_ref().map(|v| &**v), node, self.context, vw, vh)?;
+        let (style, transforms, current_color) =
+            build_style(node, self.context, &self.css_rules, inherited, inherited_color);
+        let id = extract_id(&element);
+        let children = resolve::resolve_children(
+            node,
+            &tag,
+            root_node,
+            self,
+            state,
+            &style,
+            &current_color,
+            inherited.is_some(),
+            vw,
+            vh,
+        );
+
+        Some(SvgNode {
+            id,
+            tag,
+            style,
+            transforms,
+            viewport,
+            children,
+        })
+    }
+
+    /// Build a single definition-content node, used by the definition parsers
+    /// to build clip-path / pattern / mask / marker children into full render
+    /// nodes (recursively handling `<g>`, `<use>`, `<text>`, nested `<defs>`)
+    /// instead of flattening them to a flat list of shapes.
+    pub(crate) fn build_def_content(
+        &self,
+        node: ServoLayoutNode<'dom>,
+    ) -> Option<SvgNode> {
+        self.build_render_node(
+            node,
+            self.root_node,
+            &mut resolve::ResolveState::default(),
+            None,
+            None,
+            self.root_vw,
+            self.root_vh,
+        )
+    }
+
+    /// The computed CSS `color` of an element, resolved to an [`SvgColor`].
+    ///
+    /// Used to resolve the `currentColor` keyword where the element's own
+    /// computed color is needed but `build_style` is not run — notably the
+    /// gradient `<stop>` parser, whose `stop-color="currentColor"` resolves
+    /// against the `<stop>` element's inherited `color`. Falls back to opaque
+    /// black when the element has no computed style.
+    pub(crate) fn computed_color(&self, node: ServoLayoutNode<'dom>) -> SvgColor {
+        let Some(element) = node.as_element() else {
+            return SvgColor::black();
+        };
+        if element.style_data().is_none() {
+            return SvgColor::black();
+        }
+        let computed = node.style(&self.context.style_context);
+        crate::svg::style::absolute_to_svg_color(&computed.clone_color())
+    }
+}
+
+// ======================= Definitions =======================
+
+/// Collected definition maps from `<defs>`.
+struct DefinitionMaps {
+    gradients: HashMap<String, Arc<GradientDef>>,
+    clip_paths: HashMap<String, Arc<ClipPathDef>>,
+    patterns: HashMap<String, Arc<PatternDef>>,
+    masks: HashMap<String, Arc<MaskDef>>,
+    filters: HashMap<String, Arc<FilterDef>>,
+    markers: HashMap<String, Arc<MarkerDef>>,
+}
+
+/// Collect all definition types (gradients, clip-paths, patterns, masks,
+/// filters, markers) from `<defs>` containers in the SVG subtree.
+fn collect_definitions<'dom, 'a>(
+    node: ServoLayoutNode<'dom>,
+    builder: &SvgTreeBuilder<'dom, 'a>,
+) -> DefinitionMaps {
+    let mut gradients = DefinitionCollector::collect::<GradientParser>(node, builder);
+    resolve_gradient_hrefs(&mut gradients);
+    DefinitionMaps {
+        gradients,
+        clip_paths: DefinitionCollector::collect::<ClipPathParser>(node, builder),
+        patterns: DefinitionCollector::collect::<PatternParser>(node, builder),
+        masks: DefinitionCollector::collect::<MaskParser>(node, builder),
+        filters: DefinitionCollector::collect::<FilterParser>(node, builder),
+        markers: DefinitionCollector::collect::<MarkerParser>(node, builder),
+    }
+}
+
+// ======================= Tag Dispatch =======================
+
+/// Map a DOM element's tag name to an [`SvgTag`].
+fn build_tag<'dom>(
+    element: &ServoLayoutElement<'dom>,
+    computed: Option<&style::properties::ComputedValues>,
+    node: ServoLayoutNode<'dom>,
+    context: &LayoutContext,
+    vw: f32,
+    vh: f32,
+) -> Option<SvgTag> {
+    let tag = element.local_name().as_ref();
+    match tag {
+        "svg" => Some(SvgTag::Container(Container::Svg)),
+        "g" => Some(SvgTag::Container(Container::Group)),
+        "defs" => Some(SvgTag::Container(Container::Defs)),
+        "use" => Some(SvgTag::Container(Container::Use)),
+        "symbol" => Some(SvgTag::Container(Container::Symbol)),
+        "switch" => Some(SvgTag::Container(Container::Switch)),
+        "image" => image::build_image_tag(element, node, context, vw, vh).map(SvgTag::Image),
+        _ => match build_shape(element, tag, computed, vw, vh) {
+            Some(shape) => Some(SvgTag::Shape(shape)),
+            // §5.3 unknown elements: an SVG-namespace element that is not a
+            // known renderable element is treated as a `<g>` (children render,
+            // styles inherit). Non-SVG-namespace elements and known
+            // non-rendering SVG elements are skipped.
+            None if is_unknown_svg_element(element, tag) => {
+                Some(SvgTag::Container(Container::Group))
+            },
+            None => None,
+        },
+    }
+}
+
+// ======================= Helpers =======================
+
+/// Extract the `id` attribute from an SVG DOM element.
+fn extract_id(element: &ServoLayoutElement) -> Option<Id> {
+    element
+        .attribute_as_str(&ns!(), &local_name!("id"))
+        .map(|s| Id::new(s))
+}
+
+/// Convert a WebRender font-instance key into the opaque model resource key.
+fn font_key_to_resource(key: webrender_api::FontInstanceKey) -> ResourceKey {
+    ResourceKey {
+        namespace: key.0.0,
+        id: key.1,
+    }
+}
+
+/// Build a document-wide `id → DOM node` map once, so `<use href="#id">`
+/// references resolve in O(1) instead of re-walking the whole document per
+/// `<use>`. References resolve against the whole document (not just the current
+/// `<svg>` subtree), so we index from the document root.
+fn build_element_id_map<'dom>(
+    node: ServoLayoutNode<'dom>,
+) -> HashMap<String, ServoLayoutNode<'dom>> {
+    let mut map = HashMap::new();
+    collect_ids(document_root_node(node), &mut map);
+    map
+}
+
+/// Recursively collect `id → node` entries into `map`; first occurrence wins.
+fn collect_ids<'dom>(
+    node: ServoLayoutNode<'dom>,
+    map: &mut HashMap<String, ServoLayoutNode<'dom>>,
+) {
+    if let Some(element) = node.as_element() {
+        if let Some(id) = element.attribute_as_str(&ns!(), &local_name!("id")) {
+            map.entry(id.to_owned()).or_insert(node);
+        }
+    }
+    for child in node.dom_children() {
+        collect_ids(child, map);
+    }
+}
+
+/// Walk up to the topmost DOM ancestor (the document node).
+///
+/// # Safety
+///
+/// Called during box tree construction, which runs on the main thread. The
+/// parent walk is only `unsafe` because accessing ancestors while layout worker
+/// threads are running is forbidden.
+#[expect(unsafe_code)]
+fn document_root_node<'dom>(node: ServoLayoutNode<'dom>) -> ServoLayoutNode<'dom> {
+    let mut root = node;
+    while let Some(parent) = unsafe { root.dangerous_dom_parent() } {
+        root = parent;
+    }
+    root
+}

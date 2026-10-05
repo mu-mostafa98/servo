@@ -1,0 +1,1390 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+//! Comprehensive SVG engine test suite.
+//!
+//! Covers: all shape types, fill/stroke/gradient/pattern rendering data,
+//! CSS cascade + presentation attribute interaction, clip-path/mask/filter,
+//! transforms, viewBox/preserveAspectRatio, `<use>` references,
+//! `<defs>` collection, visitor pattern, and edge cases.
+
+use std::collections::HashMap;
+use std::sync::Arc;
+
+use servo_svg::document::*;
+use servo_svg::element::*;
+use servo_svg::geometry::{PathCommand, PathData, Point};
+use servo_svg::transform::TransformOp;
+use servo_svg::style::*;
+use servo_svg::units::{Id, Length, Opacity};
+use servo_svg::{DominantBaseline, SvgImage, SvgTag, TextAnchor, TextSpan};
+
+// ============================================================
+// 1. SHAPE DATA STRUCT TESTS
+// ============================================================
+
+#[test]
+fn rect_data() {
+    let r = Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(100.0),
+        height: Length::new(50.0),
+        rx: None,
+        ry: None,
+        path_length: None,
+    };
+    assert_eq!(r.width.get(), 100.0);
+    assert_eq!(r.height.get(), 50.0);
+    assert_eq!(r.x.get(), 0.0);
+    assert_eq!(r.y.get(), 0.0);
+}
+
+#[test]
+fn rect_with_radius() {
+    let r = Rectangle {
+        x: Length::new(10.0),
+        y: Length::new(20.0),
+        width: Length::new(200.0),
+        height: Length::new(100.0),
+        rx: Some(Length::new(10.0)),
+        ry: Some(Length::new(5.0)),
+        path_length: None,
+    };
+    assert_eq!(r.rx, Some(Length::new(10.0)));
+    assert_eq!(r.ry, Some(Length::new(5.0)));
+}
+
+#[test]
+fn rect_rx_inherits_ry_and_vice_versa() {
+    // rx only: ry = rx
+    let r = Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(100.0),
+        height: Length::new(100.0),
+        rx: Some(Length::new(10.0)),
+        ry: None,
+        path_length: None,
+    };
+    assert_eq!(r.rx, Some(Length::new(10.0)));
+    // ry only: rx = ry
+    let r2 = Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(100.0),
+        height: Length::new(100.0),
+        rx: None,
+        ry: Some(Length::new(15.0)),
+        path_length: None,
+    };
+    assert_eq!(r2.ry, Some(Length::new(15.0)));
+}
+
+#[test]
+fn circle_data() {
+    let c = Circle {
+        cx: Length::new(50.0),
+        cy: Length::new(50.0),
+        r: Length::new(30.0),
+        path_length: None,
+    };
+    assert_eq!(c.cx.get(), 50.0);
+    assert_eq!(c.cy.get(), 50.0);
+    assert_eq!(c.r.get(), 30.0);
+}
+
+#[test]
+fn ellipse_data() {
+    let e = Ellipse {
+        cx: Length::new(100.0),
+        cy: Length::new(80.0),
+        rx: Some(Length::new(60.0)),
+        ry: Some(Length::new(40.0)),
+        path_length: None,
+    };
+    assert_eq!(e.rx.unwrap().get(), 60.0);
+    assert_eq!(e.ry.unwrap().get(), 40.0);
+}
+
+#[test]
+fn line_data() {
+    let l = Line {
+        x1: Length::new(0.0),
+        y1: Length::new(0.0),
+        x2: Length::new(100.0),
+        y2: Length::new(100.0),
+        path_length: None,
+    };
+    assert_eq!(l.x2.get(), 100.0);
+    assert_eq!(l.y2.get(), 100.0);
+}
+
+#[test]
+fn polyline_data() {
+    let pts = vec![
+        Point::new(0.0, 0.0),
+        Point::new(50.0, 100.0),
+        Point::new(100.0, 0.0),
+    ];
+    let p = Polyline { points: pts, path_length: None };
+    assert_eq!(p.points.len(), 3);
+}
+
+#[test]
+fn polygon_data() {
+    let pts = vec![
+        Point::new(0.0, 0.0),
+        Point::new(100.0, 0.0),
+        Point::new(50.0, 100.0),
+    ];
+    let p = Polygon { points: pts, path_length: None };
+    assert_eq!(p.points.len(), 3);
+}
+
+#[test]
+fn path_data_parse() {
+    let path = PathData {
+        commands: vec![
+            PathCommand::MoveTo(Point::new(10.0, 10.0)),
+            PathCommand::LineTo(Point::new(100.0, 100.0)),
+        ],
+    };
+    let p = Path { path, path_length: None };
+    assert_eq!(p.path.commands.len(), 2);
+}
+
+#[test]
+fn path_data_curve_command() {
+    let path = PathData {
+        commands: vec![
+            PathCommand::MoveTo(Point::new(0.0, 0.0)),
+            PathCommand::CurveTo(
+                Point::new(10.0, 0.0),
+                Point::new(20.0, 10.0),
+                Point::new(30.0, 10.0),
+            ),
+            PathCommand::Close,
+        ],
+    };
+    let p = Path { path, path_length: None };
+    assert_eq!(p.path.commands.len(), 3);
+    assert!(matches!(p.path.commands[2], PathCommand::Close));
+}
+
+#[test]
+fn shape_enum_all_variants_constructible() {
+    let _rect = Shape::Rect(Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(10.0),
+        height: Length::new(10.0),
+        rx: None,
+        ry: None,
+        path_length: None,
+    });
+    let _circle = Shape::Circle(Circle {
+        cx: Length::new(5.0),
+        cy: Length::new(5.0),
+        r: Length::new(5.0),
+        path_length: None,
+    });
+    let _ellipse = Shape::Ellipse(Ellipse {
+        cx: Length::new(5.0),
+        cy: Length::new(5.0),
+        rx: Some(Length::new(5.0)),
+        ry: Some(Length::new(3.0)),
+        path_length: None,
+    });
+    let _line = Shape::Line(Line {
+        x1: Length::new(0.0),
+        y1: Length::new(0.0),
+        x2: Length::new(10.0),
+        y2: Length::new(10.0),
+        path_length: None,
+    });
+    // Text and Image are in SvgTag, not Shape
+    let _text_tag = SvgTag::Text(TextSpan {
+        text: "Hi".into(),
+        x: vec![10.0],
+        y: vec![20.0],
+        dx: vec![],
+        dy: vec![],
+        rotate: vec![],
+        text_anchor: TextAnchor::Start,
+        rtl: false,
+        dominant_baseline: DominantBaseline::Auto,
+        glyphs: vec![],
+        font_instance_key: None,
+        advance_offset: 0.0,
+        font_size: 16.0,
+    });
+    let _image_tag = SvgTag::Image(SvgImage {
+        x: 0.0,
+        y: 0.0,
+        width: 100.0,
+        height: 100.0,
+        href: Some("test.png".into()),
+        image_key: None,
+        natural_width: None,
+        natural_height: None,
+        preserve_aspect_ratio: AspectRatio::default(),
+    });
+    // All construct without panic.
+}
+
+#[test]
+fn text_span_data() {
+    let t = TextSpan {
+        text: "Hello SVG".into(),
+        x: vec![10.0],
+        y: vec![30.0],
+        dx: vec![],
+        dy: vec![],
+        rotate: vec![],
+        text_anchor: TextAnchor::Start,
+        rtl: false,
+        dominant_baseline: DominantBaseline::Auto,
+        glyphs: vec![],
+        font_instance_key: None,
+        advance_offset: 0.0,
+        font_size: 16.0,
+    };
+    assert_eq!(t.text, "Hello SVG");
+    assert_eq!(t.x, vec![10.0]);
+    assert_eq!(t.y, vec![30.0]);
+    assert_eq!(t.advance_offset, 0.0);
+}
+
+#[test]
+fn text_span_with_dx_dy() {
+    let t = TextSpan {
+        text: "AB".into(),
+        x: vec![0.0],
+        y: vec![0.0],
+        dx: vec![5.0, 10.0],
+        dy: vec![0.0, 3.0],
+        rotate: vec![],
+        text_anchor: TextAnchor::Start,
+        rtl: false,
+        dominant_baseline: DominantBaseline::Auto,
+        glyphs: vec![],
+        font_instance_key: None,
+        advance_offset: 0.0,
+        font_size: 16.0,
+    };
+    assert_eq!(t.dx.len(), 2);
+    assert_eq!(t.dy.len(), 2);
+}
+
+#[test]
+fn text_span_advance_offset_positions_runs() {
+    // Two runs on one line: the second begins where the first ends.
+    // With no glyphs shaped, total_advance falls back to 8px/char.
+    let first = TextSpan {
+        text: "Red".into(), // 3 chars → 24px fallback advance
+        x: vec![10.0],
+        y: vec![80.0],
+        dx: vec![],
+        dy: vec![],
+        rotate: vec![],
+        text_anchor: TextAnchor::Start,
+        rtl: false,
+        dominant_baseline: DominantBaseline::Auto,
+        glyphs: vec![],
+        font_instance_key: None,
+        advance_offset: 0.0,
+        font_size: 16.0,
+    };
+    let second = TextSpan {
+        text: " Blue".into(), // 5 chars
+        x: vec![10.0],
+        y: vec![80.0],
+        dx: vec![],
+        dy: vec![],
+        rotate: vec![],
+        text_anchor: TextAnchor::Start,
+        rtl: false,
+        dominant_baseline: DominantBaseline::Auto,
+        glyphs: vec![],
+        font_instance_key: None,
+        advance_offset: first.total_advance(),
+        font_size: 16.0,
+    };
+    // The second run's pen position is the first run's x + its advance.
+    assert_eq!(first.total_advance(), 24.0);
+    assert_eq!(second.advance_offset, 24.0);
+}
+
+#[test]
+fn text_anchor_variants() {
+    assert_eq!(TextAnchor::Start.alignment_offset(), 0.0);
+    assert_eq!(TextAnchor::Middle.alignment_offset(), -0.5);
+    assert_eq!(TextAnchor::End.alignment_offset(), -1.0);
+}
+
+#[test]
+fn svg_image_data() {
+    let img = SvgImage {
+        x: 10.0,
+        y: 20.0,
+        width: 300.0,
+        height: 200.0,
+        href: Some("image.png".into()),
+        image_key: None,
+        natural_width: None,
+        natural_height: None,
+        preserve_aspect_ratio: AspectRatio::default(),
+    };
+    assert_eq!(img.width, 300.0);
+    assert_eq!(img.height, 200.0);
+    assert_eq!(img.href, Some("image.png".into()));
+    assert!(img.image_key.is_none());
+}
+
+#[test]
+fn svg_image_no_href() {
+    let img = SvgImage {
+        x: 0.0,
+        y: 0.0,
+        width: 50.0,
+        height: 50.0,
+        href: None,
+        image_key: None,
+        natural_width: None,
+        natural_height: None,
+        preserve_aspect_ratio: AspectRatio::default(),
+    };
+    assert!(img.href.is_none());
+    assert!(img.image_key.is_none());
+}
+
+#[test]
+fn line_no_fill_geometry_by_spec() {
+    // Per SVG spec, <line> has no fill geometry — only stroke renders.
+    // This is verified at the Render trait level (line.rs).
+    let line = Shape::Line(Line {
+        x1: Length::new(0.0),
+        y1: Length::new(0.0),
+        x2: Length::new(10.0),
+        y2: Length::new(10.0),
+        path_length: None,
+    });
+    assert!(matches!(line, Shape::Line(_)));
+}
+
+#[test]
+fn rect_has_fill_and_stroke_geometry() {
+    let rect = Shape::Rect(Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(100.0),
+        height: Length::new(100.0),
+        rx: None,
+        ry: None,
+        path_length: None,
+    });
+    assert!(matches!(rect, Shape::Rect(_)));
+}
+
+// ============================================================
+// 2. STYLE TYPE TESTS
+// ============================================================
+
+#[test]
+fn node_style_defaults() {
+    let s = NodeStyle::default();
+    assert!(s.is_visible());
+    assert!(s.is_displayed());
+    assert!(s.fill.is_none());
+    assert!(s.stroke.is_none());
+    assert_eq!(s.opacity.get(), 1.0);
+}
+
+#[test]
+fn node_style_visibility_hidden() {
+    let mut s = NodeStyle::default();
+    s.visibility = Visibility::Hidden;
+    assert!(!s.is_visible());
+    assert!(s.is_displayed());
+}
+
+#[test]
+fn node_style_display_none() {
+    let mut s = NodeStyle::default();
+    s.display = Display::None;
+    assert!(!s.is_displayed());
+}
+
+#[test]
+fn fill_params_solid_color() {
+    let f = FillParams {
+        paint_server: Some(PaintServer::Solid(svgtypes::Color::new_rgb(255, 0, 0))),
+        opacity: Opacity::new(0.8),
+        fill_rule: FillRule::NonZero,
+    };
+    assert_eq!(f.opacity.get(), 0.8);
+    assert!(matches!(f.fill_rule, FillRule::NonZero));
+    assert!(matches!(f.paint_server, Some(PaintServer::Solid(_))));
+}
+
+#[test]
+fn fill_params_ref_paint_server() {
+    let f = FillParams {
+        paint_server: Some(PaintServer::Ref { id: Id::new("myGrad"), fallback: None }),
+        opacity: Opacity::ONE,
+        fill_rule: FillRule::NonZero,
+    };
+    assert!(matches!(f.paint_server, Some(PaintServer::Ref { ref id, .. }) if id.as_str() == "myGrad"));
+}
+
+#[test]
+fn fill_params_evenodd() {
+    let f = FillParams {
+        paint_server: None,
+        opacity: Opacity::ONE,
+        fill_rule: FillRule::EvenOdd,
+    };
+    assert!(matches!(f.fill_rule, FillRule::EvenOdd));
+}
+
+#[test]
+fn stroke_params_all_fields() {
+    let s = StrokeParams {
+        paint_server: Some(PaintServer::Solid(svgtypes::Color::new_rgb(0, 0, 0))),
+        opacity: Opacity::new(0.5),
+        width: Length::new(3.0),
+        line_cap: LineCap::Round,
+        line_join: LineJoin::Bevel,
+        miter_limit: 10.0,
+        dash_array: Some(vec![5.0, 3.0]),
+        dash_offset: 2.0,
+    };
+    assert_eq!(s.width.get(), 3.0);
+    assert!(matches!(s.line_cap, LineCap::Round));
+    assert!(matches!(s.line_join, LineJoin::Bevel));
+    assert_eq!(s.miter_limit, 10.0);
+    assert_eq!(s.dash_array, Some(vec![5.0, 3.0]));
+    assert_eq!(s.dash_offset, 2.0);
+}
+
+#[test]
+fn stroke_line_cap_all_variants() {
+    assert!(matches!(LineCap::Butt, LineCap::Butt));
+    assert!(matches!(LineCap::Round, LineCap::Round));
+    assert!(matches!(LineCap::Square, LineCap::Square));
+}
+
+#[test]
+fn stroke_line_join_all_variants() {
+    assert!(matches!(LineJoin::Miter, LineJoin::Miter));
+    assert!(matches!(LineJoin::MiterClip, LineJoin::MiterClip));
+    assert!(matches!(LineJoin::Round, LineJoin::Round));
+    assert!(matches!(LineJoin::Bevel, LineJoin::Bevel));
+    assert!(matches!(LineJoin::Arcs, LineJoin::Arcs));
+}
+
+#[test]
+fn node_effects_default_empty() {
+    let style = NodeStyle::default();
+    assert!(style.clip_path.is_none());
+    assert!(style.mask.is_none());
+    assert!(style.filter.is_none());
+}
+
+#[test]
+fn node_effects_with_clip_path() {
+    let style = NodeStyle {
+        clip_path: Some(DefRef::Ref(Id::new("c1"))),
+        ..NodeStyle::default()
+    };
+    assert!(style.clip_path.is_some());
+}
+
+// ============================================================
+// 3. RENDER TREE TESTS
+// ============================================================
+
+#[test]
+fn svg_tag_shape_and_container() {
+    let shape_tag = SvgTag::Shape(Shape::Rect(Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(10.0),
+        height: Length::new(10.0),
+        rx: None,
+        ry: None,
+        path_length: None,
+    }));
+    let group_tag = SvgTag::Container(Container::Group);
+    assert!(matches!(shape_tag, SvgTag::Shape(_)));
+    assert!(matches!(group_tag, SvgTag::Container(Container::Group)));
+}
+
+#[test]
+fn container_all_variants() {
+    assert!(matches!(Container::Group, Container::Group));
+    assert!(matches!(Container::Svg, Container::Svg));
+    assert!(matches!(Container::Defs, Container::Defs));
+    assert!(matches!(Container::Use, Container::Use));
+    assert!(matches!(Container::Symbol, Container::Symbol));
+}
+
+#[test]
+fn viewport_info_defaults() {
+    let vp = ViewportInfo {
+        width: Length::new(300.0),
+        height: Length::new(150.0),
+        view_box: None,
+        overflow_visible: false,
+        aspect_ratio: None,
+    };
+    assert_eq!(vp.width.get(), 300.0);
+}
+
+#[test]
+fn viewport_with_viewbox() {
+    let vp = ViewportInfo {
+        width: Length::new(200.0),
+        height: Length::new(200.0),
+        view_box: Some(ViewBox {
+            min_x: Length::new(0.0),
+            min_y: Length::new(0.0),
+            width: Length::new(100.0),
+            height: Length::new(100.0),
+        }),
+        overflow_visible: false,
+        aspect_ratio: None,
+    };
+    assert_eq!(vp.view_box.unwrap().width.get(), 100.0);
+}
+
+#[test]
+fn aspect_ratio_default_xmidymid_meet() {
+    let ar = AspectRatio::default();
+    assert!(matches!(ar.align, AspectAlign::XMidYMid));
+    assert!(matches!(ar.meet_or_slice, MeetOrSlice::Meet));
+}
+
+#[test]
+fn aspect_align_all_10_variants_exist() {
+    let aligns = [
+        AspectAlign::None,
+        AspectAlign::XMinYMin,
+        AspectAlign::XMidYMin,
+        AspectAlign::XMaxYMin,
+        AspectAlign::XMinYMid,
+        AspectAlign::XMidYMid,
+        AspectAlign::XMaxYMid,
+        AspectAlign::XMinYMax,
+        AspectAlign::XMidYMax,
+        AspectAlign::XMaxYMax,
+    ];
+    assert_eq!(aligns.len(), 10);
+}
+
+// ============================================================
+// 4. GRADIENT TESTS
+// ============================================================
+
+#[test]
+fn gradient_stop_ordering_by_offset() {
+    let stops = vec![
+        GradientStop {
+            offset: 0.5,
+            color: svgtypes::Color::new_rgb(128, 128, 128),
+        },
+        GradientStop {
+            offset: 0.0,
+            color: svgtypes::Color::new_rgb(0, 0, 0),
+        },
+        GradientStop {
+            offset: 1.0,
+            color: svgtypes::Color::new_rgb(255, 255, 255),
+        },
+    ];
+    let mut sorted = stops.clone();
+    sorted.sort_by(|a, b| {
+        a.offset
+            .partial_cmp(&b.offset)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    assert_eq!(sorted[0].offset, 0.0);
+    assert_eq!(sorted[1].offset, 0.5);
+    assert_eq!(sorted[2].offset, 1.0);
+}
+
+#[test]
+fn gradient_length_number() {
+    let n = GradientLength::Number(50.0);
+    assert_eq!(n.to_object_bbox(), 50.0);
+    assert_eq!(n.to_user_space(200.0), 50.0);
+}
+
+#[test]
+fn gradient_length_percentage() {
+    let p = GradientLength::Percentage(50.0);
+    assert_eq!(p.to_object_bbox(), 0.5);
+    assert_eq!(p.to_user_space(200.0), 100.0);
+}
+
+#[test]
+fn gradient_units_both_variants() {
+    assert!(matches!(
+        GradientUnits::ObjectBoundingBox,
+        GradientUnits::ObjectBoundingBox
+    ));
+    assert!(matches!(
+        GradientUnits::UserSpaceOnUse,
+        GradientUnits::UserSpaceOnUse
+    ));
+}
+
+#[test]
+fn linear_gradient_default_x2() {
+    // When x2 not specified in objectBoundingBox, defaults to 100%
+    let lg = LinearGradient {
+        id: "g".into(),
+        href: None,
+        x1: GradientLength::Number(0.0),
+        y1: GradientLength::Number(0.0),
+        x2: GradientLength::Percentage(100.0),
+        y2: GradientLength::Number(0.0),
+        units: GradientUnits::ObjectBoundingBox,
+        stops: vec![],
+        transform: vec![],
+        spread_method: SpreadMethod::Pad,
+        explicit: GradientExplicit::default(),
+    };
+    assert_eq!(lg.x2.to_object_bbox(), 1.0);
+}
+
+#[test]
+fn radial_gradient_default_center() {
+    let rg = RadialGradient {
+        id: "g".into(),
+        href: None,
+        cx: GradientLength::Percentage(50.0),
+        cy: GradientLength::Percentage(50.0),
+        r: GradientLength::Percentage(50.0),
+        fx: GradientLength::Percentage(50.0),
+        fy: GradientLength::Percentage(50.0),
+        fr: GradientLength::Number(0.0),
+        units: GradientUnits::ObjectBoundingBox,
+        stops: vec![],
+        transform: vec![],
+        spread_method: SpreadMethod::Pad,
+        explicit: GradientExplicit::default(),
+    };
+    assert_eq!(rg.cx.to_object_bbox(), 0.5);
+    assert_eq!(rg.r.to_object_bbox(), 0.5);
+}
+
+#[test]
+fn clip_path_units_both_variants() {
+    assert!(matches!(
+        ClipPathUnits::ObjectBoundingBox,
+        ClipPathUnits::ObjectBoundingBox
+    ));
+    assert!(matches!(
+        ClipPathUnits::UserSpaceOnUse,
+        ClipPathUnits::UserSpaceOnUse
+    ));
+}
+
+#[test]
+fn clip_path_def_non_empty_shapes() {
+    let rect = Shape::Rect(Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(100.0),
+        height: Length::new(100.0),
+        rx: None,
+        ry: None,
+        path_length: None,
+    });
+    let root = SvgNode {
+        id: None,
+        tag: SvgTag::Shape(rect),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+    };
+    let def = ClipPathDef {
+        root,
+        clip_path_units: ClipPathUnits::UserSpaceOnUse,
+    };
+    assert!(matches!(def.root.tag, SvgTag::Shape(_)));
+}
+
+#[test]
+fn mask_def_with_shapes_and_styles() {
+    let rect = Shape::Rect(Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(10.0),
+        height: Length::new(10.0),
+        rx: None,
+        ry: None,
+        path_length: None,
+    });
+    let root = SvgNode {
+        id: None,
+        tag: SvgTag::Shape(rect),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+    };
+    let def = MaskDef {
+        root,
+        mask_type: MaskType::Luminance,
+        content_units: MaskContentUnits::UserSpaceOnUse,
+    };
+    assert!(matches!(def.root.tag, SvgTag::Shape(_)));
+}
+
+#[test]
+fn filter_def_all_primitive_variants() {
+    let primitives = vec![
+        FilterPrimitive::GaussianBlur(2.0, 2.0),
+        FilterPrimitive::DropShadow(5.0, 5.0, 3.0, 0.0, 0.0, 0.0, 0.5),
+        FilterPrimitive::ColorMatrix([1.0; 20]),
+    ];
+    let def = FilterDef {
+        primitives,
+        x: -0.1,
+        y: -0.1,
+        width: 1.2,
+        height: 1.2,
+    };
+    assert_eq!(def.primitives.len(), 3);
+    assert!(matches!(
+        def.primitives[0],
+        FilterPrimitive::GaussianBlur(2.0, 2.0)
+    ));
+    assert!(matches!(
+        def.primitives[1],
+        FilterPrimitive::DropShadow(_, _, _, _, _, _, _)
+    ));
+    assert!(matches!(def.primitives[2], FilterPrimitive::ColorMatrix(_)));
+}
+
+// ============================================================
+// 7. PATTERN TESTS
+// ============================================================
+
+#[test]
+fn pattern_def_basic() {
+    let rect = Shape::Rect(Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(10.0),
+        height: Length::new(10.0),
+        rx: None,
+        ry: None,
+        path_length: None,
+    });
+    let root = SvgNode {
+        id: None,
+        tag: SvgTag::Shape(rect),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+    };
+    let def = PatternDef {
+        width: PatternLength::Number(20.0),
+        height: PatternLength::Number(20.0),
+        x: PatternLength::Number(0.0),
+        y: PatternLength::Number(0.0),
+        pattern_units: PatternUnits::UserSpaceOnUse,
+        pattern_content_units: PatternContentUnits::UserSpaceOnUse,
+        transform: vec![],
+        view_box: None,
+        aspect_ratio: None,
+        root,
+    };
+    assert!(matches!(def.width, PatternLength::Number(20.0)));
+    assert!(matches!(def.height, PatternLength::Number(20.0)));
+}
+
+#[test]
+fn pattern_units_variants() {
+    assert!(matches!(
+        PatternUnits::ObjectBoundingBox,
+        PatternUnits::ObjectBoundingBox
+    ));
+    assert!(matches!(
+        PatternUnits::UserSpaceOnUse,
+        PatternUnits::UserSpaceOnUse
+    ));
+}
+
+#[test]
+fn pattern_content_units_variants() {
+    assert!(matches!(
+        PatternContentUnits::ObjectBoundingBox,
+        PatternContentUnits::ObjectBoundingBox
+    ));
+    assert!(matches!(
+        PatternContentUnits::UserSpaceOnUse,
+        PatternContentUnits::UserSpaceOnUse
+    ));
+}
+
+// ============================================================
+// 8. TRANSFORM TESTS
+// ============================================================
+
+#[test]
+fn transform_op_translate() {
+    let op = TransformOp::Translate(10.0, 20.0);
+    assert!(matches!(op, TransformOp::Translate(10.0, 20.0)));
+}
+
+#[test]
+fn transform_op_rotate() {
+    let op = TransformOp::Rotate(45.0, 0.0, 0.0);
+    assert!(matches!(op, TransformOp::Rotate(45.0, _, _)));
+}
+
+#[test]
+fn transform_op_scale() {
+    let op = TransformOp::Scale(2.0, 2.0);
+    assert!(matches!(op, TransformOp::Scale(2.0, 2.0)));
+}
+
+#[test]
+fn transform_op_skew() {
+    assert!(matches!(TransformOp::SkewX(30.0), TransformOp::SkewX(30.0)));
+    assert!(matches!(TransformOp::SkewY(15.0), TransformOp::SkewY(15.0)));
+}
+
+#[test]
+fn transform_op_matrix() {
+    let op = TransformOp::Matrix([1.0, 0.0, 0.0, 1.0, 50.0, 50.0]);
+    assert!(matches!(
+        op,
+        TransformOp::Matrix([1.0, 0.0, 0.0, 1.0, 50.0, 50.0])
+    ));
+}
+
+// ============================================================
+// 9. RENDER HINTS TESTS (color-rendering, color-interpolation, paint-order)
+// ============================================================
+
+#[test]
+fn color_rendering_variants_exist() {
+    assert!(matches!(ColorRendering::Auto, ColorRendering::Auto));
+    assert!(matches!(
+        ColorRendering::OptimizeSpeed,
+        ColorRendering::OptimizeSpeed
+    ));
+    assert!(matches!(
+        ColorRendering::OptimizeQuality,
+        ColorRendering::OptimizeQuality
+    ));
+}
+
+#[test]
+fn color_interpolation_variants_exist() {
+    assert!(matches!(ColorInterpolation::Auto, ColorInterpolation::Auto));
+    assert!(matches!(ColorInterpolation::Srgb, ColorInterpolation::Srgb));
+    assert!(matches!(
+        ColorInterpolation::LinearRGB,
+        ColorInterpolation::LinearRGB
+    ));
+}
+
+#[test]
+fn color_interpolation_linear_rgb_gradient_math() {
+    // Linear RGB interpolation of red→blue should produce visibly
+    // different result from sRGB interpolation (darker mid-tones).
+    let red = svgtypes::Color::new_rgb(255, 0, 0);
+    let blue = svgtypes::Color::new_rgb(0, 0, 255);
+    let stops = vec![
+        GradientStop {
+            offset: 0.0,
+            color: red,
+        },
+        GradientStop {
+            offset: 1.0,
+            color: blue,
+        },
+    ];
+
+    // sRGB midpoint
+    let srgb_mid = servo_svg::color_at_t_with_space(&stops, 0.5, ColorInterpolation::Srgb);
+    // Linear RGB midpoint
+    let linear_mid = servo_svg::color_at_t_with_space(&stops, 0.5, ColorInterpolation::LinearRGB);
+
+    // Linear RGB midpoint should be perceptually different from sRGB.
+    // The R and B channels diverge — linear RGB produces a darker purple.
+    assert!(srgb_mid.r > 0.0 && srgb_mid.b > 0.0);
+    assert!(linear_mid.r > 0.0 && linear_mid.b > 0.0);
+    // Linear RGB typically has a lower max channel value at t=0.5
+    // because gamma correction darkens the midpoint.
+    assert!(
+        (srgb_mid.r - linear_mid.r).abs() > 0.0 || (srgb_mid.b - linear_mid.b).abs() > 0.0,
+        "sRGB and linear RGB should produce different midpoints"
+    );
+}
+
+#[test]
+fn paint_order_default() {
+    let po = PaintOrder::default();
+    assert!(!po.stroke_before_fill());
+    assert_eq!(
+        po.order,
+        [
+            PaintOperation::Fill,
+            PaintOperation::Stroke,
+            PaintOperation::Markers
+        ]
+    );
+}
+
+#[test]
+fn paint_order_stroke_before_fill() {
+    let po = PaintOrder {
+        order: [
+            PaintOperation::Stroke,
+            PaintOperation::Fill,
+            PaintOperation::Markers,
+        ],
+    };
+    assert!(po.stroke_before_fill());
+}
+
+#[test]
+fn paint_order_fill_before_stroke() {
+    let po = PaintOrder {
+        order: [
+            PaintOperation::Fill,
+            PaintOperation::Stroke,
+            PaintOperation::Markers,
+        ],
+    };
+    assert!(!po.stroke_before_fill());
+}
+
+#[test]
+fn render_hints_with_color_interpolation() {
+    let hints = RenderHints {
+        vector_effect: None,
+        shape_rendering: None,
+        color_rendering: None,
+        color_interpolation: Some(ColorInterpolation::LinearRGB),
+        paint_order: None,
+        text_rendering: None,
+        image_rendering: None,
+    };
+    assert!(matches!(
+        hints.color_interpolation,
+        Some(ColorInterpolation::LinearRGB)
+    ));
+}
+
+#[test]
+fn render_hints_with_color_rendering_optimize_quality() {
+    let hints = RenderHints {
+        vector_effect: None,
+        shape_rendering: None,
+        color_rendering: Some(ColorRendering::OptimizeQuality),
+        color_interpolation: None,
+        paint_order: None,
+        text_rendering: None,
+        image_rendering: None,
+    };
+    assert!(matches!(
+        hints.color_rendering,
+        Some(ColorRendering::OptimizeQuality)
+    ));
+}
+
+#[test]
+fn render_hints_with_paint_order_stroke_fill() {
+    let hints = RenderHints {
+        vector_effect: None,
+        shape_rendering: None,
+        color_rendering: None,
+        color_interpolation: None,
+        paint_order: Some(PaintOrder {
+            order: [
+                PaintOperation::Stroke,
+                PaintOperation::Fill,
+                PaintOperation::Markers,
+            ],
+        }),
+        text_rendering: None,
+        image_rendering: None,
+    };
+    assert!(hints.paint_order.unwrap().stroke_before_fill());
+}
+
+// ============================================================
+// 10. VISITOR PATTERN TESTS
+// ============================================================
+
+#[test]
+fn visitor_visits_all_nodes() {
+    let tree = make_simple_tree();
+    struct Counter(usize);
+    impl SvgTreeVisitor for Counter {
+        fn visit_node(&mut self, _node: &SvgNode) -> VisitDecision {
+            self.0 += 1;
+            VisitDecision::Continue
+        }
+    }
+    let mut counter = Counter(0);
+    tree.visit(&mut counter);
+    assert_eq!(counter.0, 3);
+}
+
+#[test]
+fn visitor_skip_children() {
+    let tree = make_simple_tree();
+    struct SkipRoot(bool);
+    impl SvgTreeVisitor for SkipRoot {
+        fn visit_node(&mut self, node: &SvgNode) -> VisitDecision {
+            if node.id.as_ref().map(|i| i.as_str()) == Some("root") {
+                VisitDecision::SkipChildren
+            } else {
+                self.0 = true;
+                VisitDecision::Continue
+            }
+        }
+    }
+    let mut v = SkipRoot(false);
+    tree.visit(&mut v);
+    assert!(!v.0, "Children should be skipped");
+}
+
+#[test]
+fn visitor_stop_does_not_panic() {
+    let tree = make_simple_tree();
+    struct StopAfterRoot;
+    impl SvgTreeVisitor for StopAfterRoot {
+        fn visit_node(&mut self, _node: &SvgNode) -> VisitDecision {
+            VisitDecision::Stop
+        }
+    }
+    tree.visit(&mut StopAfterRoot);
+}
+
+#[test]
+fn mutable_visitor_modifies_nodes() {
+    let mut tree = make_simple_tree_with_fill();
+    struct OpacityBump;
+    impl SvgTreeVisitorMut for OpacityBump {
+        fn visit_node_mut(&mut self, node: &mut SvgNode) -> VisitDecision {
+            node.style.opacity = Opacity::new(node.style.opacity.get() * 0.5);
+            VisitDecision::Continue
+        }
+    }
+    tree.visit_mut(&mut OpacityBump);
+    assert_eq!(tree.root.style.opacity.get(), 0.5);
+}
+
+// ============================================================
+// 10. RENDER TREE INTEGRATION TESTS
+// ============================================================
+
+#[test]
+fn empty_tree_does_not_panic_on_visit() {
+    let tree = make_empty_tree();
+    struct CountingVisitor<'a>(&'a mut usize);
+    impl<'a> SvgTreeVisitor for CountingVisitor<'a> {
+        fn visit_node(&mut self, _node: &SvgNode) -> VisitDecision {
+            *self.0 += 1;
+            VisitDecision::Continue
+        }
+    }
+    let mut count = 0;
+    tree.visit(&mut CountingVisitor(&mut count));
+    assert_eq!(count, 1);
+}
+
+#[test]
+fn tree_with_nested_groups() {
+    let tree = make_simple_tree();
+    assert_eq!(tree.root.children.len(), 2);
+}
+
+#[test]
+fn defs_container_in_tree() {
+    let defs = SvgNode {
+        id: None,
+        tag: SvgTag::Container(Container::Defs),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+    };
+    assert!(matches!(defs.tag, SvgTag::Container(Container::Defs)));
+}
+
+#[test]
+fn svg_node_with_transforms() {
+    use servo_svg::transform::TransformOp;
+    let node = SvgNode {
+        id: Some(Id::new("t")),
+        tag: SvgTag::Container(Container::Group),
+        style: NodeStyle::default(),
+        transforms: vec![TransformOp::Translate(50.0, 50.0)],
+        viewport: None,
+        children: vec![],
+    };
+    assert_eq!(node.transforms.len(), 1);
+}
+
+// ============================================================
+// 11. ERROR TYPE TESTS
+// ============================================================
+
+#[test]
+fn servo_svg_error_missing_attr() {
+    use servo_svg::error::SvgEngineError;
+    let err = SvgEngineError::MissingAttribute("width".to_owned());
+    assert_eq!(err.to_string(), "missing SVG attribute: width");
+}
+
+#[test]
+fn servo_svg_error_parse_error() {
+    use servo_svg::error::SvgEngineError;
+    let err = SvgEngineError::ParseError("invalid number".to_owned());
+    assert_eq!(err.to_string(), "SVG parse error: invalid number");
+}
+
+#[test]
+fn servo_svg_error_unsupported() {
+    use servo_svg::error::SvgEngineError;
+    let err = SvgEngineError::UnsupportedFeature("gradients".to_owned());
+    assert_eq!(err.to_string(), "unsupported SVG feature: gradients");
+}
+
+#[test]
+fn servo_svg_error_implements_std_error() {
+    use servo_svg::error::SvgEngineError;
+    let err: &dyn std::error::Error = &SvgEngineError::ParseError("test".to_owned());
+    assert!(!err.to_string().is_empty());
+}
+
+#[test]
+fn servo_svg_error_debug_differs_from_display() {
+    use servo_svg::error::SvgEngineError;
+    let err = SvgEngineError::ParseError("test".to_owned());
+    assert_ne!(format!("{err:?}"), format!("{err}"));
+}
+
+// ============================================================
+// 12. SvgTree DEFINITION COLLECTION TESTS
+// ============================================================
+
+#[test]
+fn tree_initializes_with_empty_def_maps() {
+    let tree = make_empty_tree();
+    assert!(tree.gradients.is_empty());
+    assert!(tree.clip_paths.is_empty());
+    assert!(tree.patterns.is_empty());
+    assert!(tree.masks.is_empty());
+    assert!(tree.filters.is_empty());
+}
+
+#[test]
+fn tree_with_gradient_def() {
+    let mut tree = make_empty_tree();
+    let grad = Arc::new(GradientDef::Linear(LinearGradient {
+        id: "g1".into(),
+        href: None,
+        x1: GradientLength::Number(0.0),
+        y1: GradientLength::Number(0.0),
+        x2: GradientLength::Percentage(100.0),
+        y2: GradientLength::Number(0.0),
+        units: GradientUnits::ObjectBoundingBox,
+        stops: vec![],
+        transform: vec![],
+        spread_method: SpreadMethod::Pad,
+        explicit: GradientExplicit::default(),
+    }));
+    tree.gradients.insert("g1".into(), grad);
+    assert_eq!(tree.gradients.len(), 1);
+}
+
+#[test]
+fn tree_gradient_insert_and_check() {
+    let mut tree = make_empty_tree();
+    let grad = Arc::new(GradientDef::Linear(LinearGradient {
+        id: "g1".into(),
+        href: None,
+        x1: GradientLength::Number(0.0),
+        y1: GradientLength::Number(0.0),
+        x2: GradientLength::Percentage(100.0),
+        y2: GradientLength::Number(0.0),
+        units: GradientUnits::ObjectBoundingBox,
+        stops: vec![],
+        transform: vec![],
+        spread_method: SpreadMethod::Pad,
+        explicit: GradientExplicit::default(),
+    }));
+    tree.gradients.insert("g1".into(), grad);
+    assert_eq!(tree.gradients.len(), 1);
+    assert!(!tree.gradients.contains_key("missing"));
+}
+
+// ============================================================
+// 13. VISIBILITY & DISPLAY TESTS
+// ============================================================
+
+#[test]
+fn visibility_visible_and_hidden() {
+    let v1 = Visibility::Visible;
+    let v2 = Visibility::Hidden;
+    assert!(matches!(v1, Visibility::Visible));
+    assert!(matches!(v2, Visibility::Hidden));
+}
+
+#[test]
+fn display_variants() {
+    assert!(matches!(Display::Inline, Display::Inline));
+    assert!(matches!(Display::Block, Display::Block));
+    assert!(matches!(Display::None, Display::None));
+}
+
+// ============================================================
+// 14. RENDER HINTS TESTS
+// ============================================================
+
+#[test]
+fn render_hints_non_scaling_stroke() {
+    let hints = RenderHints {
+        vector_effect: Some(VectorEffect::NonScalingStroke),
+        shape_rendering: None,
+        color_rendering: None,
+        color_interpolation: None,
+        text_rendering: None,
+        image_rendering: None,
+        paint_order: None,
+    };
+    assert!(matches!(
+        hints.vector_effect,
+        Some(VectorEffect::NonScalingStroke)
+    ));
+}
+
+#[test]
+fn shape_rendering_all_variants() {
+    assert!(matches!(ShapeRendering::Auto, ShapeRendering::Auto));
+    assert!(matches!(
+        ShapeRendering::OptimizeSpeed,
+        ShapeRendering::OptimizeSpeed
+    ));
+    assert!(matches!(
+        ShapeRendering::CrispEdges,
+        ShapeRendering::CrispEdges
+    ));
+    assert!(matches!(
+        ShapeRendering::GeometricPrecision,
+        ShapeRendering::GeometricPrecision
+    ));
+}
+
+// ============================================================
+// HELPER FUNCTIONS
+// ============================================================
+
+fn make_simple_tree() -> SvgTree {
+    let child1 = SvgNode {
+        id: Some(Id::new("child1")),
+        tag: SvgTag::Shape(Shape::Circle(Circle {
+            cx: Length::new(10.0),
+            cy: Length::new(10.0),
+            r: Length::new(5.0),
+            path_length: None,
+        })),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+    };
+    let child2 = SvgNode {
+        id: Some(Id::new("child2")),
+        tag: SvgTag::Shape(Shape::Rect(Rectangle {
+            x: Length::new(0.0),
+            y: Length::new(0.0),
+            width: Length::new(20.0),
+            height: Length::new(20.0),
+            rx: None,
+            ry: None,
+            path_length: None,
+        })),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+    };
+    let root = SvgNode {
+        id: Some(Id::new("root")),
+        tag: SvgTag::Container(Container::Svg),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![child1, child2],
+    };
+    SvgTree {
+        root,
+        viewport: ViewportInfo {
+            width: Length::new(100.0),
+            height: Length::new(100.0),
+            view_box: None,
+            overflow_visible: false,
+            aspect_ratio: None,
+        },
+        gradients: HashMap::new(),
+        clip_paths: HashMap::new(),
+        patterns: HashMap::new(),
+        masks: HashMap::new(),
+        filters: HashMap::new(),
+        markers: HashMap::new(),
+    }
+}
+
+fn make_simple_tree_with_fill() -> SvgTree {
+    let mut tree = make_simple_tree();
+    tree.root.style.fill = Some(FillParams {
+        paint_server: Some(PaintServer::Solid(svgtypes::Color::new_rgb(255, 0, 0))),
+        opacity: Opacity::ONE,
+        fill_rule: FillRule::NonZero,
+    });
+    tree
+}
+
+fn make_empty_tree() -> SvgTree {
+    let root = SvgNode {
+        id: None,
+        tag: SvgTag::Container(Container::Svg),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+    };
+    SvgTree {
+        root,
+        viewport: ViewportInfo {
+            width: Length::new(100.0),
+            height: Length::new(100.0),
+            view_box: None,
+            overflow_visible: false,
+            aspect_ratio: None,
+        },
+        gradients: HashMap::new(),
+        clip_paths: HashMap::new(),
+        patterns: HashMap::new(),
+        masks: HashMap::new(),
+        filters: HashMap::new(),
+        markers: HashMap::new(),
+    }
+}

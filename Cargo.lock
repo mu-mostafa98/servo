@@ -2598,7 +2598,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2776,6 +2776,12 @@ name = "float-cmp"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "98de4bbd547a563b716d8dfa9aad1cb19bfab00f4fa09a6a4ed21dbcf44ce9c4"
+
+[[package]]
+name = "float_next_after"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8bf7cc16383c4b8d58b9905a8509f02926ce3058053c056376248d958c9df1e8"
 
 [[package]]
 name = "fnv"
@@ -3166,7 +3172,7 @@ dependencies = [
  "gobject-sys",
  "libc",
  "system-deps",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -5084,6 +5090,58 @@ dependencies = [
 ]
 
 [[package]]
+name = "lyon"
+version = "1.0.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bd0578bdecb7d6d88987b8b2b1e3a4e2f81df9d0ece1078623324a567904e7b7"
+dependencies = [
+ "lyon_algorithms",
+ "lyon_tessellation",
+]
+
+[[package]]
+name = "lyon_algorithms"
+version = "1.0.20"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8575c0d003ae459399623c4def180c63b77f343b1a7fee64f249b349e7699a31"
+dependencies = [
+ "lyon_path",
+ "num-traits",
+]
+
+[[package]]
+name = "lyon_geom"
+version = "1.0.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4336502e29e32af93cf2dad2214ed6003c17ceb5bd499df77b1de663b9042b92"
+dependencies = [
+ "arrayvec",
+ "euclid",
+ "num-traits",
+]
+
+[[package]]
+name = "lyon_path"
+version = "1.0.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5c463f9c428b7fc5ec885dcd39ce4aa61e29111d0e33483f6f98c74e89d8621e"
+dependencies = [
+ "lyon_geom",
+ "num-traits",
+]
+
+[[package]]
+name = "lyon_tessellation"
+version = "1.0.20"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8e43b7e44161571868f5c931d12583592c223c5583eef86b08aa02b7048a3552"
+dependencies = [
+ "float_next_after",
+ "lyon_path",
+ "num-traits",
+]
+
+[[package]]
 name = "mach2"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6459,7 +6517,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d8fae84b431384b68627d0f9b3b1245fcf9f46f6c0e3dc902e9dce64edd1967"
 dependencies = [
  "libc",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -7681,7 +7739,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.12.1",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -7738,7 +7796,7 @@ dependencies = [
  "security-framework",
  "security-framework-sys",
  "webpki-root-certs",
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -7912,8 +7970,8 @@ dependencies = [
 
 [[package]]
 name = "selectors"
-version = "0.41.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.40.0"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "bitflags 2.13.2",
  "cssparser",
@@ -8672,9 +8730,10 @@ dependencies = [
  "bitflags 2.13.2",
  "data-url",
  "euclid",
- "icu_locale_core",
- "icu_properties",
- "icu_segmenter",
+ "html5ever",
+ "icu_locid",
+ "icu_properties 1.5.1",
+ "icu_segmenter 1.5.0",
  "itertools 0.15.0",
  "kurbo",
  "log",
@@ -8703,6 +8762,7 @@ dependencies = [
  "servo-profile-traits",
  "servo-script",
  "servo-script-traits",
+ "servo-svg",
  "servo-tracing",
  "servo-url",
  "servo_arc",
@@ -8711,6 +8771,7 @@ dependencies = [
  "stylo",
  "stylo_atoms",
  "stylo_traits",
+ "svgtypes",
  "taffy",
  "tracing",
  "unicode-bidi",
@@ -9587,9 +9648,15 @@ dependencies = [
 
 [[package]]
 name = "servo-svg"
-version = "0.7.0"
+version = "0.6.0"
 dependencies = [
+ "euclid",
+ "kurbo",
+ "log",
+ "lyon",
  "svgtypes",
+ "vello_cpu 0.2.0",
+ "webrender_api",
 ]
 
 [[package]]
@@ -9771,8 +9838,8 @@ dependencies = [
 
 [[package]]
 name = "servo_arc"
-version = "0.5.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.4.3"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "serde",
  "stable_deref_trait",
@@ -10277,8 +10344,8 @@ dependencies = [
 
 [[package]]
 name = "stylo"
-version = "0.22.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.20.0"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "app_units",
  "arrayvec",
@@ -10289,8 +10356,8 @@ dependencies = [
  "derive_more",
  "encoding_rs",
  "euclid",
- "icu_segmenter",
- "indexmap 2.14.2",
+ "icu_segmenter 1.5.0",
+ "indexmap",
  "itertools 0.14.0",
  "itoa",
  "log",
@@ -10333,8 +10400,8 @@ dependencies = [
 
 [[package]]
 name = "stylo_atoms"
-version = "0.22.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.20.0"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "string_cache",
  "string_cache_codegen",
@@ -10342,8 +10409,8 @@ dependencies = [
 
 [[package]]
 name = "stylo_derive"
-version = "0.22.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.20.0"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -10354,8 +10421,8 @@ dependencies = [
 
 [[package]]
 name = "stylo_dom"
-version = "0.22.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.20.0"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "bitflags 2.13.2",
  "stylo_malloc_size_of",
@@ -10363,8 +10430,8 @@ dependencies = [
 
 [[package]]
 name = "stylo_malloc_size_of"
-version = "0.22.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.20.0"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "app_units",
  "cssparser",
@@ -10381,16 +10448,16 @@ dependencies = [
 
 [[package]]
 name = "stylo_static_prefs"
-version = "0.22.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.20.0"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "toml 1.1.6+spec-1.1.0",
 ]
 
 [[package]]
 name = "stylo_traits"
-version = "0.22.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.20.0"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "app_units",
  "bitflags 2.13.2",
@@ -10577,8 +10644,8 @@ dependencies = [
  "fastrand",
  "getrandom 0.3.4",
  "once_cell",
- "rustix 1.1.5",
- "windows-sys 0.52.0",
+ "rustix 1.1.4",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -10811,8 +10878,8 @@ checksum = "fd3ca314f692efd6c868f8408f53fe444634a845f96c028b97d35f6a1f79f0ee"
 
 [[package]]
 name = "to_shmem"
-version = "0.6.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.5.0"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "cssparser",
  "servo_arc",
@@ -10824,8 +10891,8 @@ dependencies = [
 
 [[package]]
 name = "to_shmem_derive"
-version = "0.2.0"
-source = "git+https://github.com/servo/stylo?rev=62d5a65af7107f7b1aef4b2d34335e92ad989840#62d5a65af7107f7b1aef4b2d34335e92ad989840"
+version = "0.1.0"
+source = "git+https://github.com/mu-mostafa98/stylo?branch=svg-engine#15c9803361b75a22fc4131002b92d4ddadd9718f"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -12297,7 +12364,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.52.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

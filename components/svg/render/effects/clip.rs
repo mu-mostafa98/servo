@@ -1,0 +1,162 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+//! Clip path and mask resolution — converts SVG `clip-path` and `mask`
+//! references into WebRender [`ClipChain`] IDs and vello-rasterized clip
+//! geometry.
+//!
+//! **Single responsibility:** given a render node and its effect definitions,
+//! produce the clip chains and [`ComplexClip`] geometry needed for rendering.
+//! No tree walking, no display list management beyond clip definition.
+
+use webrender_api::units::LayoutPoint;
+use webrender_api::{
+    ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId,
+};
+
+use crate::model::document::{ClipPathUnits, DefRef};
+use crate::model::element::SvgNode;
+use crate::render::renderer::clip_chain_option;
+use crate::render::geometry::{ClipGeometry, ComplexClip};
+
+// ======================= Clip Path Resolution =======================
+
+/// A single mask shape resolved to either a WebRender clip chain (rect /
+/// rounded-rect) or a [`ComplexClip`] applied during rasterization.
+#[derive(Clone)]
+pub(crate) struct MaskClip {
+    /// WebRender clip chain for rect/rounded-rect mask shapes (native shapes).
+    pub chain: ClipChainId,
+    /// Complex (polygon/path) mask geometry, applied during rasterization.
+    pub complex: Option<ComplexClip>,
+}
+
+/// Resolve a node's `clip-path` reference into a WebRender clip chain plus any
+/// complex (polygon/path) clips that must be applied during rasterization.
+///
+/// Returns `(clip_chain, complex_clips)`. When no clip-path is present, both
+/// are returned unchanged (`parent_clip_chain` and an empty list).
+pub(crate) fn resolve_node_clip_path(
+    node: &SvgNode,
+    svg_origin: &LayoutPoint,
+    spatial_id: SpatialId,
+    parent_clip_chain: ClipChainId,
+    wr: &mut DisplayListBuilder,
+) -> (ClipChainId, Vec<ComplexClip>) {
+    let Some(clip_def) = node.style.clip_path.as_ref().and_then(DefRef::resolved) else {
+        return (parent_clip_chain, Vec::new());
+    };
+
+    let mut current_chain = parent_clip_chain;
+    let mut complex = Vec::new();
+    clip_def.root.for_each_shape_leaf(&mut |shape, _style| {
+        let Some(geometry) = shape.clip_info(svg_origin, clip_def.clip_path_units) else {
+            return;
+        };
+
+        match geometry {
+            ClipGeometry::RoundedRect { bounds, radii } => {
+                let clip_id = wr.define_clip_rounded_rect(
+                    spatial_id,
+                    ComplexClipRegion {
+                        rect: bounds,
+                        radii,
+                        mode: ClipMode::Clip,
+                    },
+                );
+                current_chain =
+                    wr.define_clip_chain(clip_chain_option(current_chain), [clip_id]);
+            },
+            ClipGeometry::Rect { bounds } => {
+                let clip_id = wr.define_clip_rect(spatial_id, bounds);
+                current_chain =
+                    wr.define_clip_chain(clip_chain_option(current_chain), [clip_id]);
+            },
+            ClipGeometry::Path {
+                bounds,
+                path,
+                fill_rule,
+            } => {
+                // WebRender 0.70's quad path panics on image-mask clips, so we
+                // can't use `define_clip_image_mask` for arbitrary polygon/path
+                // clips. Keep a bounding-rect fallback for native shapes that
+                // can't be rasterized (e.g. pattern fills) and defer the real
+                // clip to vello rasterization via `ComplexClip`.
+                let clip_id = wr.define_clip_rect(spatial_id, bounds);
+                current_chain =
+                    wr.define_clip_chain(clip_chain_option(current_chain), [clip_id]);
+                complex.push(ComplexClip { path, fill_rule });
+            },
+        }
+    });
+
+    (current_chain, complex)
+}
+
+// ======================= Mask Resolution =======================
+
+/// Build individual clip chains for each mask shape, one per shape.
+///
+/// Returns `None` when no mask is present.
+/// Returns `Some(vec![...])` with one [`MaskClip`] per mask shape.
+///
+/// Each clip chain combines the parent clip AND one mask shape. Rendering the
+/// shape once per mask clip achieves union (OR) behavior.
+pub(crate) fn build_mask_clips(
+    node: &SvgNode,
+    svg_origin: &LayoutPoint,
+    spatial_id: SpatialId,
+    parent_clip_chain: ClipChainId,
+    wr: &mut DisplayListBuilder,
+) -> Option<Vec<MaskClip>> {
+    let mask_def = node.style.mask.as_ref().and_then(DefRef::resolved)?;
+
+    let mut masks = Vec::new();
+    mask_def.root.for_each_shape_leaf(&mut |shape, _style| {
+        let Some(geometry) = shape.clip_info(svg_origin, ClipPathUnits::UserSpaceOnUse) else {
+            return;
+        };
+
+        let (chain, complex) = match geometry {
+            ClipGeometry::RoundedRect { bounds, radii } => {
+                let clip_id = wr.define_clip_rounded_rect(
+                    spatial_id,
+                    ComplexClipRegion {
+                        rect: bounds,
+                        radii,
+                        mode: ClipMode::Clip,
+                    },
+                );
+                (
+                    wr.define_clip_chain(clip_chain_option(parent_clip_chain), [clip_id]),
+                    None,
+                )
+            },
+            ClipGeometry::Rect { bounds } => {
+                let clip_id = wr.define_clip_rect(spatial_id, bounds);
+                (
+                    wr.define_clip_chain(clip_chain_option(parent_clip_chain), [clip_id]),
+                    None,
+                )
+            },
+            ClipGeometry::Path {
+                bounds,
+                path,
+                fill_rule,
+            } => {
+                // Same fallback as clip-path: bounding-rect clip for native
+                // shapes, real clip deferred to rasterization.
+                let clip_id = wr.define_clip_rect(spatial_id, bounds);
+                (
+                    wr.define_clip_chain(clip_chain_option(parent_clip_chain), [clip_id]),
+                    Some(ComplexClip { path, fill_rule }),
+                )
+            },
+        };
+
+        masks.push(MaskClip { chain, complex });
+    });
+
+    if masks.is_empty() { None } else { Some(masks) }
+}
