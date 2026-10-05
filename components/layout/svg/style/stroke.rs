@@ -6,7 +6,6 @@
 //! the matching presentation-attribute application.
 
 use script::layout_dom::ServoLayoutElement;
-use style::color::ColorSpace;
 use style::values::computed::svg::{SVGOpacity, SVGStrokeDashArray};
 use style::values::generics::svg::SVGLength;
 use servo_svg::style::paint_servers::PaintServer;

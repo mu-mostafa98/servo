@@ -156,7 +156,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             return None;
         }
 
-        let tag_name = element.local_name().as_ref().to_owned();
+        let tag_name = element.local_name().to_string();
 
         // Text / tspan — extract text content from DOM children.
         if tag_name == "text" || tag_name == "tspan" {

@@ -6,6 +6,7 @@
 
 use std::collections::HashMap;
 
+use html5ever::local_name;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
 use servo_svg::element::text::{TextAnchor, TextSpan};
@@ -168,7 +169,7 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
     let mut runs = Vec::new();
     for (i, child) in children.iter().enumerate() {
         if let Some(child_elem) = child.as_element() {
-            if child_elem.local_name().as_ref() == "tspan" {
+            if child_elem.local_name() == &local_name!("tspan") {
                 let get = |n: &str| get_attr(&child_elem, n);
                 if let Some(mut span) = build_text(*child, &get, fs) {
                     // Inherit the <text>'s baseline/origin for any axis the
@@ -200,7 +201,7 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
             // trailing newline from shaping into a `.notdef` box and from
             // inflating the RTL anchor offset.
             let followed_by_content = children[i + 1..].iter().any(|c| match c.as_element() {
-                Some(e) => e.local_name().as_ref() == "tspan",
+                Some(e) => e.local_name() == &local_name!("tspan"),
                 None => !(*c).text_content().trim().is_empty(),
             });
             let text = if followed_by_content && trimmed.len() < text.len() {
@@ -223,8 +224,10 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
 /// of consecutive characters that use the same fallback font, and each run is
 /// shaped as a whole.
 fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutContext) {
+    use app_units::Au;
     use fonts::{ShapingFlags, ShapingOptions};
     use layout_api::LayoutNode;
+    use style::Zero;
     use style::computed_values::font_variant_position::T as FontVariantPosition;
     use style::values::computed::{
         FontFeatureSettings, FontVariantEastAsian, FontVariantLigatures, FontVariantNumeric,
@@ -273,7 +276,7 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
         DominantBaseline::Central | DominantBaseline::Mathematical => 0.45 * font_size,
     };
 
-    let language: icu_locid::subtags::Language = "und".parse().unwrap();
+    let language: icu_locale_core::subtags::Language = "und".parse().unwrap();
     let mut glyphs = Vec::with_capacity(span.text.len());
     // The current text position, tracked in *absolute* coordinates: it starts
     // at the span origin (`x[0]`/`y[0]`) and each per-character `x[i]`/`y[i]`
@@ -337,8 +340,8 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
         // Shape the whole run (HarfBuzz handles Arabic joining, ligatures, …).
         let run_text: String = chars[ci..cj].iter().collect();
         let options = ShapingOptions {
-            letter_spacing: None,
-            word_spacing: None,
+            letter_spacing: Au::zero(),
+            word_spacing: Au::zero(),
             script: Script::from(chars[ci]),
             language,
             ligatures: FontVariantLigatures::NORMAL,
@@ -385,7 +388,7 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
                 font_instance_key: Some(key),
             });
             cur_x += advance;
-            run_char_index += glyph_info.character_count().max(1);
+            run_char_index += usize::from(glyph_info.character_count()).max(1);
         }
 
         ci = cj;

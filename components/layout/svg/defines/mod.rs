@@ -87,10 +87,10 @@ fn find_elements_by_tag<'dom>(
 ) {
     for child in node.dom_children() {
         if let Some(elem) = child.as_element() {
-            if elem.local_name().as_ref() == tag {
+            if &**elem.local_name() == tag {
                 result.push(child);
             }
-            let name = elem.local_name().as_ref();
+            let name = &**elem.local_name();
             if name == "g"
                 || name == "defs"
                 || name == "svg"

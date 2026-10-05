@@ -665,6 +665,7 @@ impl ReplacedContents {
                     return vec![Fragment::Image(Arc::new(ImageFragment {
                         base,
                         style: style.clone().into(),
+                        selected_style: self.selected_style.clone(),
                         clip,
                         image_key: None,
                         showing_broken_image_icon: false,
@@ -672,6 +673,7 @@ impl ReplacedContents {
                         natural_width: self.natural_size.width,
                         natural_height: self.natural_size.height,
                         svg_render_tree: Some(tree.clone()),
+                        selected: self.selected.clone(),
                     }))];
                 }
                 return vec![];

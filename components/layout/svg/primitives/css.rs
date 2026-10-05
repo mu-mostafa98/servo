@@ -10,6 +10,7 @@
 
 use std::collections::HashMap;
 
+use html5ever::local_name;
 use layout_api::{LayoutElement, LayoutNode, LayoutNodeType};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use servo_svg::style::*;
@@ -29,7 +30,7 @@ pub(crate) fn collect_svg_css_rules<'dom>(root_node: ServoLayoutNode<'dom>) -> C
     let mut stack: Vec<ServoLayoutNode<'dom>> = vec![root_node];
     while let Some(node) = stack.pop() {
         if let Some(element) = node.as_element() {
-            if element.local_name().as_ref() == "style" {
+            if element.local_name() == &local_name!("style") {
                 if let Some(css_text) = extract_style_text_content(node) {
                     let rules = parse_svg_class_rules(&css_text);
                     for (cls, props) in rules {

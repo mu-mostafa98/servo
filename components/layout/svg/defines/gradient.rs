@@ -36,7 +36,7 @@ impl DefinitionParser for GradientParser {
         builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
-        let grad_name = element.local_name().as_ref().to_owned();
+        let grad_name = element.local_name().to_string();
         if grad_name != "linearGradient" && grad_name != "radialGradient" {
             return None;
         }
@@ -94,7 +94,7 @@ impl DefinitionParser for GradientParser {
 // ======================= Gradient Parsing =======================
 
 /// Attributes plus computed `color` for a single `<stop>` element.
-struct StopInput {
+pub(crate) struct StopInput {
     offset: Option<String>,
     color: Option<String>,
     opacity: Option<String>,

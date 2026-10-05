@@ -48,7 +48,7 @@ impl DefinitionParser for FilterParser {
         let mut primitives = Vec::new();
         for prim_child in node.dom_children() {
             if let Some(prim_elem) = prim_child.as_element() {
-                let pname = prim_elem.local_name().as_ref().to_owned();
+                let pname = prim_elem.local_name().to_string();
                 let prim_get = |attr: &str| {
                     prim_elem
                         .attribute_as_str(&ns!(), &LocalName::from(attr))
