@@ -2,12 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+//! Rendering for SVG `<polyline>` and shared native polyline/polygon helpers.
+
 use euclid::Transform2D;
 use kurbo::{BezPath, Point as KurboPoint};
 use lyon::math::Point as LyonPoint;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
-use crate::render::renderer::{Render, RenderContext, fill, paint_order_stroke_before_fill, stroke};
+use crate::render::renderer::{Render, RenderContext, fill, fill_rule, paint_order_stroke_before_fill, stroke};
 use crate::render::renderer::path::rasterize_bez;
 use crate::model::element::shape::Polyline;
 use crate::model::style::FillRule;
@@ -36,12 +38,19 @@ impl Render for Polyline {
         }
 
         let bez = points_to_bez(&points, false);
+        // CPU-rasterized shapes bypass reference frames, so fold the nested
+        // viewBox translation into the raster position explicitly (mirrors
+        // `Polygon::render`).
+        let raster_origin = LayoutPoint::new(
+            ctx.svg_origin.x + ctx.raster_offset.x,
+            ctx.svg_origin.y + ctx.raster_offset.y,
+        );
         rasterize_bez(
             &bez,
             ctx.style.fill.as_ref(),
             ctx.style.stroke.as_ref(),
             ctx.style.opacity.get(),
-            &ctx.svg_origin,
+            &raster_origin,
             ctx.viewbox_scale,
             ctx.device_scale,
             Transform2D::identity(),
@@ -65,12 +74,7 @@ pub(crate) fn render_native_polyline(
     ctx: &mut RenderContext,
     fill_enabled: bool,
 ) {
-    let fill_rule = ctx
-        .style
-        .fill
-        .as_ref()
-        .map(|f| f.fill_rule)
-        .unwrap_or(FillRule::NonZero);
+    let fill_rule = fill_rule(ctx);
     let stroke_before_fill = paint_order_stroke_before_fill(ctx);
     let has_stroke = ctx.style.stroke.is_some();
     let has_fill = fill_enabled && ctx.style.fill.is_some();

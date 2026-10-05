@@ -112,13 +112,23 @@ impl TextSpan {
         let base_x = ctx.svg_origin.x + self.origin_x() + self.advance_offset + anchor_offset;
         let base_y = ctx.svg_origin.y + self.origin_y();
 
-        let last = self.glyphs.last().unwrap();
+        let Some(last) = self.glyphs.last() else {
+            return;
+        };
         let total_w = last.x + last.advance;
         // The bounds must encompass every glyph's vertical position — `dy` and
         // `dominant-baseline` shift the baseline, so clamp the rect to the
         // glyph y range (WebRender clips to this rect).
-        let min_y = self.glyphs.iter().map(|g| g.y).fold(0.0f32, f32::min);
-        let max_y = self.glyphs.iter().map(|g| g.y).fold(0.0f32, f32::max);
+        let min_y = self
+            .glyphs
+            .iter()
+            .map(|g| g.y)
+            .fold(f32::INFINITY, f32::min);
+        let max_y = self
+            .glyphs
+            .iter()
+            .map(|g| g.y)
+            .fold(f32::NEG_INFINITY, f32::max);
         let ascent = ascent(self.font_size);
         let descent = descent(self.font_size);
         let bounds = LayoutRect::from_origin_and_size(

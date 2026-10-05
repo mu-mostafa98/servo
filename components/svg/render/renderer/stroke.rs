@@ -716,7 +716,11 @@ fn stroke_polyline_gradient(
                     c
                 },
                 GradientDef::Radial(rg) => {
-                    let (fx, fy, r2) = rad_fx_fy_r2.unwrap();
+                    // `rad_fx_fy_r2` is `Some` whenever `grad_def` is radial;
+                    // this guard is defensive only.
+                    let Some((fx, fy, r2)) = rad_fx_fy_r2 else {
+                        continue;
+                    };
                     let dx = mx - fx;
                     let dy = my - fy;
                     let dist_sq = (dx * dx + dy * dy) / (r2 * r2).max(1.0);

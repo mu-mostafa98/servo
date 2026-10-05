@@ -4,13 +4,13 @@
 
 //! `<filter>` definition parsing (filter primitives).
 
-use html5ever::{LocalName, local_name};
+use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
 use servo_svg::document::{FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive};
 use web_atoms::ns;
 
-use super::DefinitionParser;
+use super::{DefinitionParser, element_id};
 use crate::svg::builder::SvgTreeBuilder;
 use crate::svg::primitives::paint::parse_color_rgba;
 
@@ -27,23 +27,31 @@ impl DefinitionParser for FilterParser {
         _builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
-        let id = element
-            .attribute_as_str(&ns!(), &local_name!("id"))
-            .map(|s| s.to_string())?;
+        let id = element_id(&element)?;
         let get = |attr: &str| {
             element
                 .attribute_as_str(&ns!(), &LocalName::from(attr))
                 .map(|s| s.to_string())
         };
-        let get_float = |attr: &str, default: f32| -> f32 {
+        // The filter region attributes are `<number-or-percentage>`; under the
+        // default `filterUnits="objectBoundingBox"` a bare number is already a
+        // fraction, so a trailing `%` is divided by 100 to match (e.g.
+        // `x="-10%"` and `x="-0.1"` are equivalent).
+        let get_region = |attr: &str, default: f32| -> f32 {
             get(attr)
-                .and_then(|v| v.parse::<f32>().ok())
+                .and_then(|v| {
+                    let v = v.trim();
+                    match v.strip_suffix('%') {
+                        Some(p) => p.trim().parse::<f32>().ok().map(|p| p / 100.0),
+                        None => v.parse::<f32>().ok(),
+                    }
+                })
                 .unwrap_or(default)
         };
-        let x = get_float("x", -0.1);
-        let y = get_float("y", -0.1);
-        let width = get_float("width", 1.2);
-        let height = get_float("height", 1.2);
+        let x = get_region("x", -0.1);
+        let y = get_region("y", -0.1);
+        let width = get_region("width", 1.2);
+        let height = get_region("height", 1.2);
 
         let mut primitives = Vec::new();
         for prim_child in node.dom_children() {

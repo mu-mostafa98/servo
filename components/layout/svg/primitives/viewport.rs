@@ -29,7 +29,17 @@ pub(crate) fn extract_viewport_info<'dom>(
     width: f32,
     height: f32,
 ) -> ViewportInfo {
-    let element = node.as_element().unwrap();
+    let Some(element) = node.as_element() else {
+        // Non-element nodes carry no viewport attributes; fall back to the
+        // resolved `width`/`height` with no `viewBox`/`preserveAspectRatio`.
+        return ViewportInfo {
+            width: Length::new(width),
+            height: Length::new(height),
+            view_box: None,
+            overflow_visible: false,
+            aspect_ratio: None,
+        };
+    };
     let get = |attr: &str| {
         element
             .attribute_as_str(&ns!(), &LocalName::from(attr))

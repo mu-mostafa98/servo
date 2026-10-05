@@ -43,6 +43,41 @@ pub(crate) struct RenderContext<'a> {
     pub sink: &'a RasterSink<'a>,
 }
 
+impl<'a> RenderContext<'a> {
+    /// Construct a [`RenderContext`] for a non-native (vello_cpu) render pass.
+    ///
+    /// `native_rendering` is left at its default `false`; the few call sites
+    /// that need native WebRender primitives (pattern content) build the struct
+    /// literal directly.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn new(
+        style: &'a NodeStyle,
+        svg_origin: LayoutPoint,
+        spatial_id: SpatialId,
+        clip_chain_id: ClipChainId,
+        wr: &'a mut DisplayListBuilder,
+        accumulated_scale: f32,
+        viewbox_scale: (f32, f32),
+        device_scale: f32,
+        raster_offset: LayoutPoint,
+        sink: &'a RasterSink<'a>,
+    ) -> Self {
+        Self {
+            style,
+            svg_origin,
+            spatial_id,
+            clip_chain_id,
+            wr,
+            accumulated_scale,
+            viewbox_scale,
+            device_scale,
+            raster_offset,
+            native_rendering: false,
+            sink,
+        }
+    }
+}
+
 /// Convert an SVG shape into WebRender display list commands.
 ///
 /// Every SVG shape type implements this trait so that traversal

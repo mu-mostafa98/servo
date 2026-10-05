@@ -124,17 +124,15 @@ impl Default for PaintOrder {
 impl PaintOrder {
     /// Whether stroke should be drawn before fill.
     pub fn stroke_before_fill(&self) -> bool {
-        let stroke = self
-            .order
-            .iter()
-            .position(|o| *o == PaintOperation::Stroke)
-            .unwrap();
-        let fill = self
-            .order
-            .iter()
-            .position(|o| *o == PaintOperation::Fill)
-            .unwrap();
-        stroke < fill
+        // A paint order missing Stroke or Fill (possible only via manual
+        // construction) falls back to the SVG default: fill before stroke.
+        match (
+            self.order.iter().position(|o| *o == PaintOperation::Stroke),
+            self.order.iter().position(|o| *o == PaintOperation::Fill),
+        ) {
+            (Some(stroke), Some(fill)) => stroke < fill,
+            _ => false,
+        }
     }
 }
 

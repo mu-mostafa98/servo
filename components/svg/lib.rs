@@ -27,9 +27,8 @@
 //! | `render::tessellator` | Polygon triangulation + scanline rasterization |
 //! | `render::effects` | Clip-path, mask, and filter resolution |
 //!
-//! The entry point is [`render_svg_tree`], called from
-//! `layout::display_list::mod.rs`.  Shape construction happens in
-//! `layout::svg_builder.rs`.
+//! The entry point is [`render_svg_tree`]; tree construction happens in the
+//! `layout` crate's `svg` module (via `build_svg_tree`).
 
 pub mod model;
 mod render;

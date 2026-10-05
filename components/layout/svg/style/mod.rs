@@ -46,7 +46,7 @@ use self::stroke::apply_stroke_presentation_attrs;
 // ======================= FromComputedValues Trait =======================
 
 /// Bridge from Servo's [`ComputedValues`] to SVG engine types.
-pub trait FromComputedValues: Sized {
+pub(crate) trait FromComputedValues: Sized {
     fn from_computed_values(values: &style::properties::ComputedValues) -> Option<Self>;
 }
 
@@ -235,7 +235,9 @@ pub(crate) fn build_style(
     inherited: Option<&NodeStyle>,
     inherited_color: Option<SvgColor>,
 ) -> (NodeStyle, Vec<TransformOp>, SvgColor) {
-    let element = node.as_element().unwrap();
+    let Some(element) = node.as_element() else {
+        return (NodeStyle::default(), Vec::new(), SvgColor::black());
+    };
     let (mut style, css_transform, computed_color) = if element.style_data().is_some() {
         let computed = node.style(&context.style_context);
         let style = NodeStyle::from_computed_values(&computed).unwrap_or_default();

@@ -17,7 +17,7 @@ use servo_svg::style::*;
 use servo_svg::units::{Length, Opacity};
 use svgtypes::Color as SvgColor;
 
-use crate::svg::primitives::attrs::get_attr;
+use crate::svg::primitives::attrs::{SVG_DEFAULT_FONT_SIZE, get_attr, parse_length_token};
 use crate::svg::primitives::paint::parse_paint_server;
 
 /// A simple mapping from class name to (property → value) parsed from
@@ -168,7 +168,7 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str, current_co
             }
         },
         "stroke-width" => {
-            if let Ok(w) = value.trim_end_matches("px").parse::<f32>() {
+            if let Some(w) = parse_length_token(value, SVG_DEFAULT_FONT_SIZE) {
                 if let Some(ref mut s) = style.stroke {
                     s.width = Length::new(w.max(0.0));
                 }

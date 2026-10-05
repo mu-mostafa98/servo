@@ -2,15 +2,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+//! Rendering for SVG `<path>` (vello_cpu rasterization or native primitives).
+
 use euclid::Transform2D;
 use kurbo::{BezPath, PathEl, Point as KurboPoint, Shape};
 use webrender_api::units::{LayoutPoint, LayoutRect};
 use webrender_api::DisplayListBuilder;
 
-use crate::render::renderer::{Render, RenderContext};
+use crate::render::renderer::{Render, RenderContext, fill_rule};
 use crate::render::geometry::{path_data_to_bez, ComplexClip};
 use crate::model::element::shape::Path;
 use crate::model::document::{GradientDef, GradientUnits, SpreadMethod};
+use crate::model::style::paint_servers::PaintServer;
 use crate::model::style::{FillParams, FillRule, StrokeParams};
 use crate::{RasterSink, RasterizedImage};
 
@@ -45,12 +48,7 @@ impl Render for Path {
                 .elements()
                 .iter()
                 .any(|e| matches!(e, PathEl::ClosePath));
-            let fill_rule = ctx
-                .style
-                .fill
-                .as_ref()
-                .map(|f| f.fill_rule)
-                .unwrap_or(FillRule::NonZero);
+            let fill_rule = fill_rule(ctx);
             let subpaths = flatten_subpaths(&bez);
             let stroke_before_fill = crate::render::renderer::paint_order_stroke_before_fill(ctx);
             let has_stroke = ctx.style.stroke.is_some();
@@ -424,19 +422,7 @@ pub(crate) fn resolve_fill_paint(
     bbox: &kurbo::Rect,
     node_opacity: f32,
 ) -> Option<ResolvedPaint> {
-    if let Some(crate::model::style::paint_servers::PaintServer::Gradient(def)) = &fill.paint_server {
-        return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
-            def.as_ref(),
-            w,
-            h,
-            viewbox_scale,
-            bbox,
-        )));
-    }
-    if let Some(crate::model::style::paint_servers::PaintServer::Solid(color)) = &fill.paint_server {
-        return Some(ResolvedPaint::Solid(vello_color(color, fill.opacity.get() * node_opacity)));
-    }
-    None
+    resolve_paint(&fill.paint_server, fill.opacity.get(), node_opacity, w, h, viewbox_scale, bbox)
 }
 
 /// Resolve a stroke to a concrete paint (solid color or gradient).
@@ -448,19 +434,45 @@ fn resolve_stroke_paint(
     bbox: &kurbo::Rect,
     node_opacity: f32,
 ) -> Option<ResolvedPaint> {
-    if let Some(crate::model::style::paint_servers::PaintServer::Gradient(def)) = &stroke.paint_server {
-        return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
+    resolve_paint(
+        &stroke.paint_server,
+        stroke.opacity.get(),
+        node_opacity,
+        w,
+        h,
+        viewbox_scale,
+        bbox,
+    )
+}
+
+/// Shared paint-server resolution for fill and stroke, which differ only in
+/// their per-paint opacity.
+fn resolve_paint(
+    paint_server: &Option<PaintServer>,
+    paint_opacity: f32,
+    node_opacity: f32,
+    w: f32,
+    h: f32,
+    viewbox_scale: (f32, f32),
+    bbox: &kurbo::Rect,
+) -> Option<ResolvedPaint> {
+    match paint_server {
+        Some(PaintServer::Gradient(def)) => Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
             def.as_ref(),
             w,
             h,
             viewbox_scale,
             bbox,
-        )));
+        ))),
+        Some(PaintServer::Solid(color)) => {
+            Some(ResolvedPaint::Solid(vello_color(color, paint_opacity * node_opacity)))
+        },
+        Some(PaintServer::Pattern(_))
+        | Some(PaintServer::Ref { .. })
+        | Some(PaintServer::ContextFill)
+        | Some(PaintServer::ContextStroke)
+        | None => None,
     }
-    if let Some(crate::model::style::paint_servers::PaintServer::Solid(color)) = &stroke.paint_server {
-        return Some(ResolvedPaint::Solid(vello_color(color, stroke.opacity.get() * node_opacity)));
-    }
-    None
 }
 
 /// Convert a [`GradientDef`] to a [`Gradient`] in pixmap-local coordinates.

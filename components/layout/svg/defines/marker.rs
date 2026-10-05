@@ -10,8 +10,9 @@ use script::layout_dom::ServoLayoutNode;
 use servo_svg::document::{MarkerDef, MarkerOrient, MarkerUnits};
 use web_atoms::ns;
 
-use super::{DefinitionParser, build_def_content_root, collect_def_content};
+use super::{DefinitionParser, build_def_content_root, collect_def_content, element_id};
 use crate::svg::builder::SvgTreeBuilder;
+use crate::svg::primitives::attrs::{SVG_DEFAULT_FONT_SIZE, parse_length_token};
 use crate::svg::primitives::viewport::extract_viewbox;
 
 pub(crate) struct MarkerParser;
@@ -27,14 +28,12 @@ impl DefinitionParser for MarkerParser {
         builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
-        let id = element
-            .attribute_as_str(&ns!(), &local_name!("id"))
-            .map(|s| s.to_string())?;
+        let id = element_id(&element)?;
 
         let parse_attr = |attr: &str, default: f32| -> f32 {
             element
                 .attribute_as_str(&ns!(), &LocalName::from(attr))
-                .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
+                .and_then(|v| parse_length_token(v, SVG_DEFAULT_FONT_SIZE))
                 .unwrap_or(default)
         };
 
@@ -61,9 +60,8 @@ impl DefinitionParser for MarkerParser {
                         return extent * p / 100.0;
                     }
                 }
-                v.trim_end_matches("px").parse::<f32>().unwrap_or(0.0)
+                parse_length_token(v, SVG_DEFAULT_FONT_SIZE).unwrap_or(0.0)
             };
-
         let view_box = element
             .attribute_as_str(&ns!(), &local_name!("viewBox"))
             .as_deref()

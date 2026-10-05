@@ -75,7 +75,6 @@ pub(crate) enum FillStyle<'a> {
         /// Tile origin offset in absolute space.
         ox: f32,
         oy: f32,
-        opacity: f32,
     },
 }
 
@@ -348,7 +347,6 @@ fn scanline_fill_triangle(
                 tile_h,
                 ox,
                 oy,
-                opacity: _opacity,
             } => {
                 // Render pattern shapes using proper shape.render() calls,
                 // grouped by tile column and clipped to the polygon

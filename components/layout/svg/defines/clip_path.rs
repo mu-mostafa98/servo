@@ -10,7 +10,7 @@ use script::layout_dom::ServoLayoutNode;
 use servo_svg::document::{ClipPathDef, ClipPathUnits};
 use web_atoms::ns;
 
-use super::{DefinitionParser, build_def_content_root, collect_def_content};
+use super::{DefinitionParser, build_def_content_root, collect_def_content, element_id};
 use crate::svg::builder::SvgTreeBuilder;
 
 pub(crate) struct ClipPathParser;
@@ -26,9 +26,7 @@ impl DefinitionParser for ClipPathParser {
         builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
-        let id = element
-            .attribute_as_str(&ns!(), &local_name!("id"))
-            .map(|s| s.to_string())?;
+        let id = element_id(&element)?;
         let units = element
             .attribute_as_str(&ns!(), &local_name!("clipPathUnits"))
             .and_then(|s| match s.trim() {

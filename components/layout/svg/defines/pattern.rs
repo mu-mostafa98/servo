@@ -11,7 +11,7 @@ use servo_svg::document::{PatternContentUnits, PatternDef, PatternLength, Patter
 use svgtypes::Length as SvgLength;
 use web_atoms::ns;
 
-use super::{DefinitionParser, build_def_content_root, collect_def_content};
+use super::{DefinitionParser, build_def_content_root, collect_def_content, element_id};
 use crate::svg::builder::SvgTreeBuilder;
 use crate::svg::primitives::transforms::parse_transform_str;
 use crate::svg::primitives::viewport::{extract_viewbox, parse_aspect_ratio};
@@ -29,9 +29,7 @@ impl DefinitionParser for PatternParser {
         builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
-        let id = element
-            .attribute_as_str(&ns!(), &local_name!("id"))
-            .map(|s| s.to_string())?;
+        let id = element_id(&element)?;
         let parse_len = |attr: &str, default: PatternLength| -> PatternLength {
             element
                 .attribute_as_str(&ns!(), &LocalName::from(attr))

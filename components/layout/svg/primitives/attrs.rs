@@ -174,6 +174,11 @@ pub(crate) fn parse_inline_style_prop(style_value: &str, prop_name: &str) -> Opt
 
 // ======================= Length & points =======================
 
+/// The SVG initial font size (CSS `medium`), used to resolve `em`/`ex` units
+/// when no computed font size is available — e.g. presentation attributes and
+/// CSS class rules, which are applied without a resolved `font-size`.
+pub(crate) const SVG_DEFAULT_FONT_SIZE: f32 = 16.0;
+
 /// Parse a named SVG length attribute (e.g. `x="10"`, `width="50%"`).
 ///
 /// Handles all CSS/SVG length units via [`svgtypes::Length`].

@@ -112,6 +112,21 @@ impl Shape {
             Shape::Path(p) => p.path_length,
         }
     }
+
+    /// The equivalent [`Rectangle`] for a rect/circle/ellipse, else `None`.
+    ///
+    /// A circle is first converted to an ellipse with equal radii, then both are
+    /// reduced to their bounding rectangle. Returns `None` for line, polyline,
+    /// polygon and path shapes, and for a degenerate circle/ellipse (non-positive
+    /// radius).
+    pub fn to_rect(&self) -> Option<Rectangle> {
+        match self {
+            Shape::Rect(r) => Some(*r),
+            Shape::Circle(c) => c.to_ellipse().to_rect(),
+            Shape::Ellipse(e) => e.to_rect(),
+            _ => None,
+        }
+    }
 }
 
 impl Rectangle {
@@ -138,6 +153,40 @@ impl Ellipse {
             (Some(r), None) => Some((r, r)),
             (None, Some(r)) => Some((r, r)),
             (None, None) => None,
+        }
+    }
+
+    /// Convert to an equivalent [`Rectangle`] with 100% corner radii.
+    ///
+    /// An ellipse is rendered as a rounded rectangle whose corner radii equal
+    /// the ellipse radii. Returns `None` when both radii are `auto` (nothing to
+    /// render) or when a resolved radius is non-positive (SVG 2 error handling).
+    pub fn to_rect(&self) -> Option<Rectangle> {
+        let (rx, ry) = self.resolved_radii()?;
+        if rx.get() <= 0.0 || ry.get() <= 0.0 {
+            return None;
+        }
+        Some(Rectangle {
+            x: Length::new(self.cx.get() - rx.get()),
+            y: Length::new(self.cy.get() - ry.get()),
+            width: Length::new(rx.get() * 2.0),
+            height: Length::new(ry.get() * 2.0),
+            rx: Some(rx),
+            ry: Some(ry),
+            path_length: self.path_length,
+        })
+    }
+}
+
+impl Circle {
+    /// Convert to an equivalent [`Ellipse`] with equal radii.
+    pub fn to_ellipse(&self) -> Ellipse {
+        Ellipse {
+            cx: self.cx,
+            cy: self.cy,
+            rx: Some(self.r),
+            ry: Some(self.r),
+            path_length: self.path_length,
         }
     }
 }

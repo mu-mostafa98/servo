@@ -16,9 +16,8 @@ use webrender_api::units::LayoutRect;
 use webrender_api::{ClipChainId, CommonItemProperties, SpaceAndClipInfo};
 
 use crate::model::document::{GradientDef, GradientUnits, PatternUnits};
-use crate::render::renderer::{RenderContext, gradient, pattern, to_colorf};
+use crate::render::renderer::{RenderContext, color_interpolation, gradient, pattern, to_colorf};
 use crate::model::style::paint_servers::PaintServer;
-use crate::model::style::ColorInterpolation;
 use crate::render::tessellator;
 use crate::render::tessellator::FillStyle;
 
@@ -44,7 +43,7 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
         },
         Some(PaintServer::Pattern(def)) => {
             let def = Arc::clone(def);
-            pattern::fill_rect_with_pattern(def.as_ref(), bounds, ctx, opacity);
+            pattern::fill_rect_with_pattern(def.as_ref(), bounds, ctx);
         },
         Some(PaintServer::Solid(svg_color)) => {
             let mut color = to_colorf(svg_color);
@@ -110,7 +109,7 @@ pub(crate) fn fill_polygon(
         },
         Some(PaintServer::Pattern(def)) => {
             let def = Arc::clone(def);
-            handle_pattern_fill(def.as_ref(), pts, bounds, fill_rule, ctx, opacity);
+            handle_pattern_fill(def.as_ref(), pts, bounds, fill_rule, ctx);
         },
         Some(PaintServer::Solid(svg_color)) => {
             let mut color = to_colorf(svg_color);
@@ -180,15 +179,6 @@ fn resolve_radial_gradient_coords(
     }
 }
 
-/// Extract the `color-interpolation` hint from the render context.
-fn color_interpolation_hint(ctx: &RenderContext) -> ColorInterpolation {
-    ctx.style
-        .render_hints
-        .as_ref()
-        .and_then(|h| h.color_interpolation)
-        .unwrap_or(ColorInterpolation::Srgb)
-}
-
 /// Build a [`FillStyle::LinearGradient`] from resolved coordinates.
 fn build_linear_fill_style<'a>(
     lg: &'a crate::model::document::LinearGradient,
@@ -206,7 +196,7 @@ fn build_linear_fill_style<'a>(
         gx2,
         gy2,
         opacity,
-        color_interpolation: color_interpolation_hint(ctx),
+        color_interpolation: color_interpolation(ctx),
         spread_method: lg.spread_method,
     }
 }
@@ -230,7 +220,7 @@ fn build_radial_fill_style<'a>(
         // is clamped to the value of r").
         fr: fr.min(radius),
         opacity,
-        color_interpolation: color_interpolation_hint(ctx),
+        color_interpolation: color_interpolation(ctx),
         spread_method: rg.spread_method,
     }
 }
@@ -242,7 +232,6 @@ fn handle_pattern_fill(
     bounds: LayoutRect,
     fill_rule: crate::model::style::FillRule,
     ctx: &mut RenderContext,
-    opacity: f32,
 ) {
     if def.root.children.is_empty() {
         return;
@@ -291,7 +280,6 @@ fn handle_pattern_fill(
         tile_h,
         ox,
         oy,
-        opacity,
     };
     tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
 }

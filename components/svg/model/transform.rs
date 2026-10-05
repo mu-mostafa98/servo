@@ -13,9 +13,12 @@
 /// A single SVG transform operation, in the order it was specified.
 #[derive(Debug, Clone)]
 pub enum TransformOp {
+    /// Translate by `(tx, ty)` in user units.
     Translate(f32, f32),
+    /// Scale by `(sx, sy)` (uniform when the two are equal).
     Scale(f32, f32),
-    Rotate(f32, f32, f32), // (angle_deg, cx, cy)
+    /// Rotate by `angle_deg` degrees around the pivot `(cx, cy)`.
+    Rotate(f32, f32, f32),
     /// Skew along the X axis by the given angle in degrees.
     SkewX(f32),
     /// Skew along the Y axis by the given angle in degrees.

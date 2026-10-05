@@ -14,10 +14,12 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
+use html5ever::local_name;
 use layout_api::{LayoutElement, LayoutNode};
-use script::layout_dom::ServoLayoutNode;
+use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use servo_svg::element::{Container, SvgNode, SvgTag};
 use servo_svg::style::NodeStyle;
+use web_atoms::ns;
 
 use crate::svg::builder::SvgTreeBuilder;
 
@@ -34,6 +36,16 @@ pub(crate) use gradient::{GradientParser, resolve_gradient_hrefs};
 pub(crate) use marker::MarkerParser;
 pub(crate) use mask::MaskParser;
 pub(crate) use pattern::PatternParser;
+
+/// Extract a definition element's `id` attribute as an owned `String`.
+///
+/// Shared by every [`DefinitionParser`] implementation, which all look up the
+/// same attribute before parsing the rest of the definition.
+pub(crate) fn element_id(element: &ServoLayoutElement) -> Option<String> {
+    element
+        .attribute_as_str(&ns!(), &local_name!("id"))
+        .map(|s| s.to_string())
+}
 
 // ======================= Strategy Pattern =======================
 
@@ -69,15 +81,19 @@ impl DefinitionCollector {
             find_elements_by_tag(node, tag, &mut candidates);
         }
         for candidate_node in candidates {
-            if candidate_node.as_element().is_some() {
-                if let Some((id, def)) = T::parse(candidate_node, builder) {
-                    result.insert(id, Arc::new(def));
-                }
+            if let Some((id, def)) = T::parse(candidate_node, builder) {
+                result.insert(id, Arc::new(def));
             }
         }
         result
     }
 }
+
+/// Element names whose children may themselves contain definitions, and so
+/// must be recursed into during definition collection.
+const RECURSIVE_CONTAINERS: &[&str] = &[
+    "g", "defs", "svg", "a", "switch", "symbol", "marker", "clipPath", "mask", "pattern",
+];
 
 /// Recursively search a DOM subtree for SVG elements with the given local name.
 fn find_elements_by_tag<'dom>(
@@ -87,21 +103,11 @@ fn find_elements_by_tag<'dom>(
 ) {
     for child in node.dom_children() {
         if let Some(elem) = child.as_element() {
-            if &**elem.local_name() == tag {
+            let name = &**elem.local_name();
+            if name == tag {
                 result.push(child);
             }
-            let name = &**elem.local_name();
-            if name == "g"
-                || name == "defs"
-                || name == "svg"
-                || name == "a"
-                || name == "switch"
-                || name == "symbol"
-                || name == "marker"
-                || name == "clipPath"
-                || name == "mask"
-                || name == "pattern"
-            {
+            if RECURSIVE_CONTAINERS.contains(&name) {
                 find_elements_by_tag(child, tag, result);
             }
         }

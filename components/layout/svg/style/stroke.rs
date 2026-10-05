@@ -14,7 +14,9 @@ use servo_svg::units::{Id, Length, Opacity};
 use svgtypes::Color as SvgColor;
 
 use super::{FromComputedValues, ResolvedPaint, resolve_svg_paint};
-use crate::svg::primitives::attrs::{get_attr, parse_inline_style_prop};
+use crate::svg::primitives::attrs::{
+    SVG_DEFAULT_FONT_SIZE, get_attr, parse_inline_style_prop, parse_length_token,
+};
 use crate::svg::primitives::paint::parse_paint_server;
 
 impl FromComputedValues for StrokeParams {
@@ -128,8 +130,7 @@ pub(crate) fn apply_stroke_presentation_attrs(
     stroke.paint_server = parse_paint_server(&stroke_value, current_color);
     if let Some(v) = read_attr("stroke-width") {
         stroke.width = Length::new(
-            v.trim_end_matches("px")
-                .parse::<f32>()
+            parse_length_token(&v, SVG_DEFAULT_FONT_SIZE)
                 .unwrap_or(1.0)
                 .max(0.0),
         );
@@ -181,6 +182,6 @@ pub(crate) fn apply_stroke_presentation_attrs(
         }
     }
     if let Some(v) = read_attr("stroke-dashoffset") {
-        stroke.dash_offset = v.trim_end_matches("px").parse::<f32>().unwrap_or(0.0);
+        stroke.dash_offset = parse_length_token(&v, SVG_DEFAULT_FONT_SIZE).unwrap_or(0.0);
     }
 }

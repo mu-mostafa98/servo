@@ -13,7 +13,7 @@
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{ColorF, CommonItemProperties, SpaceAndClipInfo};
 
-use crate::render::renderer::{RenderContext, ZERO_LENGTH_EPSILON, shape_rendering_value, to_colorf};
+use crate::render::renderer::{RenderContext, ZERO_LENGTH_EPSILON, color_interpolation, shape_rendering_value, to_colorf};
 use crate::model::document::{GradientDef, GradientStop, GradientUnits, SpreadMethod};
 use crate::model::style::{ColorInterpolation, ColorRendering};
 use crate::model::transform::TransformOp;
@@ -371,15 +371,6 @@ pub(crate) fn fill_rect_with_gradient(
 }
 
 // ======================= Native gradient resolution =======================
-
-/// The `color-interpolation` hint for the current context, defaulting to sRGB.
-fn color_interpolation(ctx: &RenderContext) -> ColorInterpolation {
-    ctx.style
-        .render_hints
-        .as_ref()
-        .and_then(|h| h.color_interpolation)
-        .unwrap_or(ColorInterpolation::Srgb)
-}
 
 /// Map an SVG spread method to a WebRender `ExtendMode`, or `None` for
 /// `reflect` (which WebRender cannot express natively).

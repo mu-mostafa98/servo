@@ -13,9 +13,16 @@
 //!
 //! | Module | Role |
 //! |--------|------|
-//! | [`render_trait`] | [`Render`] trait, [`RenderContext`], Shape dispatch |
+//! | [`render_trait`] | [`Render`] trait, [`RenderContext`], shape dispatch |
 //! | [`util`] | Color conversion, clip chain utilities, hint resolution |
-//! | `circle`, `ellipse`, … | Per-shape [`Render`] implementations |
+//! | [`rect`], [`circle`], [`ellipse`], [`line`], [`polyline`], [`polygon`], [`path`] | Per-shape [`Render`] implementations |
+//! | [`fill`] | Fill painting (solid/gradient/pattern) |
+//! | [`stroke`] | Stroke painting (solid/gradient, dashes, caps/joins) |
+//! | [`gradient`] | Gradient geometry resolution + native gradient emission |
+//! | [`pattern`] | Pattern tile rendering |
+//! | [`image`] | `<image>` rendering |
+//! | [`text`] | `<text>`/`<tspan>` rendering |
+//! | [`transform`] | Transform-op → matrix conversion |
 
 pub(crate) mod circle;
 pub(crate) mod ellipse;
@@ -36,7 +43,7 @@ pub(crate) mod transform;
 
 // Re-export the public API so existing imports stay working.
 pub(crate) use util::{
-    ZERO_LENGTH_EPSILON, clip_chain_option, effective_stroke_width, make_common_props,
-    paint_order_stroke_before_fill, shape_rendering_value, to_colorf,
+    ZERO_LENGTH_EPSILON, clip_chain_option, color_interpolation, effective_stroke_width, fill_rule,
+    make_common_props, paint_order_stroke_before_fill, shape_rendering_value, to_colorf,
 };
 pub(crate) use render_trait::{Render, RenderContext};

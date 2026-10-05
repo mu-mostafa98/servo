@@ -574,18 +574,22 @@ fn emit_shape(
 
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, node_clip_chain, wr);
 
-    match &params.mask {
-        Some(ResolvedMask::Raster(raster)) => {
-            // Real luminance/alpha mask: force CPU rasterization and multiply
-            // the content's alpha by the mask value.
+    // Factor the repeated `draw_shape` call into a closure so the mask fan-out
+    // only varies the clip chain, complex clips, and alpha mask. The closure is
+    // scoped so it releases its mutable borrow of `wr` before the filter context
+    // is popped below.
+    {
+        let mut draw = |clip_chain: ClipChainId,
+                    complex_clips: &[ComplexClip],
+                    alpha_mask: Option<&MaskRaster>| {
             draw_shape(
                 shape,
                 &style,
                 cur_origin,
                 cur_spatial_id,
-                node_clip_chain,
+                clip_chain,
                 accumulated_scale,
-                params.complex_clips,
+                complex_clips,
                 wr,
                 viewbox_scale,
                 device_scale,
@@ -593,55 +597,31 @@ fn emit_shape(
                 clip_rect,
                 node_xform,
                 sink,
-                Some(raster.as_ref()),
+                alpha_mask,
             );
-        },
-        Some(ResolvedMask::Clips(clips)) => {
-            for mask_clip in clips {
-                // Each mask pass inherits the node's clip-path geometry plus the
-                // mask shape's own complex clip (if any).
-                let mut combined = params.complex_clips.to_vec();
-                if let Some(c) = &mask_clip.complex {
-                    combined.push(c.clone());
+        };
+
+        match &params.mask {
+            Some(ResolvedMask::Raster(raster)) => {
+                // Real luminance/alpha mask: force CPU rasterization and multiply
+                // the content's alpha by the mask value.
+                draw(node_clip_chain, params.complex_clips, Some(raster.as_ref()));
+            },
+            Some(ResolvedMask::Clips(clips)) => {
+                for mask_clip in clips {
+                    // Each mask pass inherits the node's clip-path geometry plus
+                    // the mask shape's own complex clip (if any).
+                    let mut combined = params.complex_clips.to_vec();
+                    if let Some(c) = &mask_clip.complex {
+                        combined.push(c.clone());
+                    }
+                    draw(mask_clip.chain, &combined, None);
                 }
-                draw_shape(
-                    shape,
-                    &style,
-                    cur_origin,
-                    cur_spatial_id,
-                    mask_clip.chain,
-                    accumulated_scale,
-                    &combined,
-                    wr,
-                    viewbox_scale,
-                    device_scale,
-                    raster_offset,
-                    clip_rect,
-                    node_xform,
-                    sink,
-                    None,
-                );
-            }
-        },
-        None => {
-            draw_shape(
-                shape,
-                &style,
-                cur_origin,
-                cur_spatial_id,
-                node_clip_chain,
-                accumulated_scale,
-                params.complex_clips,
-                wr,
-                viewbox_scale,
-                device_scale,
-                raster_offset,
-                clip_rect,
-                node_xform,
-                sink,
-                None,
-            );
-        },
+            },
+            None => {
+                draw(node_clip_chain, params.complex_clips, None);
+            },
+        }
     }
 
     if pushed_filter {
@@ -718,19 +698,18 @@ fn draw_shape(
                 // primitives in paint order (rect/circle/ellipse → `push_rect` /
                 // `push_border`; line → `stroke_line_segment`), so they stay
                 // correctly ordered against surrounding rasters and native items.
-                let mut ctx = RenderContext {
+                let mut ctx = RenderContext::new(
                     style,
-                    svg_origin: *svg_origin,
+                    *svg_origin,
                     spatial_id,
                     clip_chain_id,
-                    wr: &mut *wr,
+                    &mut *wr,
                     accumulated_scale,
                     viewbox_scale,
                     device_scale,
                     raster_offset,
-                    native_rendering: false,
                     sink,
-                };
+                );
                 shape.render(&mut ctx);
                 handled = true;
             }
@@ -782,19 +761,18 @@ fn draw_shape(
         // Native path — used for pattern paint servers (which vello_cpu can't
         // rasterize) and as a no-op fallback for shapes with neither paint nor
         // a bez path.
-        let mut ctx = RenderContext {
+        let mut ctx = RenderContext::new(
             style,
-            svg_origin: *svg_origin,
+            *svg_origin,
             spatial_id,
             clip_chain_id,
-            wr: &mut *wr,
+            &mut *wr,
             accumulated_scale,
             viewbox_scale,
             device_scale,
             raster_offset,
-            native_rendering: false,
             sink,
-        };
+        );
         shape.render(&mut ctx);
     }
 }
@@ -818,25 +796,27 @@ fn emit_native_gradients(
     use crate::model::style::paint_servers::PaintServer;
 
     // Only bounded shapes (rect/circle/ellipse) can be clipped natively.
+    let Some(rect) = shape.to_rect() else {
+        return false;
+    };
     let Some((bounds, _)) =
-        crate::render::renderer::rect::rect_bounds_and_radii(shape, *svg_origin)
+        crate::render::renderer::rect::rect_bounds_and_radii(&rect, *svg_origin)
     else {
         return false;
     };
 
-    let mut ctx = RenderContext {
+    let mut ctx = RenderContext::new(
         style,
-        svg_origin: *svg_origin,
+        *svg_origin,
         spatial_id,
         clip_chain_id,
-        wr: &mut *wr,
+        &mut *wr,
         accumulated_scale,
-        viewbox_scale: (1.0, 1.0),
-        device_scale: 1.0,
-        raster_offset: LayoutPoint::zero(),
-        native_rendering: false,
+        (1.0, 1.0),
+        1.0,
+        LayoutPoint::zero(),
         sink,
-    };
+    );
 
     // Every present paint must be a native-eligible gradient. A solid color or a
     // dashed stroke forces a vello fallback so paint order and dash handling
@@ -1172,19 +1152,18 @@ fn emit_leaf<T: crate::render::renderer::Render>(
         _ => clip_chain_id,
     };
 
-    let mut ctx = RenderContext {
-        style: &node.style,
-        svg_origin: *cur_origin,
-        spatial_id: cur_spatial_id,
-        clip_chain_id: effective_clip,
-        wr: &mut *wr,
-        accumulated_scale: 1.0,
+    let mut ctx = RenderContext::new(
+        &node.style,
+        *cur_origin,
+        cur_spatial_id,
+        effective_clip,
+        &mut *wr,
+        1.0,
         viewbox_scale,
         device_scale,
         raster_offset,
-        native_rendering: false,
         sink,
-    };
+    );
     item.render(&mut ctx);
 
     if pushed_filter {

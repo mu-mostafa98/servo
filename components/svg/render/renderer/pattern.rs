@@ -17,7 +17,6 @@ pub(crate) fn fill_rect_with_pattern(
     def: &PatternDef,
     bounds: LayoutRect,
     ctx: &mut RenderContext,
-    _opacity: f32,
 ) {
     if def.root.children.is_empty() {
         return;

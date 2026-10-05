@@ -26,38 +26,7 @@ pub(crate) fn build_text(
     get: &dyn Fn(&str) -> Option<String>,
     fs: f32,
 ) -> Option<TextSpan> {
-    let mut x = parse_length_list("x", get, fs);
-    let mut y = parse_length_list("y", get, fs);
-    let mut dx = parse_length_list("dx", get, fs);
-    let mut dy = parse_length_list("dy", get, fs);
-    let mut rotate = parse_rotate_list(get);
-    let text_anchor = parse_text_anchor(get);
-    let dominant_baseline = parse_dominant_baseline(get);
-    let text_length = get("textLength").and_then(|v| parse_length_token(&v, fs));
-    let length_adjust = parse_length_adjust(get);
-    let mut text = extract_direct_text(node);
-    if text.is_empty() {
-        return None;
-    }
-    let rtl = apply_rtl_direction(&mut text, &mut x, &mut y, &mut dx, &mut dy, &mut rotate, get);
-    Some(TextSpan {
-        text,
-        x,
-        y,
-        dx,
-        dy,
-        rotate,
-        text_anchor,
-        rtl,
-        dominant_baseline,
-        glyphs: vec![],
-        font_instance_key: None,
-        advance_offset: 0.0,
-        font_size: fs,
-        text_length,
-        length_adjust,
-        glyph_hscale: 1.0,
-    })
+    build_text_run(extract_direct_text(node), get, fs)
 }
 
 /// Build a text span from a raw string, for bare text-node runs inside a

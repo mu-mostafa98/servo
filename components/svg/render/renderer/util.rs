@@ -10,7 +10,7 @@ use webrender_api::units::LayoutRect;
 use webrender_api::{ClipChainId, ColorF, CommonItemProperties, SpaceAndClipInfo, SpatialId};
 
 use crate::render::renderer::render_trait::RenderContext;
-use crate::model::style::{ShapeRendering, VectorEffect};
+use crate::model::style::{ColorInterpolation, FillRule, ShapeRendering, VectorEffect};
 
 /// Epsilon threshold for treating a vector length as zero.
 /// Used to guard against division-by-zero in gradient projection
@@ -90,4 +90,22 @@ pub(crate) fn shape_rendering_value(
         Some(ShapeRendering::OptimizeSpeed) => speed,
         _ => default,
     }
+}
+
+/// The `color-interpolation` hint for the current context, defaulting to sRGB.
+pub(crate) fn color_interpolation(ctx: &RenderContext) -> ColorInterpolation {
+    ctx.style
+        .render_hints
+        .as_ref()
+        .and_then(|h| h.color_interpolation)
+        .unwrap_or(ColorInterpolation::Srgb)
+}
+
+/// The effective fill rule for the current style, defaulting to non-zero.
+pub(crate) fn fill_rule(ctx: &RenderContext) -> FillRule {
+    ctx.style
+        .fill
+        .as_ref()
+        .map(|f| f.fill_rule)
+        .unwrap_or(FillRule::NonZero)
 }

@@ -2,8 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+//! Rendering for SVG `<circle>`.
+
 use crate::render::renderer::{Render, RenderContext};
-use crate::model::element::shape::{Circle, Ellipse};
+use crate::model::element::shape::Circle;
 
 /// Renders an SVG `<circle>`.
 ///
@@ -13,13 +15,6 @@ use crate::model::element::shape::{Circle, Ellipse};
 impl Render for Circle {
     fn render(&self, ctx: &mut RenderContext) {
         // A circle is an ellipse with equal rx and ry.
-        let ellipse = Ellipse {
-            cx: self.cx,
-            cy: self.cy,
-            rx: Some(self.r),
-            ry: Some(self.r),
-            path_length: self.path_length,
-        };
-        ellipse.render(ctx);
+        self.to_ellipse().render(ctx);
     }
 }
