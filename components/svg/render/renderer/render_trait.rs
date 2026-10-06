@@ -9,6 +9,7 @@ use webrender_api::units::LayoutPoint;
 use webrender_api::{ClipChainId, DisplayListBuilder, SpatialId};
 
 use crate::RasterSink;
+use crate::model::document::Defs;
 use crate::model::element::shape::Shape;
 use crate::model::style::NodeStyle;
 
@@ -41,6 +42,9 @@ pub(crate) struct RenderContext<'a> {
     /// Inline raster sink: CPU-rasterized shapes are uploaded and pushed here in
     /// document order, preserving z-order against native primitives.
     pub sink: &'a RasterSink<'a>,
+    /// Read-only view over the definition maps, used to resolve `url(#id)`
+    /// paint-server references at render time.
+    pub defs: Defs<'a>,
 }
 
 impl<'a> RenderContext<'a> {
@@ -61,6 +65,7 @@ impl<'a> RenderContext<'a> {
         device_scale: f32,
         raster_offset: LayoutPoint,
         sink: &'a RasterSink<'a>,
+        defs: Defs<'a>,
     ) -> Self {
         Self {
             style,
@@ -74,6 +79,7 @@ impl<'a> RenderContext<'a> {
             raster_offset,
             native_rendering: false,
             sink,
+            defs,
         }
     }
 }

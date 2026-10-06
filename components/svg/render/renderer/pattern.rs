@@ -187,6 +187,7 @@ pub(crate) fn fill_rect_with_pattern(
                     raster_offset: ctx.raster_offset,
                     native_rendering: true,
                     sink: ctx.sink,
+                    defs: ctx.defs,
                 };
                 shape.render(&mut shape_ctx);
             });

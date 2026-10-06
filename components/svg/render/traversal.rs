@@ -61,6 +61,7 @@ pub fn render_svg_tree(
         .as_ref()
         .map(|v| LayoutPoint::new(v.ox - v.min_x * v.sx, v.oy - v.min_y * v.sy))
         .unwrap_or(LayoutPoint::zero());
+    let defs = tree.defs();
     render_node(
         &tree.root,
         &root_origin,
@@ -75,6 +76,7 @@ pub fn render_svg_tree(
         Transform2D::<f32, (), ()>::identity(),
         sink,
         None,
+        defs,
     );
 
     if pop_frame {
@@ -205,6 +207,7 @@ fn render_node(
     mut node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
     inherited_mask: Option<ResolvedMask>,
+    defs: Defs<'_>,
 ) {
     if !node.style.is_displayed() {
         return;
@@ -316,6 +319,7 @@ fn render_node(
         cur_viewbox_scale,
         device_scale,
         inherited_mask.as_ref(),
+        defs,
     );
 
     // Step 4 — Render the element.
@@ -338,6 +342,7 @@ fn render_node(
         clip_rect,
         node_xform,
         sink,
+        defs,
     );
 
     // Step 5 — Recurse into children.
@@ -355,6 +360,7 @@ fn render_node(
         node_xform,
         sink,
         resolved.mask,
+        defs,
     );
 
     // Step 6 — Pop transform reference frames.
@@ -384,9 +390,10 @@ fn resolve_node_effects(
     viewbox_scale: (f32, f32),
     device_scale: f32,
     inherited_mask: Option<&ResolvedMask>,
+    defs: Defs<'_>,
 ) -> ResolvedEffects {
     let (node_clip_chain, complex_clips) =
-        resolve_node_clip_path(node, cur_origin, cur_spatial_id, parent_clip_chain, wr);
+        resolve_node_clip_path(node, cur_origin, cur_spatial_id, parent_clip_chain, wr, defs);
     let mask = resolve_node_mask(
         node,
         cur_origin,
@@ -398,8 +405,9 @@ fn resolve_node_effects(
         viewbox_scale,
         device_scale,
         inherited_mask,
+        defs,
     );
-    let filter_ops = get_filter_ops(node, *cur_origin);
+    let filter_ops = get_filter_ops(node, *cur_origin, defs);
 
     ResolvedEffects {
         clip_chain: if node_clip_chain != parent_clip_chain {
@@ -432,8 +440,14 @@ fn resolve_node_mask(
     viewbox_scale: (f32, f32),
     device_scale: f32,
     inherited_mask: Option<&ResolvedMask>,
+    defs: Defs<'_>,
 ) -> Option<ResolvedMask> {
-    let Some(mask_def) = node.style.mask.as_ref().and_then(DefRef::resolved) else {
+    let Some(mask_def) = node
+        .style
+        .mask
+        .as_ref()
+        .and_then(|m| m.resolve(&defs.masks))
+    else {
         return inherited_mask.cloned();
     };
 
@@ -444,6 +458,7 @@ fn resolve_node_mask(
             node_xform,
             viewbox_scale,
             device_scale,
+            defs,
         ) {
             return Some(ResolvedMask::Raster(Rc::new(raster)));
         }
@@ -451,7 +466,7 @@ fn resolve_node_mask(
 
     // Fall back to geometric clips (objectBoundingBox masks and non-rasterizable
     // mask content).
-    build_mask_clips(node, cur_origin, cur_spatial_id, parent_clip_chain, wr)
+    build_mask_clips(node, cur_origin, cur_spatial_id, parent_clip_chain, wr, defs)
         .map(ResolvedMask::Clips)
 }
 
@@ -501,6 +516,7 @@ fn emit_element(
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
+    defs: Defs<'_>,
 ) {
     match &node.tag {
         SvgTag::Shape(shape) => emit_shape(
@@ -518,6 +534,7 @@ fn emit_element(
             clip_rect,
             node_xform,
             sink,
+            defs,
         ),
         SvgTag::Text(text) => emit_leaf(
             text,
@@ -531,6 +548,7 @@ fn emit_element(
             device_scale,
             raster_offset,
             sink,
+            defs,
         ),
         SvgTag::Image(img) => emit_leaf(
             img,
@@ -544,6 +562,7 @@ fn emit_element(
             device_scale,
             raster_offset,
             sink,
+            defs,
         ),
         SvgTag::Container(_) => {},
     }
@@ -565,6 +584,7 @@ fn emit_shape(
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
+    defs: Defs<'_>,
 ) {
     if !style.is_visible() {
         return;
@@ -596,6 +616,7 @@ fn emit_shape(
                 node_xform,
                 sink,
                 alpha_mask,
+                defs,
             );
         };
 
@@ -645,6 +666,7 @@ fn draw_shape(
     node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
     alpha_mask: Option<&MaskRaster>,
+    defs: Defs<'_>,
 ) {
     // Shapes render through one of two paths: a native path that pushes
     // WebRender primitives inline (`push_rect`, `push_border`, `push_gradient`),
@@ -656,7 +678,7 @@ fn draw_shape(
     // Pattern fills/strokes can't be rasterized by vello_cpu (it only handles
     // solid colors and gradients), so route them through the native renderer,
     // which tiles the pattern via `fill_rect_with_pattern`.
-    let has_pattern = style_has_pattern(style);
+    let has_pattern = style_has_pattern(style, defs);
     // A raster mask must be multiplied into the content's alpha at raster time,
     // so it forces the vello path (WebRender can't express it as a clip).
     let force_raster = alpha_mask.is_some();
@@ -690,8 +712,9 @@ fn draw_shape(
                 accumulated_scale,
                 wr,
                 sink,
+                defs,
             );
-            if !handled && is_native_solid_shape(shape, style) {
+            if !handled && is_native_solid_shape(shape, style, defs) {
                 // Solid paint on the four basic shapes renders as native WebRender
                 // primitives in paint order (rect/circle/ellipse → `push_rect` /
                 // `push_border`; line → `stroke_line_segment`), so they stay
@@ -707,6 +730,7 @@ fn draw_shape(
                     device_scale,
                     raster_offset,
                     sink,
+                    defs,
                 );
                 shape.render(&mut ctx);
                 handled = true;
@@ -735,6 +759,7 @@ fn draw_shape(
                     sink,
                     alpha_mask,
                     shape.path_length(),
+                    defs,
                 );
             }
         }
@@ -753,6 +778,7 @@ fn draw_shape(
         clip_rect,
         wr,
         sink,
+        defs,
     );
 
     if !has_paint || has_pattern {
@@ -770,6 +796,7 @@ fn draw_shape(
             device_scale,
             raster_offset,
             sink,
+            defs,
         );
         shape.render(&mut ctx);
     }
@@ -790,6 +817,7 @@ fn emit_native_gradients(
     accumulated_scale: f32,
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
+    defs: Defs<'_>,
 ) -> bool {
     use crate::model::style::paint_servers::PaintServer;
 
@@ -814,6 +842,7 @@ fn emit_native_gradients(
         1.0,
         LayoutPoint::zero(),
         sink,
+        defs,
     );
 
     // Every present paint must be a native-eligible gradient. A solid color or a
@@ -822,7 +851,11 @@ fn emit_native_gradients(
     let mut any_gradient = false;
 
     if let Some(fill) = &style.fill {
-        match &fill.paint_server {
+        let paint = fill
+            .paint_server
+            .as_ref()
+            .and_then(|p| defs.resolve_paint_server(p));
+        match &paint {
             Some(PaintServer::Gradient(def)) => {
                 if crate::render::renderer::gradient::resolve_gradient(
                     def.as_ref(),
@@ -845,7 +878,11 @@ fn emit_native_gradients(
         if stroke.dash_array.as_ref().is_some_and(|d| !d.is_empty()) {
             return false;
         }
-        match &stroke.paint_server {
+        let paint = stroke
+            .paint_server
+            .as_ref()
+            .and_then(|p| defs.resolve_paint_server(p));
+        match &paint {
             Some(PaintServer::Gradient(def)) => {
                 if crate::render::renderer::gradient::resolve_gradient(
                     def.as_ref(),
@@ -874,17 +911,19 @@ fn emit_native_gradients(
 }
 
 /// Whether the style uses a `<pattern>` paint server for its fill or stroke.
-fn style_has_pattern(style: &crate::model::style::NodeStyle) -> bool {
+fn style_has_pattern(style: &crate::model::style::NodeStyle, defs: Defs<'_>) -> bool {
     use crate::model::style::paint_servers::PaintServer;
     let fill_pattern = style
         .fill
         .as_ref()
         .and_then(|f| f.paint_server.as_ref())
+        .and_then(|p| defs.resolve_paint_server(p))
         .is_some_and(|p| matches!(p, PaintServer::Pattern(_)));
     let stroke_pattern = style
         .stroke
         .as_ref()
         .and_then(|s| s.paint_server.as_ref())
+        .and_then(|p| defs.resolve_paint_server(p))
         .is_some_and(|p| matches!(p, PaintServer::Pattern(_)));
     fill_pattern || stroke_pattern
 }
@@ -898,15 +937,24 @@ fn style_has_pattern(style: &crate::model::style::NodeStyle) -> bool {
 fn is_native_solid_shape(
     shape: &crate::model::element::shape::Shape,
     style: &crate::model::style::NodeStyle,
+    defs: Defs<'_>,
 ) -> bool {
     use crate::model::element::shape::Shape;
     use crate::model::style::paint_servers::PaintServer;
 
     let fill_is_solid = style.fill.as_ref().map_or(true, |f| {
-        matches!(f.paint_server, None | Some(PaintServer::Solid(_)))
+        let paint = f
+            .paint_server
+            .as_ref()
+            .and_then(|p| defs.resolve_paint_server(p));
+        matches!(paint, None | Some(PaintServer::Solid(_)))
     });
     let stroke_is_solid = style.stroke.as_ref().map_or(true, |s| {
-        matches!(s.paint_server, None | Some(PaintServer::Solid(_)))
+        let paint = s
+            .paint_server
+            .as_ref()
+            .and_then(|p| defs.resolve_paint_server(p));
+        matches!(paint, None | Some(PaintServer::Solid(_)))
     });
     if !fill_is_solid || !stroke_is_solid {
         return false;
@@ -972,6 +1020,7 @@ fn emit_markers(
     clip_rect: Option<LayoutRect>,
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
+    defs: Defs<'_>,
 ) {
     let Some(refs) = &style.markers else { return };
     let Some(vertices) = shape_vertices(shape, bez) else {
@@ -981,7 +1030,7 @@ fn emit_markers(
 
     let stroke_width = style.stroke.as_ref().map(|s| s.width.get()).unwrap_or(1.0);
 
-    if let Some(def) = refs.start.as_ref().and_then(DefRef::resolved) {
+    if let Some(def) = refs.start.as_ref().and_then(|m| m.resolve(&defs.markers)) {
         let (x, y) = vertices[0];
         let (nx, ny) = vertices[1];
         emit_marker(
@@ -999,9 +1048,10 @@ fn emit_markers(
             clip_rect,
             wr,
             sink,
+            defs,
         );
     }
-    if let Some(def) = refs.mid.as_ref().and_then(DefRef::resolved) {
+    if let Some(def) = refs.mid.as_ref().and_then(|m| m.resolve(&defs.markers)) {
         for i in 1..n - 1 {
             let (x, y) = vertices[i];
             let (nx, ny) = vertices[i + 1];
@@ -1020,10 +1070,11 @@ fn emit_markers(
                 clip_rect,
                 wr,
                 sink,
+                defs,
             );
         }
     }
-    if let Some(def) = refs.end.as_ref().and_then(DefRef::resolved) {
+    if let Some(def) = refs.end.as_ref().and_then(|m| m.resolve(&defs.markers)) {
         let (x, y) = vertices[n - 1];
         let (px, py) = vertices[n - 2];
         emit_marker(
@@ -1041,6 +1092,7 @@ fn emit_markers(
             clip_rect,
             wr,
             sink,
+            defs,
         );
     }
 }
@@ -1062,6 +1114,7 @@ fn emit_marker(
     clip_rect: Option<LayoutRect>,
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
+    defs: Defs<'_>,
 ) {
     let unit_factor = match def.marker_units {
         MarkerUnits::StrokeWidth => stroke_width,
@@ -1119,6 +1172,7 @@ fn emit_marker(
             sink,
             None,
             m_shape.path_length(),
+            defs,
         );
     });
 }
@@ -1172,6 +1226,7 @@ fn emit_leaf<T: crate::render::renderer::Render>(
     device_scale: f32,
     raster_offset: LayoutPoint,
     sink: &RasterSink,
+    defs: Defs<'_>,
 ) {
     if !node.style.is_visible() {
         return;
@@ -1196,6 +1251,7 @@ fn emit_leaf<T: crate::render::renderer::Render>(
         device_scale,
         raster_offset,
         sink,
+        defs,
     );
     item.render(&mut ctx);
 
@@ -1222,6 +1278,7 @@ fn recurse_children(
     node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
     inherited_mask: Option<ResolvedMask>,
+    defs: Defs<'_>,
 ) {
     // <defs> and <symbol> children are only rendered when referenced
     // via <use>, never directly during tree traversal.
@@ -1246,6 +1303,7 @@ fn recurse_children(
             node_xform,
             sink,
             inherited_mask.clone(),
+            defs,
         );
     }
 }

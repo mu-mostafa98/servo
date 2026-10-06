@@ -5,12 +5,12 @@
 //! Child/`<use>`/`<switch>` resolution for the SVG builder.
 //!
 //! This module walks the DOM to build a render node's children, including
-//! cloning `<use>`-referenced content and selecting `<switch>` branches. The
-//! separate post-build pass that rewrites transient `PaintServer::Ref` /
-//! `DefRef::Ref` handles into typed `Arc` handles lives in
-//! [`super::references`].
+//! cloning `<use>`-referenced content and selecting `<switch>` branches.
+//! Transient `PaintServer::Ref` / `DefRef::Ref` handles are left in the built
+//! tree and resolved at render time (see `servo_svg::document::Defs`).
 
 use std::collections::HashSet;
+use std::sync::Arc;
 
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
@@ -62,6 +62,9 @@ pub(crate) const MAX_TOTAL_NODES: usize = 1_000_000;
 /// Resolve children for a render node.
 /// For `<use>`, clones the referenced element with x/y translation.
 /// For all others, recursively builds children from DOM.
+///
+/// Returns the child list and whether any child (transitively) contains a
+/// cross-reference (`<use>`/`<textPath>`), which disables subtree caching.
 pub(crate) fn resolve_children<'dom>(
     node: ServoLayoutNode<'dom>,
     tag: &SvgTag,
@@ -73,10 +76,13 @@ pub(crate) fn resolve_children<'dom>(
     in_shadow: bool,
     vw: f32,
     vh: f32,
-) -> Vec<SvgNode> {
+) -> (Vec<Arc<SvgNode>>, bool) {
     if let SvgTag::Container(Container::Use) = tag {
-        resolve_use_children(
-            node, root_node, builder, state, node_style, node_color, vw, vh,
+        (
+            resolve_use_children(
+                node, root_node, builder, state, node_style, node_color, vw, vh,
+            ),
+            true,
         )
     } else if let SvgTag::Container(Container::Switch) = tag {
         resolve_switch_children(
@@ -88,19 +94,27 @@ pub(crate) fn resolve_children<'dom>(
         // real DOM ancestry. The effective `color` (which may come from an SVG
         // `color` presentation attribute Stylo does not see) is always threaded.
         let child_inherited = if in_shadow { Some(node_style) } else { None };
-        node.dom_children()
+        let mut has_cross_ref = false;
+        let children = node
+            .dom_children()
             .filter_map(|child| {
-                builder.build_render_node(
-                    child,
-                    root_node,
-                    state,
-                    child_inherited,
-                    Some(*node_color),
-                    vw,
-                    vh,
-                )
+                builder
+                    .build_render_node(
+                        child,
+                        root_node,
+                        state,
+                        child_inherited,
+                        Some(*node_color),
+                        vw,
+                        vh,
+                    )
+                    .map(|(subtree, flag)| {
+                        has_cross_ref |= flag;
+                        subtree
+                    })
             })
-            .collect()
+            .collect();
+        (children, has_cross_ref)
     }
 }
 
@@ -122,12 +136,12 @@ fn resolve_switch_children<'dom>(
     in_shadow: bool,
     vw: f32,
     vh: f32,
-) -> Vec<SvgNode> {
+) -> (Vec<Arc<SvgNode>>, bool) {
     // Manual inheritance only applies inside a `<use>` shadow tree; otherwise
     // Stylo already resolved inherited properties along the real DOM ancestry.
     let child_inherited = if in_shadow { Some(node_style) } else { None };
     for child in node.dom_children() {
-        if let Some(built) = builder.build_render_node(
+        if let Some((built, flag)) = builder.build_render_node(
             child,
             root_node,
             state,
@@ -136,10 +150,10 @@ fn resolve_switch_children<'dom>(
             vw,
             vh,
         ) {
-            return vec![built];
+            return (vec![built], flag);
         }
     }
-    vec![]
+    (vec![], false)
 }
 
 /// Resolve children for a `<use>` element (§5.6).
@@ -160,7 +174,7 @@ fn resolve_use_children<'dom>(
     use_color: &SvgColor,
     vw: f32,
     vh: f32,
-) -> Vec<SvgNode> {
+) -> Vec<Arc<SvgNode>> {
     let element = node.as_element().unwrap();
 
     // Extract href reference.
@@ -249,7 +263,13 @@ fn resolve_use_children<'dom>(
                 vh,
             )
         })
-        .map(|target_node| {
+        .map(|(target_node, _has_cross_ref)| {
+            // Shadow content is always freshly built (never cached) because it
+            // is produced with `inherited = Some(use_style)`, so the subtree is
+            // still uniquely owned here.
+            let target_node =
+                Arc::try_unwrap(target_node).expect("`<use>` shadow content is uniquely owned");
+
             // Shared helper: apply `<use>` x/y offset as a translate transform.
             let apply_offset = |node: &mut SvgNode| {
                 if let (Some(dx), Some(dy)) = offset {
@@ -301,14 +321,16 @@ fn resolve_use_children<'dom>(
                         }),
                         children: target_node.children,
                     };
-                    return vec![wrapper];
+                    return vec![Arc::new(wrapper)];
                 }
 
                 // No viewBox and no geometry — unwrap the children with the
                 // x/y offset applied.
                 let mut children = target_node.children;
                 for child in &mut children {
-                    apply_offset(child);
+                    if let Some(child) = Arc::get_mut(child) {
+                        apply_offset(child);
+                    }
                 }
                 return children;
             }
@@ -327,7 +349,7 @@ fn resolve_use_children<'dom>(
                 }
             }
             apply_offset(&mut cloned);
-            vec![cloned]
+            vec![Arc::new(cloned)]
         })
         .unwrap_or_default();
 

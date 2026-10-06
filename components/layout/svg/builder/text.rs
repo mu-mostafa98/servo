@@ -5,6 +5,7 @@
 //! `<text>`/`<tspan>` render-node assembly and font shaping for the SVG builder.
 
 use std::collections::HashMap;
+use std::sync::Arc;
 
 use html5ever::local_name;
 use kurbo::{ParamCurve as _, ParamCurveArclen as _, ParamCurveDeriv as _};
@@ -46,18 +47,25 @@ const ARC_LEN_ACCURACY: f64 = 0.1;
 /// A `<textPath>` child places its text along a referenced `<path>`: the run's
 /// glyphs are re-positioned to points on the path (advancing by arc length) and
 /// rotated to follow the path tangent. See [`place_on_path`].
+///
+/// Returns the built node and whether it contains a `<textPath>` run — a
+/// cross-reference that disables subtree caching, because the referenced
+/// `<path>` can change without bumping this node's version.
 pub(crate) fn build_text_node<'dom>(
     node: ServoLayoutNode<'dom>,
     context: &LayoutContext,
     css_rules: &HashMap<String, HashMap<String, String>>,
     element_ids: &HashMap<String, ServoLayoutNode<'dom>>,
-) -> Option<SvgNode> {
+) -> Option<(SvgNode, bool)> {
     let element = node.as_element()?;
     let fs: f32 = 16.0;
     let get = |name: &str| get_attr(&element, name);
 
     // Collect the ordered inline runs of this element.
     let runs = collect_text_runs(node, fs, element_ids);
+    let has_text_path = runs
+        .iter()
+        .any(|(_, _, placement)| placement.is_some());
 
     // No runs → maybe a bare single-span (e.g. <tspan> with only text, or
     // a <text> with no element children). Fall back to the legacy single-span
@@ -67,14 +75,17 @@ pub(crate) fn build_text_node<'dom>(
         shape_text_span(&mut span, node, context);
         let (style, transforms, _color) = build_style(node, context, css_rules, None, None);
         let id = extract_id(&element);
-        return Some(SvgNode {
-            id,
-            tag: SvgTag::Text(span),
-            style,
-            transforms,
-            viewport: None,
-            children: vec![],
-        });
+        return Some((
+            SvgNode {
+                id,
+                tag: SvgTag::Text(span),
+                style,
+                transforms,
+                viewport: None,
+                children: vec![],
+            },
+            false,
+        ));
     }
 
     // Single run → emit as a direct Text node (no container needed).
@@ -88,14 +99,17 @@ pub(crate) fn build_text_node<'dom>(
         }
         let (style, transforms, _color) = build_style(node, context, css_rules, None, None);
         let id = extract_id(&element);
-        return Some(SvgNode {
-            id,
-            tag: SvgTag::Text(span),
-            style,
-            transforms,
-            viewport: None,
-            children: vec![],
-        });
+        return Some((
+            SvgNode {
+                id,
+                tag: SvgTag::Text(span),
+                style,
+                transforms,
+                viewport: None,
+                children: vec![],
+            },
+            has_text_path,
+        ));
     }
 
     // Multiple runs → a Container::Text with one Text child per run.
@@ -139,14 +153,14 @@ pub(crate) fn build_text_node<'dom>(
             let (run_style, run_transforms, _color) =
                 build_style(run_node, context, css_rules, None, None);
             let run_id = extract_id(&run_node.as_element()?);
-            children.push(SvgNode {
+            children.push(Arc::new(SvgNode {
                 id: run_id,
                 tag: SvgTag::Text(span),
                 style: run_style,
                 transforms: run_transforms,
                 viewport: None,
                 children: vec![],
-            });
+            }));
             continue;
         }
         span.advance_offset = pen;
@@ -168,26 +182,29 @@ pub(crate) fn build_text_node<'dom>(
         let (run_style, run_transforms, _color) =
             build_style(run_node, context, css_rules, None, None);
         let run_id = extract_id(&run_node.as_element()?);
-        children.push(SvgNode {
+        children.push(Arc::new(SvgNode {
             id: run_id,
             tag: SvgTag::Text(span),
             style: run_style,
             transforms: run_transforms,
             viewport: None,
             children: vec![],
-        });
+        }));
     }
 
     let (style, transforms, _color) = build_style(node, context, css_rules, None, None);
     let id = extract_id(&element);
-    Some(SvgNode {
-        id,
-        tag: SvgTag::Container(Container::Text),
-        style,
-        transforms,
-        viewport: None,
-        children,
-    })
+    Some((
+        SvgNode {
+            id,
+            tag: SvgTag::Container(Container::Text),
+            style,
+            transforms,
+            viewport: None,
+            children,
+        },
+        has_text_path,
+    ))
 }
 
 /// An ordered inline run within a `<text>`: the span data, the DOM node it

@@ -207,6 +207,11 @@ pub struct LayoutThread {
     // image data, or an error if the image cache failed to load/decode the image.
     resolved_images_cache: Arc<RwLock<HashMap<ServoUrl, CachedImageOrError>>>,
 
+    /// A persistent cache of clean SVG render subtrees, reused across reflows
+    /// for incremental SVG build (Level 2; see [`crate::svg::SvgSubtreeCache`]).
+    #[cfg(feature = "servo-svg")]
+    svg_subtree_cache: Arc<RwLock<crate::svg::SvgSubtreeCache>>,
+
     /// The executors for paint worklets.
     registered_painters: RegisteredPaintersImpl,
 
@@ -862,6 +867,8 @@ impl LayoutThread {
             paint_api: config.paint_api,
             stylist: Stylist::new(device, QuirksMode::NoQuirks),
             resolved_images_cache: Default::default(),
+            #[cfg(feature = "servo-svg")]
+            svg_subtree_cache: Default::default(),
             debug: opts::get().debug.clone(),
             previously_highlighted_dom_node: Cell::new(None),
             paint_timing_handler: Default::default(),
@@ -1068,6 +1075,8 @@ impl LayoutThread {
             origin: reflow_request.origin.clone(),
             image_cache: self.image_cache.clone(),
             resolved_images_cache: self.resolved_images_cache.clone(),
+            #[cfg(feature = "servo-svg")]
+            svg_subtree_cache: self.svg_subtree_cache.clone(),
             pending_images: Mutex::default(),
             pending_rasterization_images: Mutex::default(),
             pending_svg_elements_for_serialization: Mutex::default(),

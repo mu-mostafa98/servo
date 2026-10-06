@@ -144,11 +144,15 @@ pub(crate) fn stroke_line_segment(x1: f32, y1: f32, x2: f32, y2: f32, ctx: &mut 
         },
     );
 
-    if let Some(PaintServer::Solid(svg_color)) = &stroke.paint_server {
+    let paint = stroke
+        .paint_server
+        .as_ref()
+        .and_then(|p| ctx.defs.resolve_paint_server(p));
+    if let Some(PaintServer::Solid(svg_color)) = &paint {
         let mut color = to_colorf(svg_color);
         color.a *= stroke.opacity.get() * ctx.style.opacity.get();
         emit_rotated_rects_for_segment(len, half_w, color, stroke, line_spatial_id, ctx);
-    } else if let Some(PaintServer::Gradient(def)) = &stroke.paint_server {
+    } else if let Some(PaintServer::Gradient(def)) = &paint {
         let def = Arc::clone(def);
         if let Some(dash_array) = &stroke.dash_array &&
             !dash_array.is_empty()
@@ -249,6 +253,7 @@ fn fill_gradient_stroke(
         raster_offset: ctx.raster_offset,
         native_rendering: ctx.native_rendering,
         sink: ctx.sink,
+        defs: ctx.defs,
     };
     gradient::fill_rect_with_gradient(
         def,
@@ -377,7 +382,11 @@ pub(crate) fn stroke_rect(
         return;
     };
 
-    if let Some(PaintServer::Solid(svg_color)) = &stroke.paint_server {
+    let paint = stroke
+        .paint_server
+        .as_ref()
+        .and_then(|p| ctx.defs.resolve_paint_server(p));
+    if let Some(PaintServer::Solid(svg_color)) = &paint {
         let mut color = to_colorf(svg_color);
         color.a *= stroke.opacity.get() * ctx.style.opacity.get();
         let stroke_width = effective_stroke_width(ctx, stroke.width.get());
@@ -409,7 +418,7 @@ pub(crate) fn stroke_rect(
         });
         let common = make_common_props(bounds, ctx.spatial_id, ctx.clip_chain_id);
         ctx.wr.push_border(&common, bounds, widths, details);
-    } else if let Some(PaintServer::Gradient(def)) = &stroke.paint_server {
+    } else if let Some(PaintServer::Gradient(def)) = &paint {
         let def = Arc::clone(def);
         // Gradient border: clip a full-rect gradient fill to a band between the
         // outer shape outline (with radii for circles/ellipses) and the inset
@@ -523,7 +532,11 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
 
     // Gradient stroke: evaluate at each segment's midpoint so the gradient
     // spans the whole shape, not each segment independently.
-    if let Some(PaintServer::Gradient(def)) = &stroke.paint_server {
+    let paint = stroke
+        .paint_server
+        .as_ref()
+        .and_then(|p| ctx.defs.resolve_paint_server(p));
+    if let Some(PaintServer::Gradient(def)) = &paint {
         let def = Arc::clone(def);
         return stroke_polyline_gradient(pts, ctx, adjusted_width, def.as_ref());
     }
@@ -563,6 +576,7 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
         raster_offset: ctx.raster_offset,
         native_rendering: ctx.native_rendering,
         sink: ctx.sink,
+        defs: ctx.defs,
     };
 
     for pair in pts.windows(2) {

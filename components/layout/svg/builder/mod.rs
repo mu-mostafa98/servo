@@ -8,12 +8,15 @@
 //! (CSS rules, definition maps) through chained methods, then produces the
 //! final tree via [`build`](SvgTreeBuilder::build).
 //!
-//! This module is split into five layers:
+//! This module is split into four layers:
 //! - [`mod`] — orchestration: the builder struct and tag dispatch.
 //! - [`resolve`] — child/`<use>`/`<switch>` resolution.
-//! - [`references`] — the post-build reference-resolution pass.
 //! - [`text`] — `<text>`/`<tspan>` node assembly and font shaping.
 //! - [`image`] — `<image>` element assembly and image-key resolution.
+//!
+//! References (`url(#id)`) are left as transient `PaintServer::Ref` /
+//! `DefRef::Ref` values in the built tree and resolved at render time (see
+//! `servo_svg::document::Defs`), so the tree is immutable after build.
 
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -21,6 +24,7 @@ use std::sync::Arc;
 use html5ever::local_name;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
+use servo_arc::Arc as ServoArc;
 use servo_svg::document::*;
 use servo_svg::element::*;
 use servo_svg::resource::ResourceKey;
@@ -43,7 +47,6 @@ use crate::svg::primitives::viewport::{
 use crate::svg::style::build_style;
 
 mod image;
-mod references;
 mod resolve;
 mod text;
 
@@ -82,6 +85,14 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         let element_ids = build_element_id_map(node);
         let root_viewport = extract_viewport_info(node, root_width, root_height);
         let (root_vw, root_vh) = viewport_reference(&root_viewport);
+        // If the class-based CSS rules changed since the last reflow, every
+        // cached subtree under this root is out of date; clear it before any
+        // lookup so this build starts from a consistent view.
+        context
+            .image_resolver
+            .svg_subtree_cache
+            .write()
+            .ensure_css_rules(node.opaque(), &css_rules);
         SvgTreeBuilder {
             root_node: node,
             context,
@@ -95,7 +106,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
 
     /// Build the complete [`SvgTree`].
     pub(crate) fn build(self) -> Option<Arc<SvgTree>> {
-        let root = self.build_render_node(
+        let (root, _has_cross_ref) = self.build_render_node(
             self.root_node,
             self.root_node,
             &mut resolve::ResolveState::default(),
@@ -104,10 +115,13 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             self.root_vw,
             self.root_vh,
         )?;
+        // The root `<svg>` is never cached, so its freshly built subtree is
+        // still uniquely owned here.
+        let root = Arc::try_unwrap(root).expect("the root `<svg>` is never cached");
         let viewport = self.root_viewport.clone();
         let definitions = collect_definitions(self.root_node, &self);
 
-        let mut tree = SvgTree {
+        let tree = SvgTree {
             root,
             viewport,
             gradients: definitions.gradients,
@@ -118,14 +132,18 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             markers: definitions.markers,
         };
 
-        // Resolve transient `PaintServer::Ref { id, .. }` / `DefRef::Ref(id)`
-        // values into typed `Arc` handles now that the definition maps are collected.
-        references::resolve_references(&mut tree);
-
+        // References (`PaintServer::Ref` / `DefRef::Ref`) are left unresolved
+        // here and bound to definitions at render time (see
+        // `servo_svg::document::Defs`), so the built tree is immutable.
         Some(Arc::new(tree))
     }
 
     /// Recursively build a render node from a DOM node.
+    ///
+    /// Returns the built subtree and whether it (or any descendant) contains a
+    /// cross-reference — a `<use>` or `<textPath>` — which makes it unsafe to
+    /// cache, because the referenced target can change without bumping this
+    /// node's version.
     fn build_render_node(
         &self,
         node: ServoLayoutNode<'dom>,
@@ -135,7 +153,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         inherited_color: Option<SvgColor>,
         vw: f32,
         vh: f32,
-    ) -> Option<SvgNode> {
+    ) -> Option<(Arc<SvgNode>, bool)> {
         // Global expansion budget: cap the total work of a single build so that
         // pathological `<use>` graphs — exponential "billion laughs" fan-out,
         // quadratic blow-up, command amplification — terminate (§5.6; README
@@ -146,6 +164,50 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         }
         state.nodes += 1;
 
+        // Only clean, non-root, non-shadow subtrees are cacheable. The root is
+        // excluded because it is returned by value as `SvgTree::root`; shadow
+        // subtrees (`inherited = Some`) are excluded because they carry a
+        // per-`<use>` inherited style and are never shared between uses.
+        let is_root = node == root_node;
+        let cacheable = inherited.is_none() && !is_root;
+
+        // The computed style is part of the cache key: it catches inherited-style
+        // changes from an ancestor (or an external stylesheet) that a version bump
+        // alone would miss. Computed once here and reused for both lookup and store.
+        let computed_style = self.computed_style(node);
+
+        if cacheable {
+            if let Some(hit) =
+                self.lookup_cached(node, inherited_color, vw, vh, computed_style.as_ref())
+            {
+                return Some((hit, false));
+            }
+        }
+
+        let (built, has_cross_ref) =
+            self.build_node(node, root_node, state, inherited, inherited_color, vw, vh)?;
+
+        let subtree = Arc::new(built);
+        if cacheable && !has_cross_ref {
+            self.store_cached(node, inherited_color, vw, vh, computed_style, Arc::clone(&subtree));
+        }
+        Some((subtree, has_cross_ref))
+    }
+
+    /// Build a render node from a DOM node (no caching). This is the shared
+    /// body of the build: tag dispatch, style construction, and child
+    /// resolution. See [`SvgTreeBuilder::build_render_node`] for the cache
+    /// wrapper around it.
+    fn build_node(
+        &self,
+        node: ServoLayoutNode<'dom>,
+        root_node: ServoLayoutNode<'dom>,
+        state: &mut resolve::ResolveState,
+        inherited: Option<&NodeStyle>,
+        inherited_color: Option<SvgColor>,
+        vw: f32,
+        vh: f32,
+    ) -> Option<(SvgNode, bool)> {
         let element = node.as_element()?;
 
         // §5.7 conditional processing: an element whose `requiredExtensions`,
@@ -197,7 +259,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             inherited_color,
         );
         let id = extract_id(&element);
-        let children = resolve::resolve_children(
+        let (children, has_cross_ref) = resolve::resolve_children(
             node,
             &tag,
             root_node,
@@ -210,21 +272,88 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             vh,
         );
 
-        Some(SvgNode {
-            id,
-            tag,
-            style,
-            transforms,
-            viewport,
-            children,
-        })
+        Some((
+            SvgNode {
+                id,
+                tag,
+                style,
+                transforms,
+                viewport,
+                children,
+            },
+            has_cross_ref,
+        ))
+    }
+
+    /// The computed style of `node`, used as the style-change half of the cache
+    /// key. `None` for nodes that have no style data (unstyled nodes), which the
+    /// cache treats as equal only to another `None`.
+    fn computed_style(
+        &self,
+        node: ServoLayoutNode<'dom>,
+    ) -> Option<ServoArc<style::properties::ComputedValues>> {
+        let element = node.as_element()?;
+        if element.style_data().is_none() {
+            return None;
+        }
+        Some(node.style(&self.context.style_context))
+    }
+
+    /// Look up a cached subtree for `node`, if one is still fresh.
+    fn lookup_cached(
+        &self,
+        node: ServoLayoutNode<'dom>,
+        inherited_color: Option<SvgColor>,
+        vw: f32,
+        vh: f32,
+        computed_style: Option<&ServoArc<style::properties::ComputedValues>>,
+    ) -> Option<Arc<SvgNode>> {
+        self.context
+            .image_resolver
+            .svg_subtree_cache
+            .read()
+            .lookup(
+                self.root_node.opaque(),
+                node.opaque(),
+                node.inclusive_descendants_version(),
+                vw,
+                vh,
+                inherited_color,
+                computed_style,
+            )
+    }
+
+    /// Store a freshly built subtree for `node`.
+    fn store_cached(
+        &self,
+        node: ServoLayoutNode<'dom>,
+        inherited_color: Option<SvgColor>,
+        vw: f32,
+        vh: f32,
+        computed_style: Option<ServoArc<style::properties::ComputedValues>>,
+        subtree: Arc<SvgNode>,
+    ) {
+        self.context
+            .image_resolver
+            .svg_subtree_cache
+            .write()
+            .store(
+                self.root_node.opaque(),
+                node.opaque(),
+                node.inclusive_descendants_version(),
+                vw,
+                vh,
+                inherited_color,
+                computed_style,
+                subtree,
+            );
     }
 
     /// Build a single definition-content node, used by the definition parsers
     /// to build clip-path / pattern / mask / marker children into full render
     /// nodes (recursively handling `<g>`, `<use>`, `<text>`, nested `<defs>`)
     /// instead of flattening them to a flat list of shapes.
-    pub(crate) fn build_def_content(&self, node: ServoLayoutNode<'dom>) -> Option<SvgNode> {
+    pub(crate) fn build_def_content(&self, node: ServoLayoutNode<'dom>) -> Option<Arc<SvgNode>> {
         self.build_render_node(
             node,
             self.root_node,
@@ -234,6 +363,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             self.root_vw,
             self.root_vh,
         )
+        .map(|(subtree, _has_cross_ref)| subtree)
     }
 
     /// The computed CSS `color` of an element, resolved to an [`SvgColor`].

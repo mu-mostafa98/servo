@@ -17,7 +17,7 @@ use webrender_api::{
     FilterOpGraphPictureReference,
 };
 
-use crate::model::document::{DefRef, FeCompositeKind, FilterPrimitive};
+use crate::model::document::{Defs, FeCompositeKind, FilterPrimitive};
 use crate::model::element::{SvgNode, SvgTag};
 
 /// A graph node with a single input referencing the given buffer index.
@@ -110,8 +110,16 @@ fn node_local_bounds(node: &SvgNode) -> LayoutRect {
 /// filter stacking context and the primitives live). The filter region is
 /// computed in the node's local space and then translated by `origin` so the
 /// subregions line up with where the node is actually drawn.
-pub(crate) fn get_filter_ops(node: &SvgNode, origin: LayoutPoint) -> Option<Vec<FilterOp>> {
-    let filter_def = node.style.filter.as_ref().and_then(DefRef::resolved)?;
+pub(crate) fn get_filter_ops(
+    node: &SvgNode,
+    origin: LayoutPoint,
+    defs: Defs<'_>,
+) -> Option<Vec<FilterOp>> {
+    let filter_def = node
+        .style
+        .filter
+        .as_ref()
+        .and_then(|f| f.resolve(&defs.filters))?;
     if filter_def.primitives.is_empty() {
         return None;
     }

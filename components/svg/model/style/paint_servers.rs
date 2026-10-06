@@ -29,11 +29,13 @@ use crate::model::units::Id;
 /// A paint server reference — a solid color, a gradient, a pattern, a
 /// `url(#id)` reference, or a `context-fill`/`context-stroke` keyword.
 ///
-/// [`PaintServer::Ref`] is a transient build-time state: the layout layer emits
-/// it while only the string `url(#id)` is known, then the resolve pass rewrites
-/// it into a typed [`PaintServer::Gradient`]/[`PaintServer::Pattern`] `Arc`
-/// handle (or its fallback color) once the definition maps are collected. No
-/// `Ref` value survives past build time.
+/// [`PaintServer::Ref`] is resolved at render time (see
+/// [`crate::model::document::Defs::resolve_paint_server`]): the layout layer
+/// stores only the string `url(#id)`, and the renderer binds it to a
+/// [`PaintServer::Gradient`]/[`PaintServer::Pattern`] `Arc` handle (or its
+/// fallback color) against the current definition maps. Keeping the raw
+/// reference in the immutable tree is what lets clean subtrees be shared
+/// across incremental reflows.
 #[derive(Debug, Clone)]
 pub enum PaintServer {
     /// Solid color fill/stroke.

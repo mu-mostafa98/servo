@@ -396,6 +396,7 @@ fn scanline_fill_triangle(
                             raster_offset: ctx.raster_offset,
                             native_rendering: ctx.native_rendering,
                             sink: ctx.sink,
+                            defs: ctx.defs,
                         };
                         shape.render(&mut shape_ctx);
                     });

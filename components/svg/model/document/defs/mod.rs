@@ -17,6 +17,7 @@
 //! (<https://www.w3.org/TR/filter-effects-1/>), and paint servers — gradients
 //! and patterns (<https://www.w3.org/TR/SVG2/pservers.html>).
 
+use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::model::units::Id;
@@ -38,20 +39,19 @@ pub use self::marker::{MarkerDef, MarkerOrient, MarkerUnits};
 pub use self::mask::{MaskContentUnits, MaskDef, MaskType};
 pub use self::pattern::{PatternContentUnits, PatternDef, PatternLength, PatternUnits};
 
-/// A reference to a definition (clip-path, mask, filter, or marker) that
-/// starts as a raw `#id` string during tree building and is rewritten to a
-/// typed [`Arc`] handle once the definition maps are collected, during the
-/// post-build resolve pass.
+/// A reference to a definition (clip-path, mask, filter, or marker): either a
+/// raw `#id` string ([`DefRef::Ref`]) or an already-bound typed [`Arc`] handle
+/// ([`DefRef::Resolved`]).
 ///
-/// This mirrors the transient `PaintServer::Ref` variant: the build layer
-/// emits [`DefRef::Ref`] and the resolve pass rewrites it to
-/// [`DefRef::Resolved`], so render-time consumers only ever see a resolved
-/// handle.
+/// References are resolved at render time via [`DefRef::resolve`] against the
+/// definition maps on [`crate::model::document::SvgTree`]. The tree is never
+/// mutated after build, which is what lets clean subtrees be shared across
+/// incremental reflows.
 #[derive(Debug)]
 pub enum DefRef<T> {
     /// Raw `#id` (without the `#` prefix), not yet resolved.
     Ref(Id),
-    /// Typed definition handle, resolved after build.
+    /// Typed definition handle, already bound (no lookup needed).
     Resolved(Arc<T>),
 }
 
@@ -70,12 +70,15 @@ impl<T> Clone for DefRef<T> {
 }
 
 impl<T> DefRef<T> {
-    /// The resolved definition, or `None` if this reference is still
-    /// unresolved (which should not happen after the resolve pass).
-    pub fn resolved(&self) -> Option<&T> {
+    /// Resolve this reference against a definition map at render time.
+    ///
+    /// An already-`Resolved` handle is passed through; a [`DefRef::Ref`]
+    /// looks up its `id` in `map` and returns `None` when the reference is
+    /// broken (SVG 2: the effect is omitted).
+    pub fn resolve<'a>(&'a self, map: &'a HashMap<String, Arc<T>>) -> Option<&'a T> {
         match self {
             DefRef::Resolved(def) => Some(def.as_ref()),
-            DefRef::Ref(_) => None,
+            DefRef::Ref(id) => map.get(id.as_str()).map(Arc::as_ref),
         }
     }
 }

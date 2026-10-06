@@ -23,6 +23,7 @@ pub use self::viewport::{
     AspectAlign, AspectRatio, MeetOrSlice, SvgViewport, ViewBox, ViewportInfo,
 };
 use crate::model::element::{SvgNode, SvgTreeVisitor, SvgTreeVisitorMut};
+use crate::model::style::paint_servers::PaintServer;
 
 /// The SVG render tree — a tree of [`SvgNode`]s plus viewport info
 /// and gradient/clip-path/pattern/mask/filter definitions collected from `<defs>`.
@@ -53,5 +54,60 @@ impl SvgTree {
     /// Visit every node in the tree with a mutable visitor.
     pub fn visit_mut(&mut self, visitor: &mut dyn SvgTreeVisitorMut) {
         self.root.accept_mut(visitor);
+    }
+
+    /// A read-only [`Defs`] view over this tree's definition maps, for
+    /// render-time reference resolution.
+    pub fn defs(&self) -> Defs<'_> {
+        Defs {
+            gradients: &self.gradients,
+            clip_paths: &self.clip_paths,
+            patterns: &self.patterns,
+            masks: &self.masks,
+            filters: &self.filters,
+            markers: &self.markers,
+        }
+    }
+}
+
+/// A read-only view over a tree's definition maps. Handed to the renderer so
+/// it can resolve `url(#id)` references (paint servers and clip-path/mask/
+/// filter/marker references) at render time without mutating the tree.
+///
+/// The tree is immutable after build; only [`Defs`]-backed lookups bind
+/// references to definitions, so a cached subtree always renders against the
+/// current definitions.
+#[derive(Clone, Copy)]
+pub struct Defs<'a> {
+    pub gradients: &'a HashMap<String, Arc<GradientDef>>,
+    pub clip_paths: &'a HashMap<String, Arc<ClipPathDef>>,
+    pub patterns: &'a HashMap<String, Arc<PatternDef>>,
+    pub masks: &'a HashMap<String, Arc<MaskDef>>,
+    pub filters: &'a HashMap<String, Arc<FilterDef>>,
+    pub markers: &'a HashMap<String, Arc<MarkerDef>>,
+}
+
+impl Defs<'_> {
+    /// Resolve a [`PaintServer`] reference against the definition maps.
+    ///
+    /// A [`PaintServer::Ref`] binding to a gradient or pattern becomes a typed
+    /// [`Arc`] handle; one binding to neither uses its fallback color; a broken
+    /// reference with no fallback resolves to `None` (SVG 2: no paint is
+    /// rendered). Every other paint server passes through unchanged.
+    pub fn resolve_paint_server(&self, paint: &PaintServer) -> Option<PaintServer> {
+        match paint {
+            PaintServer::Ref { id, fallback } => {
+                if let Some(gradient) = self.gradients.get(id.as_str()) {
+                    Some(PaintServer::Gradient(Arc::clone(gradient)))
+                } else if let Some(pattern) = self.patterns.get(id.as_str()) {
+                    Some(PaintServer::Pattern(Arc::clone(pattern)))
+                } else if let Some(color) = fallback {
+                    Some(PaintServer::Solid(*color))
+                } else {
+                    None
+                }
+            },
+            other => Some(other.clone()),
+        }
     }
 }

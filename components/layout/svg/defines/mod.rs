@@ -120,14 +120,14 @@ fn find_elements_by_tag<'dom>(
 fn collect_def_content<'dom, 'a>(
     node: ServoLayoutNode<'dom>,
     builder: &SvgTreeBuilder<'dom, 'a>,
-) -> Vec<SvgNode> {
+) -> Vec<Arc<SvgNode>> {
     node.dom_children()
         .filter_map(|child| builder.build_def_content(child))
         .collect()
 }
 
 /// Wrap definition children in a synthetic `<g>` root node.
-fn build_def_content_root(children: Vec<SvgNode>) -> SvgNode {
+fn build_def_content_root(children: Vec<Arc<SvgNode>>) -> SvgNode {
     SvgNode {
         id: None,
         tag: SvgTag::Container(Container::Group),

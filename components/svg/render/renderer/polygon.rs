@@ -62,6 +62,7 @@ impl Render for Polygon {
             ctx.sink,
             None,
             self.path_length,
+            ctx.defs,
         );
     }
 }

@@ -13,7 +13,7 @@
 use webrender_api::units::LayoutPoint;
 use webrender_api::{ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId};
 
-use crate::model::document::{ClipPathUnits, DefRef};
+use crate::model::document::{ClipPathUnits, Defs};
 use crate::model::element::SvgNode;
 use crate::render::geometry::{ClipGeometry, ComplexClip};
 use crate::render::renderer::clip_chain_option;
@@ -41,8 +41,14 @@ pub(crate) fn resolve_node_clip_path(
     spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,
     wr: &mut DisplayListBuilder,
+    defs: Defs<'_>,
 ) -> (ClipChainId, Vec<ComplexClip>) {
-    let Some(clip_def) = node.style.clip_path.as_ref().and_then(DefRef::resolved) else {
+    let Some(clip_def) = node
+        .style
+        .clip_path
+        .as_ref()
+        .and_then(|c| c.resolve(&defs.clip_paths))
+    else {
         return (parent_clip_chain, Vec::new());
     };
 
@@ -104,8 +110,13 @@ pub(crate) fn build_mask_clips(
     spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,
     wr: &mut DisplayListBuilder,
+    defs: Defs<'_>,
 ) -> Option<Vec<MaskClip>> {
-    let mask_def = node.style.mask.as_ref().and_then(DefRef::resolved)?;
+    let mask_def = node
+        .style
+        .mask
+        .as_ref()
+        .and_then(|m| m.resolve(&defs.masks))?;
 
     let mut masks = Vec::new();
     mask_def.root.for_each_shape_leaf(&mut |shape, _style| {

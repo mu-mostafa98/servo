@@ -33,6 +33,9 @@ use uuid::Uuid;
 use webrender_api::ImageKey;
 use webrender_api::units::{DeviceIntSize, DeviceSize};
 
+#[cfg(feature = "servo-svg")]
+use crate::svg::SvgSubtreeCache;
+
 pub(crate) type CachedImageOrError = Result<CachedImage, ResolveImageError>;
 
 pub(crate) struct LayoutContext<'a> {
@@ -138,6 +141,11 @@ pub(crate) struct ImageResolver {
     // A cache that maps image resources used in CSS (e.g as the `url()` value
     // for `background-image` or `content` property) to the final resolved image data.
     pub resolved_images_cache: Arc<RwLock<HashMap<ServoUrl, CachedImageOrError>>>,
+
+    /// A persistent cache of clean SVG render subtrees, reused across reflows
+    /// for incremental SVG build (see [`crate::svg::SvgSubtreeCache`]).
+    #[cfg(feature = "servo-svg")]
+    pub svg_subtree_cache: Arc<RwLock<SvgSubtreeCache>>,
 
     /// The current animation timeline value used to properly initialize animating images.
     pub animation_timeline_value: f64,

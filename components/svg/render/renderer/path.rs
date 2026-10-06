@@ -13,7 +13,7 @@ use vello_cpu::peniko::{ColorStop, ColorStops, Extend, Gradient};
 use webrender_api::DisplayListBuilder;
 use webrender_api::units::{LayoutPoint, LayoutRect};
 
-use crate::model::document::{GradientDef, GradientUnits, SpreadMethod};
+use crate::model::document::{Defs, GradientDef, GradientUnits, SpreadMethod};
 use crate::model::element::shape::Path;
 use crate::model::style::paint_servers::PaintServer;
 use crate::model::style::{FillParams, FillRule, StrokeParams};
@@ -106,6 +106,7 @@ impl Render for Path {
             ctx.sink,
             None,
             self.path_length,
+            ctx.defs,
         );
     }
 }
@@ -142,6 +143,7 @@ pub(crate) fn rasterize_bez(
     sink: &RasterSink,
     alpha_mask: Option<&crate::render::effects::mask::MaskRaster>,
     path_length: Option<f32>,
+    defs: Defs<'_>,
 ) {
     // Approximate scalar scale of the accumulated node transform, used to keep
     // stroke widths/dashes proportional. `sqrt(|det|)` is exact for uniform
@@ -246,6 +248,7 @@ pub(crate) fn rasterize_bez(
             viewbox_scale,
             &bbox,
             node_opacity,
+            defs,
         ) {
             context.set_fill_rule(match f.fill_rule {
                 FillRule::NonZero => vello_cpu::peniko::Fill::NonZero,
@@ -264,6 +267,7 @@ pub(crate) fn rasterize_bez(
             viewbox_scale,
             &bbox,
             node_opacity,
+            defs,
         ) {
             apply_paint(&mut context, scale_paint(paint, scale as f64));
             let mut vello_stroke =
@@ -438,6 +442,7 @@ pub(crate) fn resolve_fill_paint(
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
     node_opacity: f32,
+    defs: Defs<'_>,
 ) -> Option<ResolvedPaint> {
     resolve_paint(
         &fill.paint_server,
@@ -447,6 +452,7 @@ pub(crate) fn resolve_fill_paint(
         h,
         viewbox_scale,
         bbox,
+        defs,
     )
 }
 
@@ -458,6 +464,7 @@ fn resolve_stroke_paint(
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
     node_opacity: f32,
+    defs: Defs<'_>,
 ) -> Option<ResolvedPaint> {
     resolve_paint(
         &stroke.paint_server,
@@ -467,6 +474,7 @@ fn resolve_stroke_paint(
         h,
         viewbox_scale,
         bbox,
+        defs,
     )
 }
 
@@ -480,8 +488,11 @@ fn resolve_paint(
     h: f32,
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
+    defs: Defs<'_>,
 ) -> Option<ResolvedPaint> {
-    match paint_server {
+    // Bind any `url(#id)` reference to a definition now, at render time.
+    let resolved = paint_server.as_ref().and_then(|p| defs.resolve_paint_server(p));
+    match &resolved {
         Some(PaintServer::Gradient(def)) => Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
             def.as_ref(),
             w,
@@ -493,6 +504,8 @@ fn resolve_paint(
             color,
             paint_opacity * node_opacity,
         ))),
+        // Pattern content is tiled by the native renderer; `context-fill`/
+        // `context-stroke` and broken references rasterize as no paint.
         Some(PaintServer::Pattern(_)) |
         Some(PaintServer::Ref { .. }) |
         Some(PaintServer::ContextFill) |

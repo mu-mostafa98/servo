@@ -1364,7 +1364,7 @@ fn make_simple_tree() -> SvgTree {
         style: NodeStyle::default(),
         transforms: vec![],
         viewport: None,
-        children: vec![child1, child2],
+        children: vec![Arc::new(child1), Arc::new(child2)],
     };
     SvgTree {
         root,

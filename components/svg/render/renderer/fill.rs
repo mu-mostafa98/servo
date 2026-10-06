@@ -37,7 +37,12 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
     let orig_clip = ctx.clip_chain_id;
     ctx.clip_chain_id = clip;
 
-    match &fill.paint_server {
+    // Bind `url(#id)` references to definitions at render time.
+    let paint = fill
+        .paint_server
+        .as_ref()
+        .and_then(|p| ctx.defs.resolve_paint_server(p));
+    match &paint {
         Some(PaintServer::Gradient(def)) => {
             let def = Arc::clone(def);
             gradient::fill_rect_with_gradient(def.as_ref(), bounds, ctx, opacity);
@@ -58,8 +63,8 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
             );
             ctx.wr.push_rect(&common, bounds, color);
         },
-        // A transient `Ref` should already have been resolved before render;
-        // `context-fill`/`context-stroke` render as no paint (no context element).
+        // Broken references and `context-fill`/`context-stroke` render as no
+        // paint (no context element).
         Some(PaintServer::Ref { .. }) |
         Some(PaintServer::ContextFill) |
         Some(PaintServer::ContextStroke) |
@@ -91,7 +96,12 @@ pub(crate) fn fill_polygon(
     let bw = bounds.size().width.max(1.0);
     let bh = bounds.size().height.max(1.0);
 
-    match &fill.paint_server {
+    // Bind `url(#id)` references to definitions at render time.
+    let paint = fill
+        .paint_server
+        .as_ref()
+        .and_then(|p| ctx.defs.resolve_paint_server(p));
+    match &paint {
         Some(PaintServer::Gradient(def)) => {
             let def = Arc::clone(def);
             match def.as_ref() {

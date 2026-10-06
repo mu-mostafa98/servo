@@ -18,6 +18,8 @@ pub mod text;
 pub use self::image::SvgImage;
 pub use self::shape::{Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle, Shape};
 pub use self::text::{DominantBaseline, LengthAdjust, ShapedGlyph, TextAnchor, TextSpan};
+use std::sync::Arc;
+
 use crate::model::document::SvgViewport;
 use crate::model::style::NodeStyle;
 use crate::model::transform::TransformOp;
@@ -36,7 +38,9 @@ pub struct SvgNode {
     /// `None` for the root `<svg>` (handled via [`SvgTree::viewport`]) and
     /// for every non-`<svg>` node.
     pub viewport: Option<SvgViewport>,
-    pub children: Vec<SvgNode>,
+    /// Child nodes, `Arc`-shared so clean subtrees can be reused across
+    /// incremental reflows by the layout-thread subtree cache.
+    pub children: Vec<Arc<SvgNode>>,
 }
 
 /// The kind of content an [`SvgNode`] carries.
@@ -122,12 +126,18 @@ impl SvgNode {
     }
 
     /// Accept a mutable visitor, traversing the tree in pre-order.
+    ///
+    /// Mutable traversal requires every subtree to be uniquely owned, so it is
+    /// only valid on a freshly built tree (before the incremental-build cache
+    /// has shared any of its subtrees).
     pub fn accept_mut(&mut self, visitor: &mut dyn SvgTreeVisitorMut) {
         let decision = visitor.visit_node_mut(self);
         match decision {
             VisitDecision::Continue => {
                 for child in &mut self.children {
-                    child.accept_mut(visitor);
+                    Arc::get_mut(child)
+                        .expect("mutable traversal requires uniquely owned subtrees")
+                        .accept_mut(visitor);
                 }
             },
             VisitDecision::SkipChildren => {},
