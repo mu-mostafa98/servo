@@ -84,15 +84,24 @@ keyed by `OpaqueNode`. A subtree is reused when, for the DOM node that produced 
   catches inherited-style changes from an ancestor, external-stylesheet rules,
   and pseudo-class flips,
 - the viewport reference dimensions (`vw`/`vh`) match,
-- the inherited `currentColor` matches, and
+- the inherited `currentColor` matches,
+- for a `<use>`, its referenced target's version + computed style match
+  ([`CrossRefFingerprint`](mod.rs)), and
 - the root's class-based `<style>` rules match (a `<style>` edit clears the
   whole root's cache).
 
-Subtrees that contain a cross-reference (`<use>` or `<textPath>`) are never
-cached, because a referenced target can change without bumping the referencing
-node's version. `url(#id)` paint/clip/mask/filter/marker references stay
-transient and resolve against the freshly rebuilt definition maps at render
-time, so cached subtrees still see definition changes.
+Each key is checked in turn and a [`CacheMiss`](mod.rs) reason reports which one
+mismatched (`SubtreeDirty` / `Viewport` / `CurrentColor` / `ComputedStyle` /
+`ReferencedTarget`).
+
+Cross-references are triaged by a [`CrossRef`](builder/mod.rs) state threaded up
+from the leaves: `None` caches normally, `Simple` (a single `<use>` whose target
+is itself cross-reference-free) caches keyed on the target's fingerprint, and
+`Complex` (a `<textPath>`, or a `<use>` whose target contains a cross-reference,
+or an ancestor of one) is never cached — a referenced target can change without
+bumping the referencing node's version. `url(#id)` paint/clip/mask/filter/marker
+references stay transient and resolve against the freshly rebuilt definition maps
+at render time, so cached subtrees still see definition changes.
 
 **Note on style invalidation.** The computed-style `Arc::ptr_eq` check is what
 makes the cache correct in the face of *inherited* style changes: an edit like
