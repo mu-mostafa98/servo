@@ -8,9 +8,11 @@ use std::sync::Arc;
 use embedder_traits::UntrustedNodeAddress;
 use euclid::Size2D;
 use fonts::FontContext;
+#[cfg(not(feature = "servo-svg"))]
+use layout_api::LayoutNode;
 use layout_api::{
-    AnimatingImages, IFrameSizes, LayoutImageDestination, LayoutNode, PendingImage,
-    PendingImageState, PendingRasterizationImage,
+    AnimatingImages, IFrameSizes, LayoutImageDestination, PendingImage, PendingImageState,
+    PendingRasterizationImage,
 };
 use net_traits::image_cache::{
     Image as CachedImage, ImageCache, ImageCacheResult, ImageOrMetadataAvailable, PendingImageId,
@@ -18,6 +20,7 @@ use net_traits::image_cache::{
 use net_traits::request::InternalRequest;
 use parking_lot::{Mutex, RwLock};
 use pixels::RasterImage;
+#[cfg(not(feature = "servo-svg"))]
 use script::layout_dom::ServoLayoutNode;
 use servo_base::id::PainterId;
 use servo_url::{ImmutableOrigin, ServoUrl};
@@ -29,6 +32,9 @@ use style_traits::DevicePixel;
 use uuid::Uuid;
 use webrender_api::ImageKey;
 use webrender_api::units::{DeviceIntSize, DeviceSize};
+
+#[cfg(feature = "servo-svg")]
+use crate::svg::SvgSubtreeCache;
 
 pub(crate) type CachedImageOrError = Result<CachedImage, ResolveImageError>;
 
@@ -135,6 +141,11 @@ pub(crate) struct ImageResolver {
     // A cache that maps image resources used in CSS (e.g as the `url()` value
     // for `background-image` or `content` property) to the final resolved image data.
     pub resolved_images_cache: Arc<RwLock<HashMap<ServoUrl, CachedImageOrError>>>,
+
+    /// A persistent cache of clean SVG render subtrees, reused across reflows
+    /// for incremental SVG build (see [`crate::svg::SvgSubtreeCache`]).
+    #[cfg(feature = "servo-svg")]
+    pub svg_subtree_cache: Arc<RwLock<SvgSubtreeCache>>,
 
     /// The current animation timeline value used to properly initialize animating images.
     pub animation_timeline_value: f64,
@@ -289,6 +300,7 @@ impl ImageResolver {
         }
     }
 
+    #[cfg(not(feature = "servo-svg"))]
     pub(crate) fn queue_svg_element_for_serialization(&self, element: ServoLayoutNode<'_>) {
         self.pending_svg_elements_for_serialization
             .lock()

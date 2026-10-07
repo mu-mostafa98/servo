@@ -16,6 +16,8 @@ use servo_arc::Arc as ServoArc;
 use servo_base::id::PipelineId;
 use servo_base::print_tree::PrintTree;
 use servo_base::text::Utf32CodeUnits;
+#[cfg(feature = "servo-svg")]
+use servo_svg::document::SvgTree;
 use servo_url::ServoUrl;
 use style::Zero;
 use style::properties::ComputedValues;
@@ -127,6 +129,9 @@ pub(crate) struct ImageFragment {
     pub natural_width: Option<Au>,
     /// The intrinsic (natural) height of the image, if known.
     pub natural_height: Option<Au>,
+    #[cfg(feature = "servo-svg")]
+    #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
+    pub svg_render_tree: Option<Arc<SvgTree>>,
     /// Whether or not this image is selected.
     #[conditional_malloc_size_of]
     pub selected: Arc<AtomicBool>,

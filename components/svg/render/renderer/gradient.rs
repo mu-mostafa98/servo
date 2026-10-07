@@ -1,0 +1,786 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+//! Software gradient rendering — fills shapes with interpolated color bands.
+//!
+//! Uses the **Strategy** pattern: a shared loop structure ([`render_gradient`])
+//! delegates the per-pixel `t` computation to a [`GradientStrategy`] impl.
+//! This eliminates the duplicated while-while loops between linear and radial
+//! gradients.  Adding a new gradient type (e.g. conic, mesh) requires only a
+//! new strategy — no structural code changes.
+
+use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
+use webrender_api::{ColorF, CommonItemProperties, SpaceAndClipInfo};
+
+use crate::model::document::{GradientDef, GradientStop, GradientUnits, SpreadMethod};
+use crate::model::style::{ColorInterpolation, ColorRendering};
+use crate::model::transform::TransformOp;
+use crate::render::renderer::{
+    RenderContext, ZERO_LENGTH_EPSILON, color_interpolation, shape_rendering_value, to_colorf,
+};
+
+// ======================= Shared color math =======================
+
+/// Linearly interpolate between two colors in sRGB space.
+pub(crate) fn lerp_color(a: &ColorF, b: &ColorF, t: f32) -> ColorF {
+    ColorF::new(
+        a.r + (b.r - a.r) * t,
+        a.g + (b.g - a.g) * t,
+        a.b + (b.b - a.b) * t,
+        a.a + (b.a - a.a) * t,
+    )
+}
+
+/// Convert a single sRGB channel to linear light.
+fn srgb_to_linear(c: f32) -> f32 {
+    if c <= 0.04045 {
+        c / 12.92
+    } else {
+        ((c + 0.055) / 1.055).powf(2.4)
+    }
+}
+
+/// Convert a linear light channel back to sRGB.
+fn linear_to_srgb(c: f32) -> f32 {
+    let c = c.clamp(0.0, 1.0);
+    if c <= 0.0031308 {
+        c * 12.92
+    } else {
+        1.055 * c.powf(1.0 / 2.4) - 0.055
+    }
+}
+
+/// Linearly interpolate between two colors in linear RGB space.
+///
+/// Per the SVG 2 spec, `color-interpolation: linearRGB` uses linear light
+/// color interpolation, which produces perceptually smoother gradients.
+pub(crate) fn lerp_color_linear(a: &ColorF, b: &ColorF, t: f32) -> ColorF {
+    let ar = srgb_to_linear(a.r);
+    let ag = srgb_to_linear(a.g);
+    let ab = srgb_to_linear(a.b);
+    let br = srgb_to_linear(b.r);
+    let bg = srgb_to_linear(b.g);
+    let bb = srgb_to_linear(b.b);
+    ColorF::new(
+        linear_to_srgb(ar + (br - ar) * t),
+        linear_to_srgb(ag + (bg - ag) * t),
+        linear_to_srgb(ab + (bb - ab) * t),
+        a.a + (b.a - a.a) * t,
+    )
+}
+
+/// Evaluate the color at position `t` (0.0–1.0) along the gradient stop list.
+///
+/// Uses sRGB interpolation by default, or linear RGB when `color_interpolation`
+/// is [`ColorInterpolation::LinearRGB`].
+pub(crate) fn color_at_t(stops: &[GradientStop], t: f32) -> ColorF {
+    color_at_t_with_space(stops, t, ColorInterpolation::Srgb)
+}
+
+/// Normalize `t` according to the spread method.
+fn normalize_t(t: f32, spread: SpreadMethod) -> f32 {
+    match spread {
+        SpreadMethod::Pad => t.clamp(0.0, 1.0),
+        SpreadMethod::Reflect => {
+            let t = t.abs();
+            let cycle = t as i32;
+            if cycle % 2 == 0 {
+                t.fract()
+            } else {
+                1.0 - t.fract()
+            }
+        },
+        SpreadMethod::Repeat => {
+            let t = t % 1.0;
+            if t < 0.0 { t + 1.0 } else { t }
+        },
+    }
+}
+
+/// Evaluate the color at position `t` using the specified interpolation space.
+pub fn color_at_t_with_space(stops: &[GradientStop], t: f32, space: ColorInterpolation) -> ColorF {
+    color_at_t_with_spread(stops, t, space, SpreadMethod::Pad)
+}
+
+/// Evaluate the color at position `t` using the specified interpolation and spread.
+pub(crate) fn color_at_t_with_spread(
+    stops: &[GradientStop],
+    t: f32,
+    space: ColorInterpolation,
+    spread: SpreadMethod,
+) -> ColorF {
+    let t = normalize_t(t, spread);
+    if stops.is_empty() {
+        return ColorF::new(0.0, 0.0, 0.0, 1.0);
+    }
+    if stops.len() == 1 || t <= stops[0].offset {
+        return to_colorf(&stops[0].color);
+    }
+    if t >= stops[stops.len() - 1].offset {
+        return to_colorf(&stops[stops.len() - 1].color);
+    }
+    let lerp: fn(&ColorF, &ColorF, f32) -> ColorF = match space {
+        ColorInterpolation::Srgb | ColorInterpolation::Auto => lerp_color,
+        ColorInterpolation::LinearRGB => lerp_color_linear,
+    };
+    for i in 1..stops.len() {
+        if t < stops[i].offset {
+            let range = stops[i].offset - stops[i - 1].offset;
+            let local_t = if range > 0.0 {
+                (t - stops[i - 1].offset) / range
+            } else {
+                0.0
+            };
+            return lerp(
+                &to_colorf(&stops[i - 1].color),
+                &to_colorf(&stops[i].color),
+                local_t,
+            );
+        }
+    }
+    to_colorf(&stops[stops.len() - 1].color)
+}
+
+/// Project `(x, y)` onto a gradient line from `(gx1, gy1)` to `(gx2, gy2)`
+/// and return the parametric position `t` in 0..1. Returns 0.0 for zero-length lines.
+pub(crate) fn gradient_projection(x: f32, y: f32, gx1: f32, gy1: f32, gx2: f32, gy2: f32) -> f32 {
+    let dx = gx2 - gx1;
+    let dy = gy2 - gy1;
+    let len_sq = dx * dx + dy * dy;
+    if len_sq > ZERO_LENGTH_EPSILON {
+        ((x - gx1) * dx + (y - gy1) * dy) / len_sq
+    } else {
+        0.0
+    }
+}
+
+/// The SVG "normalized diagonal" of a reference box: `sqrt((w² + h²) / 2)`.
+///
+/// Radial-gradient percentages on `r` (and `fr`) resolve against this value,
+/// *not* the width, height, or their max (§13.2.2). For a square box it equals
+/// the side length; for a non-square box it is the geometric mean of the axes,
+/// so `r="50%"` yields a circle rather than an ellipse.
+pub(crate) fn normalized_diagonal(w: f32, h: f32) -> f32 {
+    ((w * w + h * h) / 2.0).sqrt()
+}
+
+// ======================= Strategy trait =======================
+
+/// Strategy for computing the parametric position `t` at a pixel `(x, y)`
+/// during gradient rendering.
+trait GradientStrategy {
+    /// The gradient stops for color interpolation.
+    fn stops(&self) -> &[GradientStop];
+    /// Cell size for this gradient type, influenced by shape-rendering hints.
+    fn cell_size(&self, ctx: &RenderContext) -> f32;
+    /// Compute the parametric position `t` in 0..1 at pixel `(x, y)` within
+    /// the bounding box `(bw, bh)`.
+    fn compute_t(&self, x: f32, y: f32, bw: f32, bh: f32) -> f32;
+}
+
+// ======================= Shared render loop =======================
+
+/// Fill `bounds` with a gradient using the given strategy.
+fn render_gradient(
+    bounds: LayoutRect,
+    ctx: &mut RenderContext,
+    opacity: f32,
+    strategy: &dyn GradientStrategy,
+    color_space: ColorInterpolation,
+    spread: SpreadMethod,
+) {
+    let bw = bounds.size().width;
+    let bh = bounds.size().height;
+    let cell = strategy.cell_size(ctx);
+    let stops = strategy.stops();
+
+    let mut y = 0.0;
+    while y < bh {
+        let mut x = 0.0;
+        while x < bw {
+            let t = strategy.compute_t(x, y, bw, bh);
+            let mut c = color_at_t_with_spread(stops, t, color_space, spread);
+            c.a *= opacity;
+            let cw = cell.min(bw - x);
+            let ch = cell.min(bh - y);
+            draw_cell(&bounds, x, y, cw, ch, c, ctx);
+            x += cell;
+        }
+        y += cell;
+    }
+}
+
+/// Adjust gradient cell size based on the `color-rendering` hint.
+fn apply_color_rendering_scale(base: f32, ctx: &RenderContext) -> f32 {
+    match ctx
+        .style
+        .render_hints
+        .as_ref()
+        .and_then(|h| h.color_rendering)
+    {
+        Some(ColorRendering::OptimizeSpeed) => base * 2.0,
+        Some(ColorRendering::OptimizeQuality) => base * 0.5,
+        _ => base,
+    }
+}
+
+// ======================= Linear strategy =======================
+
+struct LinearStrategy<'a> {
+    stops: &'a [GradientStop],
+    gx1: f32,
+    gy1: f32,
+    gx2: f32,
+    gy2: f32,
+    /// Offset to add to (x, y) pixel positions before computing gradient
+    /// projection.  This converts render_gradient's relative coordinates
+    /// into the absolute coordinate space that the gradient line uses.
+    offset_x: f32,
+    offset_y: f32,
+}
+
+impl GradientStrategy for LinearStrategy<'_> {
+    fn stops(&self) -> &[GradientStop] {
+        self.stops
+    }
+
+    fn cell_size(&self, ctx: &RenderContext) -> f32 {
+        let base = shape_rendering_value(ctx, 2.0, 8.0, 4.0);
+        apply_color_rendering_scale(base, ctx)
+    }
+
+    fn compute_t(&self, x: f32, y: f32, _bw: f32, _bh: f32) -> f32 {
+        gradient_projection(
+            x + self.offset_x,
+            y + self.offset_y,
+            self.gx1,
+            self.gy1,
+            self.gx2,
+            self.gy2,
+        )
+    }
+}
+
+// ======================= Radial strategy =======================
+
+struct RadialStrategy<'a> {
+    stops: &'a [GradientStop],
+    fx: f32,
+    fy: f32,
+    /// Outer radius (absolute) of the end circle.
+    r: f32,
+    /// Focal radius (`fr`): points within this distance of the focal point
+    /// render the first stop color as a solid disk (§13.2.2).
+    fr: f32,
+    /// Offset to add to (x, y) pixel positions before computing distance
+    /// from the focal point.  Converts relative coords to absolute.
+    offset_x: f32,
+    offset_y: f32,
+}
+
+impl GradientStrategy for RadialStrategy<'_> {
+    fn stops(&self) -> &[GradientStop] {
+        self.stops
+    }
+
+    fn cell_size(&self, ctx: &RenderContext) -> f32 {
+        let base = shape_rendering_value(ctx, 1.0, 4.0, 2.0);
+        apply_color_rendering_scale(base, ctx)
+    }
+
+    fn compute_t(&self, x: f32, y: f32, _bw: f32, _bh: f32) -> f32 {
+        let dx = (x + self.offset_x) - self.fx;
+        let dy = (y + self.offset_y) - self.fy;
+        let d = (dx * dx + dy * dy).sqrt();
+        let denom = self.r - self.fr;
+        if d <= self.fr {
+            0.0
+        } else if denom <= 0.0 {
+            1.0
+        } else {
+            ((d - self.fr) / denom).min(1.0)
+        }
+    }
+}
+// ======================= Public API =======================
+
+/// Build the affine matrix for a gradient's `gradientTransform` op list.
+/// SVG positive angle = CW rotation (y-down coords).
+fn gradient_transform_matrix(ops: &[TransformOp]) -> euclid::Transform2D<f32, (), ()> {
+    use euclid::Transform2D;
+    let mut m = Transform2D::<f32, (), ()>::identity();
+    for op in ops {
+        match op {
+            TransformOp::Translate(tx, ty) => {
+                m = m.then(&Transform2D::translation(*tx, *ty));
+            },
+            TransformOp::Scale(sx, sy) => {
+                m = m.then(&Transform2D::scale(*sx, *sy));
+            },
+            TransformOp::Rotate(a, cx, cy) => {
+                let rad = a.to_radians();
+                let (s, c) = rad.sin_cos();
+                // CW in SVG y-down coords: [c, s; -s, c]
+                let r: Transform2D<f32, (), ()> = Transform2D::new(c, s, -s, c, 0.0, 0.0);
+                m = m
+                    .then(&Transform2D::translation(-*cx, -*cy))
+                    .then(&r)
+                    .then(&Transform2D::translation(*cx, *cy));
+            },
+            TransformOp::SkewX(a) => {
+                let rad = a.to_radians();
+                m = m.then(&Transform2D::new(1.0, 0.0, rad.tan(), 1.0, 0.0, 0.0));
+            },
+            TransformOp::SkewY(a) => {
+                let rad = a.to_radians();
+                m = m.then(&Transform2D::new(1.0, rad.tan(), 0.0, 1.0, 0.0, 0.0));
+            },
+            TransformOp::Matrix(v) => {
+                m = m.then(&Transform2D::new(v[0], v[1], v[2], v[3], v[4], v[5]));
+            },
+        }
+    }
+    m
+}
+
+/// Apply gradientTransform ops to a gradient point in the gradient's
+/// own coordinate space.
+fn apply_grad_transform(gx: &mut f32, gy: &mut f32, ops: &[TransformOp]) {
+    let p = gradient_transform_matrix(ops).transform_point(euclid::Point2D::new(*gx, *gy));
+    *gx = p.x;
+    *gy = p.y;
+}
+
+pub(crate) fn fill_rect_with_gradient(
+    def: &GradientDef,
+    bounds: LayoutRect,
+    ctx: &mut RenderContext,
+    opacity: f32,
+) {
+    match def {
+        GradientDef::Linear(lg) => {
+            if !push_linear_native(lg, bounds, ctx, opacity) {
+                render_linear(lg, bounds, ctx, opacity);
+            }
+        },
+        GradientDef::Radial(rg) => {
+            if !push_radial_native(rg, bounds, ctx, opacity) {
+                render_radial(rg, bounds, ctx, opacity);
+            }
+        },
+    }
+}
+
+// ======================= Native gradient resolution =======================
+
+/// Map an SVG spread method to a WebRender `ExtendMode`, or `None` for
+/// `reflect` (which WebRender cannot express natively).
+fn spread_to_extend(spread: SpreadMethod) -> Option<webrender_api::ExtendMode> {
+    match spread {
+        SpreadMethod::Pad => Some(webrender_api::ExtendMode::Clamp),
+        SpreadMethod::Repeat => Some(webrender_api::ExtendMode::Repeat),
+        SpreadMethod::Reflect => None,
+    }
+}
+
+/// Convert SVG gradient stops to WebRender stops, folding `opacity` into each
+/// stop's alpha (native gradient items have no item-level opacity). Returns
+/// `None` for `linearRGB` interpolation, which WebRender does not support
+/// (it always interpolates in sRGB).
+fn stops_to_webrender(
+    stops: &[GradientStop],
+    color_interpolation: ColorInterpolation,
+    opacity: f32,
+) -> Option<Vec<webrender_api::GradientStop>> {
+    match color_interpolation {
+        ColorInterpolation::LinearRGB => None,
+        ColorInterpolation::Srgb | ColorInterpolation::Auto => Some(
+            stops
+                .iter()
+                .map(|s| {
+                    let mut c = to_colorf(&s.color);
+                    c.a *= opacity;
+                    webrender_api::GradientStop {
+                        offset: s.offset,
+                        color: c,
+                    }
+                })
+                .collect(),
+        ),
+    }
+}
+
+/// Whether two [`crate::model::document::GradientLength`]s denote the same
+/// position in gradient space. `Number` and `Percentage` are distinct units, so
+/// a mixed pair conservatively reports inequality (fallback).
+fn gradient_lengths_equal(
+    a: crate::model::document::GradientLength,
+    b: crate::model::document::GradientLength,
+) -> bool {
+    use crate::model::document::GradientLength;
+    match (a, b) {
+        (GradientLength::Number(x), GradientLength::Number(y)) => (x - y).abs() < 1e-6,
+        (GradientLength::Percentage(x), GradientLength::Percentage(y)) => (x - y).abs() < 1e-6,
+        _ => false,
+    }
+}
+
+/// Resolve a linear gradient's endpoints to absolute layout coordinates,
+/// applying `gradientTransform` in gradient coordinate space.
+fn resolve_linear_geometry(
+    lg: &crate::model::document::LinearGradient,
+    bounds: LayoutRect,
+    ctx: &RenderContext,
+) -> (LayoutPoint, LayoutPoint) {
+    let bw = bounds.size().width;
+    let bh = bounds.size().height;
+    let bx = bounds.min.x;
+    let by = bounds.min.y;
+
+    let (gx1, gy1, gx2, gy2) = match lg.units {
+        GradientUnits::ObjectBoundingBox => {
+            let mut x1 = lg.x1.to_object_bbox();
+            let mut y1 = lg.y1.to_object_bbox();
+            let mut x2 = lg.x2.to_object_bbox();
+            let mut y2 = lg.y2.to_object_bbox();
+            apply_grad_transform(&mut x1, &mut y1, &lg.transform);
+            apply_grad_transform(&mut x2, &mut y2, &lg.transform);
+            (bx + x1 * bw, by + y1 * bh, bx + x2 * bw, by + y2 * bh)
+        },
+        GradientUnits::UserSpaceOnUse => {
+            let mut x1 = lg.x1.to_user_space(bw);
+            let mut y1 = lg.y1.to_user_space(bh);
+            let mut x2 = lg.x2.to_user_space(bw);
+            let mut y2 = lg.y2.to_user_space(bh);
+            apply_grad_transform(&mut x1, &mut y1, &lg.transform);
+            apply_grad_transform(&mut x2, &mut y2, &lg.transform);
+            (
+                ctx.svg_origin.x + x1,
+                ctx.svg_origin.y + y1,
+                ctx.svg_origin.x + x2,
+                ctx.svg_origin.y + y2,
+            )
+        },
+    };
+    (LayoutPoint::new(gx1, gy1), LayoutPoint::new(gx2, gy2))
+}
+
+/// Resolve a radial gradient's center and (possibly elliptical) radius in
+/// absolute layout coordinates, applying `gradientTransform`. Returns `None`
+/// for a non-positive radius.
+fn resolve_radial_center_radius(
+    rg: &crate::model::document::RadialGradient,
+    bounds: LayoutRect,
+    ctx: &RenderContext,
+) -> Option<(LayoutPoint, LayoutSize)> {
+    let bw = bounds.size().width;
+    let bh = bounds.size().height;
+    let bx = bounds.min.x;
+    let by = bounds.min.y;
+
+    // Center and radius in the gradient's own coordinate space, after applying
+    // gradientTransform (which may turn the circle into an ellipse).
+    let m = gradient_transform_matrix(&rg.transform);
+    // `r` is a radial distance, so its percentage resolves against the
+    // normalized diagonal (a circle), unlike `cx`/`cy` which are positional
+    // (x against width, y against height).
+    let nd = normalized_diagonal(bw, bh);
+    let (cx, cy, r) = match rg.units {
+        GradientUnits::ObjectBoundingBox => (
+            rg.cx.to_object_bbox(),
+            rg.cy.to_object_bbox(),
+            rg.r.to_object_bbox(),
+        ),
+        GradientUnits::UserSpaceOnUse => (
+            rg.cx.to_user_space(bw),
+            rg.cy.to_user_space(bh),
+            rg.r.to_user_space(nd),
+        ),
+    };
+    let center = m.transform_point(euclid::Point2D::new(cx, cy));
+    let rx = m.transform_vector(euclid::Vector2D::new(r, 0.0)).length();
+    let ry = m.transform_vector(euclid::Vector2D::new(0.0, r)).length();
+
+    let (cx_abs, cy_abs, rx_abs, ry_abs) = match rg.units {
+        GradientUnits::ObjectBoundingBox => {
+            (bx + center.x * bw, by + center.y * bh, rx * nd, ry * nd)
+        },
+        GradientUnits::UserSpaceOnUse => (
+            ctx.svg_origin.x + center.x,
+            ctx.svg_origin.y + center.y,
+            rx,
+            ry,
+        ),
+    };
+
+    if rx_abs <= 0.0 || ry_abs <= 0.0 {
+        return None;
+    }
+    Some((
+        LayoutPoint::new(cx_abs, cy_abs),
+        LayoutSize::new(rx_abs, ry_abs),
+    ))
+}
+
+/// Resolve a radial gradient's focal point (`fx`, `fy`) to absolute layout
+/// coordinates, applying `gradientTransform` like [`resolve_radial_center_radius`].
+fn resolve_radial_focal(
+    rg: &crate::model::document::RadialGradient,
+    bounds: LayoutRect,
+    ctx: &RenderContext,
+) -> LayoutPoint {
+    let bw = bounds.size().width;
+    let bh = bounds.size().height;
+    let bx = bounds.min.x;
+    let by = bounds.min.y;
+
+    let m = gradient_transform_matrix(&rg.transform);
+    let (fx, fy) = match rg.units {
+        GradientUnits::ObjectBoundingBox => (rg.fx.to_object_bbox(), rg.fy.to_object_bbox()),
+        GradientUnits::UserSpaceOnUse => (rg.fx.to_user_space(bw), rg.fy.to_user_space(bh)),
+    };
+    let p = m.transform_point(euclid::Point2D::new(fx, fy));
+    match rg.units {
+        GradientUnits::ObjectBoundingBox => LayoutPoint::new(bx + p.x * bw, by + p.y * bh),
+        GradientUnits::UserSpaceOnUse => {
+            LayoutPoint::new(ctx.svg_origin.x + p.x, ctx.svg_origin.y + p.y)
+        },
+    }
+}
+
+/// Resolve a gradient definition to a native WebRender gradient, or `None` when
+/// it cannot be expressed natively (reflect spread, offset-focal radial, or
+/// linearRGB interpolation).
+pub(crate) fn resolve_gradient(
+    def: &GradientDef,
+    bounds: LayoutRect,
+    ctx: &RenderContext,
+    opacity: f32,
+) -> Option<crate::GradientKind> {
+    let color_interpolation = color_interpolation(ctx);
+    match def {
+        GradientDef::Linear(lg) => {
+            let extend_mode = spread_to_extend(lg.spread_method)?;
+            let stops = stops_to_webrender(&lg.stops, color_interpolation, opacity)?;
+            let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
+            Some(crate::GradientKind::Linear {
+                start,
+                end,
+                stops,
+                extend_mode,
+            })
+        },
+        GradientDef::Radial(rg) => {
+            // WebRender radial gradients are concentric only (no focal offset),
+            // and have no focal radius (`fr`), so fall back when either is set.
+            if !gradient_lengths_equal(rg.fx, rg.cx) ||
+                !gradient_lengths_equal(rg.fy, rg.cy) ||
+                !rg.fr.is_zero()
+            {
+                return None;
+            }
+            let extend_mode = spread_to_extend(rg.spread_method)?;
+            let stops = stops_to_webrender(&rg.stops, color_interpolation, opacity)?;
+            let (center, radius) = resolve_radial_center_radius(rg, bounds, ctx)?;
+            Some(crate::GradientKind::Radial {
+                center,
+                radius,
+                stops,
+                extend_mode,
+            })
+        },
+    }
+}
+
+/// Push a native linear gradient, returning `false` when it can't be expressed
+/// natively (caller falls back to the software renderer).
+fn push_linear_native(
+    lg: &crate::model::document::LinearGradient,
+    bounds: LayoutRect,
+    ctx: &mut RenderContext,
+    opacity: f32,
+) -> bool {
+    let Some(extend_mode) = spread_to_extend(lg.spread_method) else {
+        return false;
+    };
+    let Some(stops) = stops_to_webrender(&lg.stops, color_interpolation(ctx), opacity) else {
+        return false;
+    };
+    let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
+    // WebRender stores gradient geometry relative to the primitive origin (it
+    // adds `bounds.min` back in the shader), while `resolve_*_geometry` returns
+    // absolute layout coordinates. Subtract the primitive origin to avoid the
+    // double offset.
+    let origin = bounds.min.to_vector();
+    let start = start - origin;
+    let end = end - origin;
+    let gradient = ctx.wr.create_gradient(start, end, stops, extend_mode);
+    let common = CommonItemProperties::new(
+        bounds,
+        SpaceAndClipInfo {
+            spatial_id: ctx.spatial_id,
+            clip_chain_id: ctx.clip_chain_id,
+        },
+    );
+    ctx.wr.push_gradient(
+        &common,
+        bounds,
+        gradient,
+        bounds.size(),
+        LayoutSize::new(0.0, 0.0),
+    );
+    true
+}
+
+/// Push a native radial gradient, returning `false` when it can't be expressed
+/// natively (caller falls back to the software renderer).
+fn push_radial_native(
+    rg: &crate::model::document::RadialGradient,
+    bounds: LayoutRect,
+    ctx: &mut RenderContext,
+    opacity: f32,
+) -> bool {
+    if !gradient_lengths_equal(rg.fx, rg.cx) ||
+        !gradient_lengths_equal(rg.fy, rg.cy) ||
+        !rg.fr.is_zero()
+    {
+        return false;
+    }
+    let Some(extend_mode) = spread_to_extend(rg.spread_method) else {
+        return false;
+    };
+    let Some(stops) = stops_to_webrender(&rg.stops, color_interpolation(ctx), opacity) else {
+        return false;
+    };
+    let Some((center, radius)) = resolve_radial_center_radius(rg, bounds, ctx) else {
+        return false;
+    };
+    // See `push_linear_native`: WebRender adds `bounds.min` back in the shader,
+    // so store the center relative to the primitive origin.
+    let center = center - bounds.min.to_vector();
+    let gradient = ctx
+        .wr
+        .create_radial_gradient(center, radius, stops, extend_mode);
+    let common = CommonItemProperties::new(
+        bounds,
+        SpaceAndClipInfo {
+            spatial_id: ctx.spatial_id,
+            clip_chain_id: ctx.clip_chain_id,
+        },
+    );
+    ctx.wr.push_radial_gradient(
+        &common,
+        bounds,
+        gradient,
+        bounds.size(),
+        LayoutSize::new(0.0, 0.0),
+    );
+    true
+}
+
+/// Render a linear gradient.
+/// gradientTransform is applied in gradient coordinate space (normed bbox or user space).
+fn render_linear(
+    lg: &crate::model::document::LinearGradient,
+    bounds: LayoutRect,
+    ctx: &mut RenderContext,
+    opacity: f32,
+) {
+    let bx = bounds.min.x;
+    let by = bounds.min.y;
+
+    let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
+
+    let strategy = LinearStrategy {
+        stops: &lg.stops,
+        gx1: start.x,
+        gy1: start.y,
+        gx2: end.x,
+        gy2: end.y,
+        offset_x: bx,
+        offset_y: by,
+    };
+    render_gradient(
+        bounds,
+        ctx,
+        opacity,
+        &strategy,
+        color_interpolation(ctx),
+        lg.spread_method,
+    );
+}
+
+/// Render a radial gradient.
+fn render_radial(
+    rg: &crate::model::document::RadialGradient,
+    bounds: LayoutRect,
+    ctx: &mut RenderContext,
+    opacity: f32,
+) {
+    let Some((_center, radius)) = resolve_radial_center_radius(rg, bounds, ctx) else {
+        return;
+    };
+
+    // Honor an offset focal point (fx/fy); `center` coincides with the focal
+    // only when the gradient is concentric.
+    let focal = resolve_radial_focal(rg, bounds, ctx);
+
+    // The software cell-banding renderer only supports a concentric circle, so
+    // collapse an elliptical radius to its larger axis.
+    let r = radius.width.max(radius.height);
+
+    // Resolve the focal radius (`fr`) to the same absolute space as `r`. It is
+    // a radial distance, so its percentage resolves against the normalized
+    // diagonal. (gradientTransform scaling of `fr` is not modelled here; it is
+    // kept as a scalar, matching the circle-collapse approximation above.)
+    let nd = normalized_diagonal(bounds.size().width, bounds.size().height);
+    let fr = match rg.units {
+        GradientUnits::ObjectBoundingBox => rg.fr.to_object_bbox().max(0.0) * nd,
+        GradientUnits::UserSpaceOnUse => rg.fr.to_user_space(nd).max(0.0),
+    };
+
+    let strategy = RadialStrategy {
+        stops: &rg.stops,
+        fx: focal.x,
+        fy: focal.y,
+        r,
+        fr,
+        offset_x: bounds.min.x,
+        offset_y: bounds.min.y,
+    };
+    render_gradient(
+        bounds,
+        ctx,
+        opacity,
+        &strategy,
+        color_interpolation(ctx),
+        rg.spread_method,
+    );
+}
+
+// ======================= Helpers =======================
+
+/// Draw a single cell at (x,y) with the given color.
+fn draw_cell(
+    bounds: &LayoutRect,
+    x: f32,
+    y: f32,
+    w: f32,
+    h: f32,
+    color: ColorF,
+    ctx: &mut RenderContext,
+) {
+    let rect = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(bounds.min.x + x, bounds.min.y + y),
+        LayoutSize::new(w, h),
+    );
+    let common = CommonItemProperties::new(
+        rect,
+        SpaceAndClipInfo {
+            spatial_id: ctx.spatial_id,
+            clip_chain_id: ctx.clip_chain_id,
+        },
+    );
+    ctx.wr.push_rect(&common, rect, color);
+}

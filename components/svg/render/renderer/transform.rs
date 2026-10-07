@@ -1,0 +1,223 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+//! SVG transform WebRender integration.
+//!
+//! Applies each [`TransformOp`](crate::model::transform::TransformOp) operation
+//! (translate, scale, rotate) onto a WebRender display list builder by
+//! pushing reference frames.
+
+use euclid::Transform2D;
+use webrender_api::units::{LayoutPoint, LayoutTransform};
+use webrender_api::{
+    DisplayListBuilder, PropertyBinding, ReferenceFrameKind, SpatialId, TransformStyle,
+};
+
+use crate::model::transform::TransformOp;
+
+// ------------------- WebRender integration ------------------
+
+/// Result of applying a single transform operation.
+pub(crate) struct TransformResult {
+    pub child_origin: LayoutPoint,
+    pub child_spatial_id: SpatialId,
+    /// Whether a reference frame was pushed (caller must pop).
+    pub pushed_frame: bool,
+}
+
+/// Apply a transform operation onto a WebRender display list builder.
+///
+/// Returns the new origin and spatial id for child elements, and whether
+/// a reference frame was pushed (caller must call `wr.pop_reference_frame()`).
+pub(crate) fn apply_transform_op(
+    op: &TransformOp,
+    origin: LayoutPoint,
+    spatial_id: SpatialId,
+    wr: &mut DisplayListBuilder,
+) -> TransformResult {
+    match op {
+        TransformOp::Translate(tx, ty) => {
+            // Translate is a simple coordinate shift — no reference frame.
+            TransformResult {
+                child_origin: LayoutPoint::new(origin.x + tx, origin.y + ty),
+                child_spatial_id: spatial_id,
+                pushed_frame: false,
+            }
+        },
+        TransformOp::Scale(sx, sy) => {
+            let lt = LayoutTransform::scale(*sx, *sy, 1.0);
+            let frame_id = push_reference_frame(origin, spatial_id, lt, wr);
+            TransformResult {
+                child_origin: LayoutPoint::new(0.0, 0.0),
+                child_spatial_id: frame_id,
+                pushed_frame: true,
+            }
+        },
+        TransformOp::Rotate(angle_deg, cx, cy) => {
+            // rotate(a, cx, cy) = translate(cx,cy) × rotate(a) × translate(-cx,-cy)
+            let lt = build_rotation_transform(*angle_deg, *cx, *cy);
+            let frame_id = push_reference_frame(origin, spatial_id, lt, wr);
+            TransformResult {
+                child_origin: LayoutPoint::new(0.0, 0.0),
+                child_spatial_id: frame_id,
+                pushed_frame: true,
+            }
+        },
+        TransformOp::SkewX(angle_deg) => {
+            // skewX(a): x' = x + tan(a)·y, y' = y. Applied as a reference frame,
+            // exactly like `Scale`/`Rotate`/`Matrix` (no coordinate-space
+            // fallback is needed).
+            let radians = angle_deg.to_radians();
+            let tan_a = radians.tan();
+            let xform: Transform2D<f32, (), ()> = Transform2D::new(1.0, 0.0, tan_a, 1.0, 0.0, 0.0);
+            let lt = to_layout_transform(&xform);
+            let frame_id = push_reference_frame(origin, spatial_id, lt, wr);
+            TransformResult {
+                child_origin: LayoutPoint::new(0.0, 0.0),
+                child_spatial_id: frame_id,
+                pushed_frame: true,
+            }
+        },
+        TransformOp::SkewY(angle_deg) => {
+            let radians = angle_deg.to_radians();
+            let tan_a = radians.tan();
+            let xform: Transform2D<f32, (), ()> = Transform2D::new(1.0, tan_a, 0.0, 1.0, 0.0, 0.0);
+            let lt = to_layout_transform(&xform);
+            let frame_id = push_reference_frame(origin, spatial_id, lt, wr);
+            TransformResult {
+                child_origin: LayoutPoint::new(0.0, 0.0),
+                child_spatial_id: frame_id,
+                pushed_frame: true,
+            }
+        },
+        TransformOp::Matrix([a, b, c, d, e, f]) => {
+            let xform: Transform2D<f32, (), ()> = Transform2D::new(*a, *b, *c, *d, *e, *f);
+            let lt = to_layout_transform(&xform);
+            let frame_id = push_reference_frame(origin, spatial_id, lt, wr);
+            TransformResult {
+                child_origin: LayoutPoint::new(0.0, 0.0),
+                child_spatial_id: frame_id,
+                pushed_frame: true,
+            }
+        },
+    }
+}
+
+/// Push a reference frame with the given transform.
+fn push_reference_frame(
+    origin: LayoutPoint,
+    parent_spatial_id: SpatialId,
+    transform: LayoutTransform,
+    wr: &mut DisplayListBuilder,
+) -> SpatialId {
+    wr.push_reference_frame(
+        origin,
+        parent_spatial_id,
+        TransformStyle::Flat,
+        PropertyBinding::Value(transform),
+        ReferenceFrameKind::Transform {
+            is_2d_scale_translation: false,
+            should_snap: false,
+            paired_with_perspective: false,
+        },
+    )
+}
+
+/// Build a combined matrix for `rotate(a, cx, cy)`:
+///   translate(cx, cy) × rotate(a) × translate(-cx, -cy)
+fn build_rotation_transform(angle_deg: f32, cx: f32, cy: f32) -> LayoutTransform {
+    let radians = angle_deg.to_radians();
+    let (s, c) = radians.sin_cos();
+    // `a.then(b) == b * a`, so compose in the reverse order to obtain
+    // T(cx,cy) · R(a) · T(-cx,-cy) (rotate about the pivot (cx,cy)).
+    let t1: Transform2D<f32, (), ()> = Transform2D::translation(-cx, -cy);
+    // SVG `rotate(a)` is clockwise (y-down): x' = c·x − s·y, y' = s·x + c·y.
+    let rotate: Transform2D<f32, (), ()> = Transform2D::new(c, s, -s, c, 0.0, 0.0);
+    let t2: Transform2D<f32, (), ()> = Transform2D::translation(cx, cy);
+    let combined = t1.then(&rotate).then(&t2);
+    to_layout_transform(&combined)
+}
+
+/// The 2D affine matrix for a single transform operation.
+fn op_to_matrix(op: &TransformOp) -> Transform2D<f32, (), ()> {
+    match op {
+        TransformOp::Translate(tx, ty) => Transform2D::translation(*tx, *ty),
+        TransformOp::Scale(sx, sy) => Transform2D::scale(*sx, *sy),
+        TransformOp::Rotate(a, cx, cy) => {
+            let (s, c) = a.to_radians().sin_cos();
+            // SVG `rotate(a)` is clockwise (y-down): x' = c·x − s·y, y' = s·x + c·y.
+            // rotate(a, cx, cy) = translate(cx,cy) · rotate(a) · translate(-cx,-cy).
+            let rotate: Transform2D<f32, (), ()> = Transform2D::new(c, s, -s, c, 0.0, 0.0);
+            Transform2D::translation(-*cx, -*cy)
+                .then(&rotate)
+                .then(&Transform2D::translation(*cx, *cy))
+        },
+        TransformOp::SkewX(a) => {
+            let tan_a = a.to_radians().tan();
+            Transform2D::new(1.0, 0.0, tan_a, 1.0, 0.0, 0.0)
+        },
+        TransformOp::SkewY(a) => {
+            let tan_a = a.to_radians().tan();
+            Transform2D::new(1.0, tan_a, 0.0, 1.0, 0.0, 0.0)
+        },
+        TransformOp::Matrix([a, b, c, d, e, f]) => Transform2D::new(*a, *b, *c, *d, *e, *f),
+    }
+}
+
+/// The combined transform matrix for a list of operations, applied left-to-right
+/// (matching SVG semantics: the leftmost transform is the outer/last-applied one).
+pub(crate) fn compute_transform_matrix(ops: &[TransformOp]) -> Transform2D<f32, (), ()> {
+    let mut matrix = Transform2D::<f32, (), ()>::identity();
+    for op in ops {
+        // `a.then(b) == b * a`, so pre-multiply to keep left-to-right order:
+        // translate(160,10) scale(1.5) → T(160,10) * S(1.5).
+        matrix = op_to_matrix(op).then(&matrix);
+    }
+    matrix
+}
+
+/// Compute the approximate uniform scale factor from a list of transform operations.
+///
+/// Returns the product of all scale factors in the transform chain.
+/// Used to compensate stroke widths for `vector-effect: non-scaling-stroke`.
+pub(crate) fn compute_transform_scale(ops: &[TransformOp]) -> f32 {
+    let mut scale_x: f32 = 1.0;
+    let mut scale_y: f32 = 1.0;
+    for op in ops {
+        match op {
+            TransformOp::Scale(sx, sy) => {
+                scale_x *= sx.abs();
+                scale_y *= sy.abs();
+            },
+            TransformOp::Matrix([a, b, c, d, _, _]) => {
+                // Approximate scale as sqrt of the 2x2 matrix determinant.
+                let det = (a * d - b * c).abs();
+                let s = if det > 0.0 { det.sqrt() } else { 1.0 };
+                scale_x *= s;
+                scale_y *= s;
+            },
+            _ => {}, // Translate, Rotate, Skew → no scale contribution
+        }
+    }
+    scale_x.max(scale_y)
+}
+
+/// Convert a `Transform2D` to a `LayoutTransform` suitable for WebRender.
+pub(crate) fn to_layout_transform(xform: &Transform2D<f32, (), ()>) -> LayoutTransform {
+    // euclid's `m` fields are named row-first but `transform_point` reads them
+    // transposed (both `Transform2D` and `Transform3D` are effectively
+    // column-major):
+    //
+    //   Transform2D:  x' = m11·x + m21·y + m31
+    //                 y' = m12·x + m22·y + m32
+    //   Transform3D:  x' = m11·x + m21·y + m31·z + m41
+    //                 y' = m12·x + m22·y + m32·z + m42
+    //
+    // So a 2D affine embeds into a 3D affine with the 2D translation (m31, m32)
+    // landing in the 3D translation slots (m41, m42) and a unit perspective row
+    // (0, 0, 0, 1). This is exactly `Transform3D::new_2d(m11, m12, m21, m22, m31, m32)`.
+    LayoutTransform::new_2d(
+        xform.m11, xform.m12, xform.m21, xform.m22, xform.m31, xform.m32,
+    )
+}

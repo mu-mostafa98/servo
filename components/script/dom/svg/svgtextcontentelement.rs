@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+//! <https://svgwg.org/svg2-draft/text.html#InterfaceSVGTextContentElement>
+
 use dom_struct::dom_struct;
 use html5ever::{LocalName, Prefix};
 use stylo_dom::ElementState;

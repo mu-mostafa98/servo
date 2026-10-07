@@ -5,7 +5,9 @@
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 
-use app_units::{Au, MAX_AU};
+use app_units::Au;
+#[cfg(not(feature = "servo-svg"))]
+use app_units::MAX_AU;
 use data_url::DataUrl;
 use embedder_traits::ViewportDetails;
 use euclid::{Scale, Size2D};
@@ -16,6 +18,8 @@ use net_traits::request::InternalRequest;
 use script::layout_dom::ServoLayoutNode;
 use servo_arc::Arc as ServoArc;
 use servo_base::id::{BrowsingContextId, PipelineId};
+#[cfg(feature = "servo-svg")]
+use servo_svg::document::SvgTree;
 use servo_url::ServoUrl;
 use style::Zero;
 use style::attr::AttrValue;
@@ -159,6 +163,9 @@ pub(crate) enum ReplacedContentKind {
     SVGElement {
         vector_image: Option<VectorImage>,
         has_viewbox: bool,
+        #[cfg(feature = "servo-svg")]
+        #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
+        render_tree: Option<Arc<SvgTree>>,
     },
     Audio,
 }
@@ -293,47 +300,73 @@ impl ReplacedContents {
             ratio,
         };
 
-        let svg_source = match svg_data.source {
-            None => {
-                // The SVGSVGElement is not yet serialized, so we add it to a list
-                // and hand it over to script to peform the serialization.
+        #[cfg(feature = "servo-svg")]
+        {
+            // Feed the resolved viewport dimensions (already computed from the
+            // `width`/`height` presentation attributes above) into the tree so
+            // percentage resolution uses the actual viewport, not re-parsed raw
+            // attributes. Fall back to the SVG initial viewport (300×150) when
+            // neither attribute resolves to a length.
+            let viewport_width = width.map(|w| w.px()).unwrap_or(300.0);
+            let viewport_height = height.map(|h| h.px()).unwrap_or(150.0);
+            let render_tree =
+                crate::svg::build_svg_tree(node, context, viewport_width, viewport_height);
+            return (
+                ReplacedContentKind::SVGElement {
+                    vector_image: None,
+                    has_viewbox: svg_data.view_box.is_some(),
+                    render_tree,
+                },
+                natural_size,
+            );
+        }
+
+        #[cfg(not(feature = "servo-svg"))]
+        {
+            let svg_source = match svg_data.source {
+                None => {
+                    // The SVGSVGElement is not yet serialized, so we add it to a list
+                    // and hand it over to script to peform the serialization.
+                    context
+                        .image_resolver
+                        .queue_svg_element_for_serialization(node);
+                    None
+                },
+                // If `svg_source_result` is `Err()`, it means that the previous attempt
+                // had errored, then don't attempt to serialize again.
+                Some(svg_source_result) => svg_source_result.ok(),
+            };
+
+            let cached_image = svg_source.and_then(|svg_source| {
                 context
                     .image_resolver
-                    .queue_svg_element_for_serialization(node);
-                None
-            },
-            // If `svg_source_result` is `Err()`, it means that the previous attempt
-            // had errored, then don't attempt to serialize again.
-            Some(svg_source_result) => svg_source_result.ok(),
-        };
+                    .get_cached_image_for_url(
+                        node.opaque(),
+                        svg_source,
+                        LayoutImageDestination::BoxTreeConstruction,
+                        InternalRequest::Yes,
+                    )
+                    .ok()
+            });
 
-        let cached_image = svg_source.and_then(|svg_source| {
-            context
-                .image_resolver
-                .get_cached_image_for_url(
-                    node.opaque(),
-                    svg_source,
-                    LayoutImageDestination::BoxTreeConstruction,
-                    InternalRequest::Yes,
-                )
-                .ok()
-        });
+            let vector_image = cached_image.map(|image| match image {
+                Image::Vector(mut vector_image) => {
+                    vector_image.svg_id = Some(svg_data.svg_id);
+                    vector_image
+                },
+                _ => unreachable!("SVG element can't contain a raster image."),
+            });
 
-        let vector_image = cached_image.map(|image| match image {
-            Image::Vector(mut vector_image) => {
-                vector_image.svg_id = Some(svg_data.svg_id);
-                vector_image
-            },
-            _ => unreachable!("SVG element can't contain a raster image."),
-        });
-
-        (
-            ReplacedContentKind::SVGElement {
-                vector_image,
-                has_viewbox: svg_data.view_box.is_some(),
-            },
-            natural_size,
-        )
+            (
+                ReplacedContentKind::SVGElement {
+                    vector_image,
+                    has_viewbox: svg_data.view_box.is_some(),
+                    #[cfg(feature = "servo-svg")]
+                    render_tree: None,
+                },
+                natural_size,
+            )
+        }
     }
 
     fn from_content_property(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Option<Self> {
@@ -551,6 +584,8 @@ impl ReplacedContents {
                         url: image_info.url.clone(),
                         natural_width: self.natural_size.width,
                         natural_height: self.natural_size.height,
+                        #[cfg(feature = "servo-svg")]
+                        svg_render_tree: None,
                         selected: self.selected.clone(),
                     }))
                 })
@@ -567,6 +602,8 @@ impl ReplacedContents {
                     url: video_info.poster_url.clone(),
                     natural_width: self.natural_size.width,
                     natural_height: self.natural_size.height,
+                    #[cfg(feature = "servo-svg")]
+                    svg_render_tree: None,
                     selected: self.selected.clone(),
                 }))]
             },
@@ -613,9 +650,35 @@ impl ReplacedContents {
                     url: None,
                     natural_width: self.natural_size.width,
                     natural_height: self.natural_size.height,
+                    #[cfg(feature = "servo-svg")]
+                    svg_render_tree: None,
                     selected: self.selected.clone(),
                 }))]
             },
+            #[cfg(feature = "servo-svg")]
+            ReplacedContentKind::SVGElement { .. } => {
+                if let ReplacedContentKind::SVGElement {
+                    render_tree: Some(tree),
+                    ..
+                } = &self.kind
+                {
+                    return vec![Fragment::Image(Arc::new(ImageFragment {
+                        base,
+                        style: style.clone().into(),
+                        selected_style: self.selected_style.clone(),
+                        clip,
+                        image_key: None,
+                        showing_broken_image_icon: false,
+                        url: None,
+                        natural_width: self.natural_size.width,
+                        natural_height: self.natural_size.height,
+                        svg_render_tree: Some(tree.clone()),
+                        selected: self.selected.clone(),
+                    }))];
+                }
+                return vec![];
+            },
+            #[cfg(not(feature = "servo-svg"))]
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox,
@@ -670,6 +733,8 @@ impl ReplacedContents {
                             url: None,
                             natural_width: self.natural_size.width,
                             natural_height: self.natural_size.height,
+                            #[cfg(feature = "servo-svg")]
+                            svg_render_tree: None,
                             selected: self.selected.clone(),
                         }))
                     })

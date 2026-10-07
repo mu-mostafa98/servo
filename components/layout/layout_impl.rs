@@ -116,6 +116,11 @@ static HTML_MODE_CSS: &[u8] = include_bytes!("./stylesheets/html-mode.css");
 /// A CSS file to style the Servo browser.
 static SERVO_CSS: &[u8] = include_bytes!("./stylesheets/servo.css");
 
+/// An override stylesheet that lets SVG children participate in the SVG
+/// engine's own layout instead of being hidden by `servo.css`.
+#[cfg(feature = "servo-svg")]
+static SERVO_SVG_CSS: &[u8] = b"svg > * { display: inline; }";
+
 /// A CSS file to style the presentational hints.
 static PRESENTATIONAL_HINTS_CSS: &[u8] = include_bytes!("./stylesheets/presentational-hints.css");
 
@@ -201,6 +206,11 @@ pub struct LayoutThread {
     // for `background-image` or `content` properties) to either the final resolved
     // image data, or an error if the image cache failed to load/decode the image.
     resolved_images_cache: Arc<RwLock<HashMap<ServoUrl, CachedImageOrError>>>,
+
+    /// A persistent cache of clean SVG render subtrees, reused across reflows
+    /// for incremental SVG build (Level 2; see [`crate::svg::SvgSubtreeCache`]).
+    #[cfg(feature = "servo-svg")]
+    svg_subtree_cache: Arc<RwLock<crate::svg::SvgSubtreeCache>>,
 
     /// The executors for paint worklets.
     registered_painters: RegisteredPaintersImpl,
@@ -857,6 +867,8 @@ impl LayoutThread {
             paint_api: config.paint_api,
             stylist: Stylist::new(device, QuirksMode::NoQuirks),
             resolved_images_cache: Default::default(),
+            #[cfg(feature = "servo-svg")]
+            svg_subtree_cache: Default::default(),
             debug: opts::get().debug.clone(),
             previously_highlighted_dom_node: Cell::new(None),
             paint_timing_handler: Default::default(),
@@ -1063,6 +1075,8 @@ impl LayoutThread {
             origin: reflow_request.origin.clone(),
             image_cache: self.image_cache.clone(),
             resolved_images_cache: self.resolved_images_cache.clone(),
+            #[cfg(feature = "servo-svg")]
+            svg_subtree_cache: self.svg_subtree_cache.clone(),
             pending_images: Mutex::default(),
             pending_rasterization_images: Mutex::default(),
             pending_svg_elements_for_serialization: Mutex::default(),
@@ -1772,6 +1786,8 @@ fn get_ua_stylesheets(shared_lock: &SharedRwLock) -> Rc<UserAgentStylesheets> {
                 let user_agent_stylesheets = vec![
                     parse_ua_stylesheet(shared_lock, "user-agent.css", USER_AGENT_CSS),
                     parse_ua_stylesheet(shared_lock, "servo.css", SERVO_CSS),
+                    #[cfg(feature = "servo-svg")]
+                    parse_ua_stylesheet(shared_lock, "servo-svg.css", SERVO_SVG_CSS),
                     parse_ua_stylesheet(
                         shared_lock,
                         "presentational-hints.css",

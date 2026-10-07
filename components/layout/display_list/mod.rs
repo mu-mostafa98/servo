@@ -13,6 +13,8 @@ use euclid::{Box2D, Point2D, Rect, Scale, SideOffsets2D, Size2D, UnknownUnit, Ve
 use fonts::ShapedTextSlice;
 use gradient::WebRenderGradient;
 use layout_api::ReflowStatistics;
+#[cfg(feature = "servo-svg")]
+use net_traits::image_cache::ImageCache;
 use paint_api::display_list::{PaintDisplayListInfo, SpatialTreeNodeInfo};
 use servo_arc::Arc as ServoArc;
 use servo_base::id::{PipelineId, ScrollTreeNodeId};
@@ -70,6 +72,25 @@ use crate::geom::{
 };
 use crate::replaced::NaturalSizes;
 use crate::style_ext::{BorderStyleColor, ComputedValuesExt};
+
+#[cfg(feature = "servo-svg")]
+/// Adapts the layout image cache to [`servo_svg::RasterImageUploader`] so the
+/// SVG engine can upload CPU-rasterized pixels inline, in document order.
+struct ImageCacheUploader(Arc<dyn ImageCache>);
+
+#[cfg(feature = "servo-svg")]
+impl servo_svg::RasterImageUploader for ImageCacheUploader {
+    fn upload(
+        &self,
+        hash: u64,
+        data: Vec<u8>,
+        width: u32,
+        height: u32,
+    ) -> Option<webrender_api::ImageKey> {
+        self.0.upload_raw_pixels(hash, data, width, height);
+        self.0.raw_pixel_image_key(hash)
+    }
+}
 
 mod background;
 mod clip;
@@ -840,6 +861,40 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
             .translate(containing_block.origin.to_vector())
             .to_webrender();
         let common = self.common_properties(state, clip, &style);
+
+        #[cfg(feature = "servo-svg")]
+        if let Some(ref svg_tree) = fragment.svg_render_tree {
+            use servo_svg::render_svg_tree;
+            let spatial_id = self.spatial_id(state.spatial_id);
+            let clip_chain_id = self.clip_chain_id(state.clip_id);
+            let origin = rect.min;
+            let size = rect.size();
+            // Upload CPU-rasterized pixels inline (in document order) through the
+            // layout image cache. Rasters carry no spatial id — their geometry is
+            // baked to absolute space — so the sink pushes them with the *outer*
+            // SVG element's spatial/clip ids, the fragment clip rect, and the
+            // style's primitive flags (mirroring `common_properties`).
+            let uploader = ImageCacheUploader(self.image_resolver.image_cache.clone());
+            let sink = servo_svg::RasterSink {
+                uploader: &uploader,
+                spatial_id,
+                clip_chain_id,
+                clip_rect: clip,
+                flags: style.get_webrender_primitive_flags(),
+                origin,
+            };
+            render_svg_tree(
+                svg_tree,
+                &origin,
+                size,
+                self.device_pixel_ratio.get(),
+                spatial_id,
+                clip_chain_id,
+                &sink,
+                self.wr(),
+            );
+            return;
+        }
 
         if let Some(image_key) = fragment.image_key {
             self.wr().push_image(
