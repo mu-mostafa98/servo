@@ -23,7 +23,8 @@ use servo_svg::units::Length;
 use svgtypes::Color as SvgColor;
 use web_atoms::ns;
 
-use super::SvgTreeBuilder;
+use super::{CrossRef, SvgTreeBuilder};
+use crate::svg::CrossRefFingerprint;
 use crate::svg::primitives::attrs::{get_attr, parse_length_value};
 use crate::svg::primitives::viewport::{extract_viewbox, parse_aspect_ratio};
 
@@ -63,8 +64,9 @@ pub(crate) const MAX_TOTAL_NODES: usize = 1_000_000;
 /// For `<use>`, clones the referenced element with x/y translation.
 /// For all others, recursively builds children from DOM.
 ///
-/// Returns the child list and whether any child (transitively) contains a
-/// cross-reference (`<use>`/`<textPath>`), which disables subtree caching.
+/// Returns the child list and the subtree's cross-reference state (see
+/// [`CrossRef`]): `None` for a cross-reference-free subtree, `Simple` for a
+/// single `<use>` whose target is cross-reference-free, or `Complex` otherwise.
 pub(crate) fn resolve_children<'dom>(
     node: ServoLayoutNode<'dom>,
     tag: &SvgTag,
@@ -76,14 +78,9 @@ pub(crate) fn resolve_children<'dom>(
     in_shadow: bool,
     vw: f32,
     vh: f32,
-) -> (Vec<Arc<SvgNode>>, bool) {
+) -> (Vec<Arc<SvgNode>>, CrossRef) {
     if let SvgTag::Container(Container::Use) = tag {
-        (
-            resolve_use_children(
-                node, root_node, builder, state, node_style, node_color, vw, vh,
-            ),
-            true,
-        )
+        resolve_use_children(node, root_node, builder, state, node_style, node_color, vw, vh)
     } else if let SvgTag::Container(Container::Switch) = tag {
         resolve_switch_children(
             node, root_node, builder, state, node_style, node_color, in_shadow, vw, vh,
@@ -94,7 +91,7 @@ pub(crate) fn resolve_children<'dom>(
         // real DOM ancestry. The effective `color` (which may come from an SVG
         // `color` presentation attribute Stylo does not see) is always threaded.
         let child_inherited = if in_shadow { Some(node_style) } else { None };
-        let mut has_cross_ref = false;
+        let mut cross_ref = CrossRef::None;
         let children = node
             .dom_children()
             .filter_map(|child| {
@@ -108,13 +105,15 @@ pub(crate) fn resolve_children<'dom>(
                         vw,
                         vh,
                     )
-                    .map(|(subtree, flag)| {
-                        has_cross_ref |= flag;
+                    .map(|(subtree, child_cross_ref)| {
+                        if !matches!(child_cross_ref, CrossRef::None) {
+                            cross_ref = CrossRef::Complex;
+                        }
                         subtree
                     })
             })
             .collect();
-        (children, has_cross_ref)
+        (children, cross_ref)
     }
 }
 
@@ -136,12 +135,12 @@ fn resolve_switch_children<'dom>(
     in_shadow: bool,
     vw: f32,
     vh: f32,
-) -> (Vec<Arc<SvgNode>>, bool) {
+) -> (Vec<Arc<SvgNode>>, CrossRef) {
     // Manual inheritance only applies inside a `<use>` shadow tree; otherwise
     // Stylo already resolved inherited properties along the real DOM ancestry.
     let child_inherited = if in_shadow { Some(node_style) } else { None };
     for child in node.dom_children() {
-        if let Some((built, flag)) = builder.build_render_node(
+        if let Some((built, child_cross_ref)) = builder.build_render_node(
             child,
             root_node,
             state,
@@ -150,10 +149,15 @@ fn resolve_switch_children<'dom>(
             vw,
             vh,
         ) {
-            return (vec![built], flag);
+            let cross_ref = if matches!(child_cross_ref, CrossRef::None) {
+                CrossRef::None
+            } else {
+                CrossRef::Complex
+            };
+            return (vec![built], cross_ref);
         }
     }
-    (vec![], false)
+    (vec![], CrossRef::None)
 }
 
 /// Resolve children for a `<use>` element (§5.6).
@@ -174,7 +178,7 @@ fn resolve_use_children<'dom>(
     use_color: &SvgColor,
     vw: f32,
     vh: f32,
-) -> Vec<Arc<SvgNode>> {
+) -> (Vec<Arc<SvgNode>>, CrossRef) {
     let element = node.as_element().unwrap();
 
     // Extract href reference.
@@ -190,9 +194,9 @@ fn resolve_use_children<'dom>(
             }
         });
 
-    let Some(ref_id) = ref_id else { return vec![] };
+    let Some(ref_id) = ref_id else { return (vec![], CrossRef::None) };
     if state.resolving.contains(&ref_id) {
-        return vec![];
+        return (vec![], CrossRef::Complex);
     }
 
     // Parse `x`/`y`/`width`/`height` — percentages resolve against the current
@@ -210,17 +214,17 @@ fn resolve_use_children<'dom>(
     // §5.6.3: a negative `width`/`height` on `<use>` is an error (render
     // nothing); a value of zero disables rendering of the instantiated content.
     if use_width.is_some_and(|w| w < 0.0) || use_height.is_some_and(|h| h < 0.0) {
-        return vec![];
+        return (vec![], CrossRef::Complex);
     }
     if use_width.is_some_and(|w| w == 0.0) || use_height.is_some_and(|h| h == 0.0) {
-        return vec![];
+        return (vec![], CrossRef::Complex);
     }
 
     // §5.6: bound `<use>` expansion. A deep acyclic chain — where each reference
     // is a distinct id, so the cycle guard above never trips — would otherwise
     // overflow the stack (README §9.2, issue #3).
     if state.use_depth >= MAX_USE_DEPTH {
-        return vec![];
+        return (vec![], CrossRef::Complex);
     }
     state.use_depth += 1;
 
@@ -251,19 +255,36 @@ fn resolve_use_children<'dom>(
     let sym_width = target_element.and_then(|e| parse_len(&e, "width", vw));
     let sym_height = target_element.and_then(|e| parse_len(&e, "height", vh));
 
-    let result = target
-        .and_then(|t| {
-            builder.build_render_node(
-                t,
-                root_node,
-                state,
-                Some(use_style),
-                Some(*use_color),
-                vw,
-                vh,
-            )
-        })
-        .map(|(target_node, _has_cross_ref)| {
+    let target_build = target.and_then(|t| {
+        builder.build_render_node(
+            t,
+            root_node,
+            state,
+            Some(use_style),
+            Some(*use_color),
+            vw,
+            vh,
+        )
+    });
+
+    // A `<use>` whose target is itself cross-reference-free can be cached: the
+    // target's version + style fingerprint when the `<use>` needs rebuilding. A
+    // target that is missing, fails to build, or contains its own cross-reference
+    // leaves the `<use>` uncached (or, for a missing target, caches it as an
+    // ordinary empty subtree).
+    let cross_ref = match (&target, &target_build) {
+        (None, _) => CrossRef::None,
+        (Some(target_node), Some((_, CrossRef::None))) => {
+            CrossRef::Simple(CrossRefFingerprint {
+                version: target_node.inclusive_descendants_version(),
+                style: builder.computed_style(*target_node),
+            })
+        },
+        _ => CrossRef::Complex,
+    };
+
+    let result = target_build
+        .map(|(target_node, _cross_ref)| {
             // Shadow content is always freshly built (never cached) because it
             // is produced with `inherited = Some(use_style)`, so the subtree is
             // still uniquely owned here.
@@ -355,5 +376,5 @@ fn resolve_use_children<'dom>(
 
     state.use_depth -= 1;
     state.resolving.remove(&ref_id);
-    result
+    (result, cross_ref)
 }

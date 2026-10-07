@@ -15,7 +15,7 @@ use servo_svg::element::text::{TextAnchor, TextSpan};
 use servo_svg::element::{Container, SvgNode, SvgTag};
 use web_atoms::ns;
 
-use super::{extract_id, font_key_to_resource};
+use super::{CrossRef, extract_id, font_key_to_resource};
 use crate::context::LayoutContext;
 use crate::svg::primitives::attrs::{extract_url_fragment, get_attr, parse_length_token};
 use crate::svg::primitives::text::{build_text, build_text_run, parse_length_list};
@@ -48,15 +48,15 @@ const ARC_LEN_ACCURACY: f64 = 0.1;
 /// glyphs are re-positioned to points on the path (advancing by arc length) and
 /// rotated to follow the path tangent. See [`place_on_path`].
 ///
-/// Returns the built node and whether it contains a `<textPath>` run — a
-/// cross-reference that disables subtree caching, because the referenced
-/// `<path>` can change without bumping this node's version.
+/// Returns the built node and its cross-reference state: `CrossRef::Complex`
+/// when it contains a `<textPath>` run (whose referenced `<path>` can change
+/// without bumping this node's version), or `CrossRef::None` otherwise.
 pub(crate) fn build_text_node<'dom>(
     node: ServoLayoutNode<'dom>,
     context: &LayoutContext,
     css_rules: &HashMap<String, HashMap<String, String>>,
     element_ids: &HashMap<String, ServoLayoutNode<'dom>>,
-) -> Option<(SvgNode, bool)> {
+) -> Option<(SvgNode, CrossRef)> {
     let element = node.as_element()?;
     let fs: f32 = 16.0;
     let get = |name: &str| get_attr(&element, name);
@@ -84,7 +84,7 @@ pub(crate) fn build_text_node<'dom>(
                 viewport: None,
                 children: vec![],
             },
-            false,
+            CrossRef::None,
         ));
     }
 
@@ -108,7 +108,11 @@ pub(crate) fn build_text_node<'dom>(
                 viewport: None,
                 children: vec![],
             },
-            has_text_path,
+            if has_text_path {
+                CrossRef::Complex
+            } else {
+                CrossRef::None
+            },
         ));
     }
 
@@ -203,7 +207,11 @@ pub(crate) fn build_text_node<'dom>(
             viewport: None,
             children,
         },
-        has_text_path,
+        if has_text_path {
+            CrossRef::Complex
+        } else {
+            CrossRef::None
+        },
     ))
 }
 

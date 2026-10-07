@@ -23,6 +23,7 @@ use std::sync::Arc;
 
 use html5ever::local_name;
 use layout_api::{LayoutElement, LayoutNode};
+use log::debug;
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use servo_arc::Arc as ServoArc;
 use servo_svg::document::*;
@@ -34,6 +35,8 @@ use svgtypes::Color as SvgColor;
 use web_atoms::ns;
 
 use crate::context::LayoutContext;
+use crate::svg::CacheMiss;
+use crate::svg::CrossRefFingerprint;
 use crate::svg::defines::{
     ClipPathParser, DefinitionCollector, FilterParser, GradientParser, MarkerParser, MaskParser,
     PatternParser, resolve_gradient_hrefs,
@@ -49,6 +52,24 @@ use crate::svg::style::build_style;
 mod image;
 mod resolve;
 mod text;
+
+// ======================= Cross-references =======================
+
+/// A built subtree's cross-reference state, threaded up from the leaves so the
+/// cache can decide whether (and how) a subtree is reusable.
+///
+/// - `None` — no cross-reference; the subtree is cached normally.
+/// - `Simple` — a single `<use>` whose referenced target is itself free of
+///   cross-references; the target's version + style (`CrossRefFingerprint`)
+///   fingerprint it, so the `<use>` can be cached.
+/// - `Complex` — a `<textPath>`, or a `<use>` whose target itself contains a
+///   cross-reference (and any ancestor of one): the referenced content can
+///   change without bumping this subtree's version, so it is never cached.
+pub(crate) enum CrossRef {
+    None,
+    Simple(CrossRefFingerprint),
+    Complex,
+}
 
 // ======================= Builder =======================
 
@@ -106,7 +127,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
 
     /// Build the complete [`SvgTree`].
     pub(crate) fn build(self) -> Option<Arc<SvgTree>> {
-        let (root, _has_cross_ref) = self.build_render_node(
+        let (root, _) = self.build_render_node(
             self.root_node,
             self.root_node,
             &mut resolve::ResolveState::default(),
@@ -140,10 +161,11 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
 
     /// Recursively build a render node from a DOM node.
     ///
-    /// Returns the built subtree and whether it (or any descendant) contains a
-    /// cross-reference — a `<use>` or `<textPath>` — which makes it unsafe to
-    /// cache, because the referenced target can change without bumping this
-    /// node's version.
+    /// Returns the built subtree and its cross-reference state (see
+    /// [`CrossRef`]). A `Simple` or `Complex` subtree still makes its ancestors
+    /// uncacheable — the referenced target can change without bumping the
+    /// ancestor's version — but only `Simple` (a single `<use>` whose target is
+    /// itself cross-reference-free) is cacheable itself.
     fn build_render_node(
         &self,
         node: ServoLayoutNode<'dom>,
@@ -153,7 +175,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         inherited_color: Option<SvgColor>,
         vw: f32,
         vh: f32,
-    ) -> Option<(Arc<SvgNode>, bool)> {
+    ) -> Option<(Arc<SvgNode>, CrossRef)> {
         // Global expansion budget: cap the total work of a single build so that
         // pathological `<use>` graphs — exponential "billion laughs" fan-out,
         // quadratic blow-up, command amplification — terminate (§5.6; README
@@ -163,6 +185,13 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             return None;
         }
         state.nodes += 1;
+
+        // Text/whitespace/comment children produce no render node (and are never
+        // cached), so return before the cache lookup — otherwise every whitespace
+        // node between elements emits a noisy `build <node> [NoEntry]` line.
+        if node.as_element().is_none() {
+            return None;
+        }
 
         // Only clean, non-root, non-shadow subtrees are cacheable. The root is
         // excluded because it is returned by value as `SvgTree::root`; shadow
@@ -176,22 +205,75 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         // alone would miss. Computed once here and reused for both lookup and store.
         let computed_style = self.computed_style(node);
 
+        // A `<use>`'s referenced target is not covered by this node's own
+        // version, so extend the cache key with the target's version + computed
+        // style. This lets a `<use>` be reused when neither it nor its target
+        // changed, instead of being rebuilt unconditionally. A target that
+        // itself contains a cross-reference is detected during the build and
+        // left uncached.
+        let lookup_cross_ref = self.lookup_cross_ref_dep(node);
+
         if cacheable {
-            if let Some(hit) =
-                self.lookup_cached(node, inherited_color, vw, vh, computed_style.as_ref())
-            {
-                return Some((hit, false));
+            match self.lookup_cached(
+                node,
+                inherited_color,
+                vw,
+                vh,
+                computed_style.as_ref(),
+                lookup_cross_ref.as_ref(),
+            ) {
+                Ok(hit) => {
+                    debug!(target: "svg", "reuse {}", describe(node));
+                    // A cached `<use>` is still a cross-reference for its
+                    // ancestors — its target can change without bumping their
+                    // versions — so report `Complex` to the caller even though
+                    // this entry itself was reused.
+                    let cross_ref = if lookup_cross_ref.is_some() {
+                        CrossRef::Complex
+                    } else {
+                        CrossRef::None
+                    };
+                    return Some((hit, cross_ref));
+                },
+                Err(reason) => {
+                    debug!(target: "svg", "build {} [{reason:?}]", describe(node));
+                },
             }
         }
 
-        let (built, has_cross_ref) =
+        let (built, cross_ref) =
             self.build_node(node, root_node, state, inherited, inherited_color, vw, vh)?;
 
         let subtree = Arc::new(built);
-        if cacheable && !has_cross_ref {
-            self.store_cached(node, inherited_color, vw, vh, computed_style, Arc::clone(&subtree));
+        if cacheable {
+            match &cross_ref {
+                CrossRef::None => {
+                    self.store_cached(
+                        node,
+                        inherited_color,
+                        vw,
+                        vh,
+                        computed_style,
+                        None,
+                        Arc::clone(&subtree),
+                    );
+                },
+                CrossRef::Simple(dep) => {
+                    self.store_cached(
+                        node,
+                        inherited_color,
+                        vw,
+                        vh,
+                        computed_style,
+                        Some((*dep).clone()),
+                        Arc::clone(&subtree),
+                    );
+                },
+                // A cross-reference we can't fingerprint — never cached.
+                CrossRef::Complex => {},
+            }
         }
-        Some((subtree, has_cross_ref))
+        Some((subtree, cross_ref))
     }
 
     /// Build a render node from a DOM node (no caching). This is the shared
@@ -207,7 +289,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         inherited_color: Option<SvgColor>,
         vw: f32,
         vh: f32,
-    ) -> Option<(SvgNode, bool)> {
+    ) -> Option<(SvgNode, CrossRef)> {
         let element = node.as_element()?;
 
         // §5.7 conditional processing: an element whose `requiredExtensions`,
@@ -259,7 +341,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             inherited_color,
         );
         let id = extract_id(&element);
-        let (children, has_cross_ref) = resolve::resolve_children(
+        let (children, cross_ref) = resolve::resolve_children(
             node,
             &tag,
             root_node,
@@ -281,7 +363,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
                 viewport,
                 children,
             },
-            has_cross_ref,
+            cross_ref,
         ))
     }
 
@@ -307,7 +389,8 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         vw: f32,
         vh: f32,
         computed_style: Option<&ServoArc<style::properties::ComputedValues>>,
-    ) -> Option<Arc<SvgNode>> {
+        cross_ref: Option<&CrossRefFingerprint>,
+    ) -> Result<Arc<SvgNode>, CacheMiss> {
         self.context
             .image_resolver
             .svg_subtree_cache
@@ -320,6 +403,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
                 vh,
                 inherited_color,
                 computed_style,
+                cross_ref,
             )
     }
 
@@ -331,6 +415,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         vw: f32,
         vh: f32,
         computed_style: Option<ServoArc<style::properties::ComputedValues>>,
+        cross_ref: Option<CrossRefFingerprint>,
         subtree: Arc<SvgNode>,
     ) {
         self.context
@@ -345,8 +430,50 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
                 vh,
                 inherited_color,
                 computed_style,
+                cross_ref,
                 subtree,
             );
+    }
+
+    /// Resolve a `<use>` element's `href`/`xlink:href` reference to the
+    /// referenced DOM node. Returns `None` for a non-`<use>` element or an
+    /// unresolvable reference.
+    fn resolve_use_target(&self, node: ServoLayoutNode<'dom>) -> Option<ServoLayoutNode<'dom>> {
+        let element = node.as_element()?;
+        let ref_id = element
+            .attribute_as_str(&ns!(), &local_name!("href"))
+            .or_else(|| element.attribute_as_str(&ns!(), &local_name!("xlink:href")))
+            .and_then(|h| {
+                let t = h.trim_start_matches('#');
+                if t.is_empty() {
+                    None
+                } else {
+                    Some(t.to_owned())
+                }
+            })?;
+        self.element_ids.get(&ref_id).copied()
+    }
+
+    /// The cross-reference fingerprint for a `<use>` node: its referenced
+    /// target's `inclusive_descendants_version` and computed style, read without
+    /// building the target. `None` for a non-`<use>` node or an unresolvable
+    /// reference.
+    ///
+    /// This is the lookup-time half of the `<use>` cache key. It *assumes* the
+    /// target is free of cross-references; a non-simple target is never stored
+    /// (see [`CrossRef`]), and a target that became non-simple in the interim
+    /// bumped its version (adding/removing a child is a mutation), so the
+    /// version check still forces a rebuild.
+    fn lookup_cross_ref_dep(&self, node: ServoLayoutNode<'dom>) -> Option<CrossRefFingerprint> {
+        let element = node.as_element()?;
+        if element.local_name() != &local_name!("use") {
+            return None;
+        }
+        let target = self.resolve_use_target(node)?;
+        Some(CrossRefFingerprint {
+            version: target.inclusive_descendants_version(),
+            style: self.computed_style(target),
+        })
     }
 
     /// Build a single definition-content node, used by the definition parsers
@@ -363,7 +490,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             self.root_vw,
             self.root_vh,
         )
-        .map(|(subtree, _has_cross_ref)| subtree)
+        .map(|(subtree, _)| subtree)
     }
 
     /// The computed CSS `color` of an element, resolved to an [`SvgColor`].
@@ -450,6 +577,20 @@ fn build_tag<'dom>(
 }
 
 // ======================= Helpers =======================
+
+/// A short human-readable label for a DOM node — `<tag>` or `<tag#id>` — used in
+/// cache hit/miss log lines so a rebuild's cause is attributable to a specific
+/// element.
+fn describe<'dom>(node: ServoLayoutNode<'dom>) -> String {
+    let Some(element) = node.as_element() else {
+        return "<node>".to_owned();
+    };
+    let tag = element.local_name().to_string();
+    match element.attribute_as_str(&ns!(), &local_name!("id")) {
+        Some(id) => format!("<{tag}#{id}>"),
+        None => format!("<{tag}>"),
+    }
+}
 
 /// Extract the `id` attribute from an SVG DOM element.
 fn extract_id(element: &ServoLayoutElement) -> Option<Id> {

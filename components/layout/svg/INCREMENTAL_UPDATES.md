@@ -60,6 +60,16 @@ self.upcast::<Node>().dirty(cx.no_gc(), NodeDamage::Other);
 nearest `<svg>` replaced element and re-runs `build_svg_tree`. The result: a
 rebuild happens exactly when an SVG attribute changes, and not otherwise.
 
+There is a second, parallel input path: a style change arriving through CSS (a
+`<style>` rule, a `:hover` rule, a CSS animation) rather than an attribute. Stylo
+classifies SVG paint properties (`fill`, `stroke`, …) as paint-only, so such a
+change produces only `Repaint` damage, which never propagates up to the `<svg>`
+box and would be silently dropped. Layout repairs that in
+[`compute_damage_and_rebuild_box_tree_below_dirty_root`](../../layout/traversal.rs):
+an SVG element whose own damage is paint/relayout-level is upgraded to
+`DescendantHasBoxDamage`, which walks up to the `<svg>` replaced element and
+re-runs `build_svg_tree` exactly like the attribute path.
+
 ## Level 2 — incremental build
 
 Level 1 decides *whether* to rebuild. Level 2 makes the rebuild itself cheap:
@@ -118,9 +128,13 @@ Some subtrees are unsafe to cache and are always rebuilt:
 
 - **Cross-references** (`<use>`, `<textPath>`). The referenced target can change
   without bumping the referencing node's version, so a cached copy could go
-  stale. A `has_cross_ref` flag is threaded through the build
+  stale. A tri-state [`CrossRef`](builder/mod.rs) is threaded through the build
   ([`build_render_node`](builder/mod.rs) → `resolve_children` /
-  `build_text_node`) and disables caching for any subtree containing one.
+  `build_text_node`): `None` (no cross-reference — cache normally), `Simple`
+  (a single `<use>` whose target is itself cross-reference-free — cache keyed on
+  the target's [`CrossRefFingerprint`](mod.rs)), and `Complex` (a `<textPath>`,
+  or a `<use>` whose target contains a cross-reference, or any ancestor of one —
+  never cached).
 - **The root `<svg>`** — returned by value as `SvgTree::root`.
 - **`<use>` shadow content** — built with a per-use inherited style, never
   shared between uses.
@@ -134,6 +148,114 @@ rebuilt definition maps, so cached subtrees always see definition edits.
 Reuse requires shared ownership, so [`SvgNode::children`](../../svg/model/element/mod.rs)
 changed from `Vec<SvgNode>` to `Vec<Arc<SvgNode>>`, and clean subtrees are
 stored and returned as `Arc<SvgNode>`.
+
+## Testing
+
+### Observing rebuilds vs. reuse
+
+Every cache decision is logged at `debug` level under the `svg` target. Build and
+run with:
+
+```
+./mach build --features servo-svg -d                                  # build once (dev + SVG engine)
+RUST_LOG=svg=debug ./mach run -d <page>                               # sh / bash
+$env:RUST_LOG = "svg=debug"; ./mach run -d <page>                     # PowerShell
+```
+
+`-d` selects the dev/debug build on both commands — `debug!` is compiled out of
+release builds, and `mach run` picks the matching dev binary. `--features
+servo-svg` is a build-time flag: it compiles the SVG engine in, so it goes on
+`mach build`, not `mach run`. Point `<page>` at a specific `.html` file, not a
+directory.
+
+Each cacheable element emits exactly one line per rebuild:
+
+```
+svg: reuse <rect#badge>
+svg: build <g#legend> [SubtreeDirty]
+svg: build <path> [ComputedStyle]
+```
+
+`reuse` means the subtree was served from [`SvgSubtreeCache`](mod.rs) unchanged.
+`build` means it was rebuilt, with the `CacheMiss` reason in brackets:
+
+| Reason | What changed |
+|---|---|
+| `NoEntry` | First build of this node (no cached subtree yet). |
+| `SubtreeDirty` | The node or one of its descendants was mutated. |
+| `Viewport` | The viewport reference dimensions (`vw`/`vh`) changed. |
+| `CurrentColor` | The inherited `currentColor` changed. |
+| `ComputedStyle` | The node's computed style changed (own/inherited property, stylesheet rule, or pseudo-class). |
+| `ReferencedTarget` | A `<use>`'s referenced target (its version or computed style) changed. |
+
+The root `<svg>` and `<use>` shadow content (built with `inherited = Some`) are
+never looked up, so they emit no line. A `Complex` cross-reference — a
+`<textPath>`, a `<use>` whose target itself contains a cross-reference, or an
+ancestor of one — is looked up but never stored, so it emits
+`build <tag> [NoEntry]` on every rebuild and never `reuse`. A *simple* `<use>`
+(whose target is cross-reference-free) is cached keyed on its target's
+[`CrossRefFingerprint`](mod.rs): it reuses while its target is unchanged and logs
+`build [ReferencedTarget]` when its target's version or style changes.
+
+### Manual test cases
+
+Each case starts from a page whose SVG is cached by one clean reflow, then makes
+one change and triggers layout. The expected `svg`-target log tells you which
+subtrees were reused versus rebuilt. Companion pages with a button per case live
+alongside this work (`01_noop_reflow.html` … `07_currentcolor_change.html`);
+click the button to change in-document — a full reload rebuilds the DOM and
+starts the cache cold, so it never shows `reuse`.
+
+1. **No-op reflow** — mutate a harmless `data-*` attribute on the root `<svg>`.
+   `build_svg_tree` runs more than once per reflow (the replaced element's
+   contents are constructed from several layout call sites), so the first call
+   rebuilds and the next reuses it. Note also that mutating the root re-cascades
+   the whole subtree — every descendant gets a fresh `ComputedValues` Arc — so
+   the first call over-rebuilds each descendant with `[ComputedStyle]` (the
+   conservative side of `ptr_eq`, safe but not minimal) and the second call logs
+   `reuse`. For the clean "one node rebuilds, its sibling reuses" signal, see
+   case 2.
+2. **Leaf attribute change** — change one shape's own attribute, e.g.
+   `<rect width="10">` → `width="20"`, or `fill="red"` → `fill="blue"`. That
+   rect logs `build [SubtreeDirty]`; its siblings and ancestors log `reuse`.
+3. **Inherited style change** — change an ancestor's presentation attribute,
+   e.g. `<g fill="blue">` → `fill="green"`. The `<g>` and every styled
+   descendant log `build [ComputedStyle]` (their computed style changed without
+   a DOM mutation), while unrelated siblings still log `reuse`. This is the case
+   that exercises the `Arc::ptr_eq` style-identity check.
+4. **External stylesheet change** — edit a CSS rule that targets an SVG element
+   but is *not* a class rule in an SVG `<style>` (a class rule there is collected
+   by `collect_svg_css_rules`, and editing it clears the whole root cache via
+   `ensure_css_rules`; use an id/type selector or a truly external stylesheet).
+   The matched elements log `build [ComputedStyle]`. In practice the *siblings*
+   also log `build [ComputedStyle]` — a `<style>` text edit makes Servo
+   re-cascade styles broadly, reallocating every element's `ComputedValues`, so
+   the `ptr_eq` check over-rebuilds them. A fill-only style change produces only
+   paint damage in Stylo, so layout upgrades it to box damage for SVG elements
+   (see `compute_damage_and_rebuild_box_tree_below_dirty_root` in layout) — no
+   helper mutation is needed to observe it.
+5. **Cross-reference change** — change a `<use href="#x">` target's definition
+   (e.g. a referenced `<path>`). The referenced element logs `build [SubtreeDirty]`;
+   the `<use>` that points at it logs `build [ReferencedTarget]` (its target changed),
+   while a second `<use>` pointing at an *untouched* target logs `reuse`. The
+   companion page makes the contrast sharp: two `<use>` elements reference two
+   *different* `<path>` definitions and the button mutates only one. The mutated
+   `<path>` logs `build [SubtreeDirty]`, its untouched sibling logs `reuse` (a plain
+   `<path>` *is* cacheable), the `<use>` of the mutated target logs
+   `build [ReferencedTarget]`, and the `<use>` of the untouched target logs `reuse` — a
+   `<use>` is reused exactly when neither it nor its target changed.
+6. **Viewport change** — change a nested `<svg>`'s `viewBox` so its child's
+   `vw`/`vh` reference dimensions change (percentages resolve against the
+   `viewBox` extent). The mutated `<svg>` logs `build [SubtreeDirty]` (its own
+   attribute changed), its child logs `build [Viewport]`, while an untouched
+   sibling `<svg>` and its child log `reuse`.
+7. **`currentColor` change** — change a `color` that a `fill="currentColor"`
+   element inherits. That subtree logs `build [CurrentColor]` (or
+   `[ComputedStyle]`, since the restyled node's computed style changes too).
+
+The [`#[cfg(test)] mod tests`](mod.rs) in `mod.rs` cover the cache's decision
+logic in isolation: the computed-style identity rule (`ptr_eq` matches only the
+same allocation) and the store/lookup round-trip with each miss reason.
 
 ## Limitations
 
