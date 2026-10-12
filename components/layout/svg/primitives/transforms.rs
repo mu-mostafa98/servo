@@ -26,7 +26,12 @@ pub(crate) fn css_transform_from_computed(
     if list.0.is_empty() {
         return Vec::new();
     }
-    let ops = convert_transform_operations(&list.0);
+    // `translate()`/`translateX()`/`translateY()` percentages resolve against
+    // the same reference box as `transform-origin` (the default `transform-box:
+    // view-box`, i.e. the nearest SVG viewport), so thread the reference
+    // dimensions through instead of resolving them against `None` (which would
+    // silently collapse every percentage to 0 and leave the element unmoved).
+    let ops = convert_transform_operations(&list.0, reference_width, reference_height);
 
     // `transform-origin` applies to the CSS `transform` property only (the SVG
     // `transform` attribute always transforms about the coordinate origin).
@@ -57,7 +62,10 @@ pub(crate) fn css_transform_from_computed(
 /// Convert a slice of Stylo [`TransformOperation`]s into SVG engine [`TransformOp`]s.
 fn convert_transform_operations(
     ops: &[style::values::computed::transform::TransformOperation],
+    reference_width: f32,
+    reference_height: f32,
 ) -> Vec<TransformOp> {
+    use style::values::computed::Length as ComputedLength;
     use style::values::generics::transform::GenericTransformOperation::*;
     use style::values::generics::transform::ToAbsoluteLength;
 
@@ -68,16 +76,32 @@ fn convert_transform_operations(
                 result.push(TransformOp::Rotate(angle.degrees(), 0.0, 0.0));
             },
             Translate(tx, ty) => {
-                let px = ToAbsoluteLength::to_pixel_length(tx, None).unwrap_or(0.0);
-                let py = ToAbsoluteLength::to_pixel_length(ty, None).unwrap_or(0.0);
+                let px = ToAbsoluteLength::to_pixel_length(
+                    tx,
+                    Some(ComputedLength::new(reference_width)),
+                )
+                .unwrap_or(0.0);
+                let py = ToAbsoluteLength::to_pixel_length(
+                    ty,
+                    Some(ComputedLength::new(reference_height)),
+                )
+                .unwrap_or(0.0);
                 result.push(TransformOp::Translate(px, py));
             },
             TranslateX(t) => {
-                let px = ToAbsoluteLength::to_pixel_length(t, None).unwrap_or(0.0);
+                let px = ToAbsoluteLength::to_pixel_length(
+                    t,
+                    Some(ComputedLength::new(reference_width)),
+                )
+                .unwrap_or(0.0);
                 result.push(TransformOp::Translate(px, 0.0));
             },
             TranslateY(t) => {
-                let py = ToAbsoluteLength::to_pixel_length(t, None).unwrap_or(0.0);
+                let py = ToAbsoluteLength::to_pixel_length(
+                    t,
+                    Some(ComputedLength::new(reference_height)),
+                )
+                .unwrap_or(0.0);
                 result.push(TransformOp::Translate(0.0, py));
             },
             Scale(sx, sy) => {
