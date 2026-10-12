@@ -36,13 +36,18 @@ use crate::dom::animationevent::AnimationEvent;
 use crate::dom::bindings::codegen::Bindings::AnimationEventBinding::AnimationEventInit;
 use crate::dom::bindings::codegen::Bindings::EventBinding::EventInit;
 use crate::dom::bindings::codegen::Bindings::TransitionEventBinding::TransitionEventInit;
+#[cfg(feature = "servo-svg")]
 use crate::dom::bindings::inheritance::Castable;
 use crate::dom::bindings::num::Finite;
 use crate::dom::bindings::root::{Dom, DomRoot};
 use crate::dom::bindings::str::DOMString;
 use crate::dom::bindings::trace::NoTrace;
+#[cfg(feature = "servo-svg")]
+use crate::dom::element::Element;
 use crate::dom::event::Event;
 use crate::dom::node::{Node, NodeDamage, NodeTraits, from_untrusted_node_address};
+#[cfg(feature = "servo-svg")]
+use crate::dom::svg::svgsvgelement::SVGSVGElement;
 use crate::dom::transitionevent::TransitionEvent;
 use crate::dom::window::Window;
 use crate::event_loop::script_thread::with_script_thread;
@@ -191,6 +196,27 @@ impl AnimationManager {
             .remove(&NoTrace(opaque_node));
     }
 
+    /// Returns whether `node` is an SVG element whose nearest `<svg>` ancestor
+    /// is being rendered. SVG child elements never get a CSS box of their own —
+    /// their geometry is collected during reflow and painted from the `<svg>`
+    /// root — so they report "not rendered" even while the SVG they belong to
+    /// is on screen, and their animations must keep running while that `<svg>`
+    /// is rendered.
+    #[cfg(feature = "servo-svg")]
+    fn has_rendered_svg_ancestor(node: &Node) -> bool {
+        let Some(element) = node.downcast::<Element>() else {
+            return false;
+        };
+        if !element.is_svg_element() {
+            return false;
+        }
+        // The nearest `<svg>` ancestor (the root `<svg>` or a nested one —
+        // both are `SVGSVGElement`) does create a box of its own.
+        node.ancestors()
+            .find(|ancestor| ancestor.is::<SVGSVGElement>())
+            .is_some_and(|svg| svg.is_being_rendered(None))
+    }
+
     /// This does five things:
     ///  - Cancel animations for any nodes that are no longer being rendered or delegating rendering.
     ///  - Process any new animations that were discovered after reflow.
@@ -203,7 +229,15 @@ impl AnimationManager {
             let rooted_nodes = self.rooted_animation_nodes.borrow();
             for (key, set) in sets.iter_mut() {
                 if rooted_nodes.get(&NoTrace(key.node)).is_some_and(|node| {
-                    !node.is_being_rendered_or_delegates_rendering(key.pseudo_element)
+                    let not_rendered =
+                        !node.is_being_rendered_or_delegates_rendering(key.pseudo_element);
+                    // SVG child elements have no CSS box of their own, so they
+                    // report "not rendered" even while the SVG they belong to
+                    // is on screen. Keep their animations running while the
+                    // nearest `<svg>` ancestor is rendered.
+                    #[cfg(feature = "servo-svg")]
+                    let not_rendered = not_rendered && !Self::has_rendered_svg_ancestor(node);
+                    not_rendered
                 }) {
                     set.cancel_all_animations();
                 }

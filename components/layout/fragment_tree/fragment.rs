@@ -16,6 +16,8 @@ use servo_arc::Arc as ServoArc;
 use servo_base::id::PipelineId;
 use servo_base::print_tree::PrintTree;
 use servo_base::text::Utf32CodeUnits;
+#[cfg(feature = "servo-svg")]
+use servo_svg::document::SvgTree;
 use servo_url::ServoUrl;
 use style::Zero;
 use style::properties::ComputedValues;
@@ -112,6 +114,19 @@ pub(crate) struct TextFragment {
     pub is_empty_for_text_cursor: bool,
 }
 
+/// How an [`ImageFragment`]'s content is painted. A fragment may carry no paint
+/// source yet (an image still loading, or a broken image), in which case the
+/// caller falls back to [`ImageFragment::showing_broken_image_icon`].
+#[derive(MallocSizeOf)]
+pub(crate) enum ImagePaintSource {
+    /// A WebRender image (raster or vector) uploaded to the image cache.
+    Image(ImageKey),
+    /// A CPU-rasterized SVG render tree, rasterized inline during display-list
+    /// construction (see [`crate::svg`]).
+    #[cfg(feature = "servo-svg")]
+    Svg(#[ignore_malloc_size_of = "SVG render tree, tracked separately"] Arc<SvgTree>),
+}
+
 #[derive(MallocSizeOf)]
 pub(crate) struct ImageFragment {
     pub base: BaseFragment,
@@ -120,7 +135,7 @@ pub(crate) struct ImageFragment {
     /// selected.
     pub selected_style: SharedStyle,
     pub clip: PhysicalRect<Au>,
-    pub image_key: Option<ImageKey>,
+    pub paint_source: Option<ImagePaintSource>,
     pub showing_broken_image_icon: bool,
     pub url: Option<ServoUrl>,
     /// The intrinsic (natural) width of the image, if known.

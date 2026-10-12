@@ -99,6 +99,12 @@ pub trait LayoutNode<'dom>: Copy + Debug + NodeInfo + Send + Sync {
     /// Converts self into an `OpaqueNode`.
     fn opaque(&self) -> OpaqueNode;
 
+    /// The maximum dirty version of this node and all of its descendants — a
+    /// monotonically increasing counter bumped on every DOM mutation and never
+    /// reset. Layout caches use it as a persistent "subtree changed" signal
+    /// that survives reflows.
+    fn inclusive_descendants_version(&self) -> u64;
+
     /// Returns the type ID of this node. Returns `None` if this is a pseudo-element; otherwise,
     /// returns `Some`.
     fn type_id(&self) -> Option<LayoutNodeType>;
@@ -181,6 +187,11 @@ pub trait LayoutNode<'dom>: Copy + Debug + NodeInfo + Send + Sync {
 
     /// If this is an image element, returns its URL. If this is not an image element, fails.
     fn image_url(&self) -> Option<ServoUrl>;
+
+    /// Returns the owner document's base URL, used to resolve relative URLs
+    /// (e.g. SVG `<image href>` presentation attributes) into absolute
+    /// `ServoUrl`s for the image cache.
+    fn base_url(&self) -> ServoUrl;
 
     /// If this is an image element, returns its current-pixel-density. If this is not an image element, fails.
     fn image_density(&self) -> Option<f64>;

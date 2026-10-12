@@ -183,13 +183,27 @@ pub(crate) fn compute_damage_and_rebuild_box_tree_below_dirty_root<'dom>(
         return damage_from_parent;
     };
 
-    let (element_damage, is_display_none) = {
+    let (mut element_damage, is_display_none) = {
         let mut element_data = element.element_data_mut();
         (
             LayoutDamage::from(std::mem::take(&mut element_data.damage)),
             element_data.styles.is_display_none(),
         )
     };
+
+    // SVG child elements have no CSS box of their own — the whole SVG is rendered
+    // from the render tree that `build_svg_tree` rebuilds on the root `<svg>` box's
+    // reflow. Stylo classifies SVG paint properties (`fill`, `stroke`, …) as
+    // paint-only, so a style change to one produces only `Repaint`-level damage,
+    // which never propagates up to that box and the change would be silently
+    // dropped. `LayoutDamage::Relayout` (0b1111) is the superset of every restyle
+    // damage, so `intersects(Relayout)` below is true for `Repaint` through full
+    // relayout alike; upgrade any such restyle damage to box damage so it walks up
+    // to the `<svg>` replaced element and re-runs the build.
+    #[cfg(feature = "servo-svg")]
+    if element.is_svg_element() && element_damage.intersects(LayoutDamage::Relayout) {
+        element_damage.insert(LayoutDamage::DescendantHasBoxDamage);
+    }
 
     let has_dirty_descendants;
     #[expect(unsafe_code)]

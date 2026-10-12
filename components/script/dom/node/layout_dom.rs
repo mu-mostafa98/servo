@@ -48,6 +48,12 @@ impl<'dom> LayoutDom<'dom, Node> {
         self.unsafe_get().type_id()
     }
 
+    /// The maximum dirty version of this node and all of its descendants.
+    #[inline]
+    pub(crate) fn inclusive_descendants_version(self) -> u64 {
+        self.unsafe_get().inclusive_descendants_version()
+    }
+
     #[inline]
     pub(crate) fn is_element_for_layout(&self) -> bool {
         (*self).is::<Element>()
