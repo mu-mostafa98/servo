@@ -54,7 +54,7 @@ pub(crate) fn build_shape(
         "line" => parse_line(&get, fs, vw, vh),
         "polyline" => parse_polyline(&get),
         "polygon" => parse_polygon(&get),
-        "path" => parse_path(&get),
+        "path" => parse_path(&get, computed),
         _ => None,
     }
 }
@@ -226,14 +226,39 @@ fn parse_polygon(get: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
     }))
 }
 
-fn parse_path(get: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
-    let d = get("d")?;
+fn parse_path(
+    get: &dyn Fn(&str) -> Option<String>,
+    computed: Option<&style::properties::ComputedValues>,
+) -> Option<Shape> {
+    // `d` is a CSS property (`DProperty`); when Stylo resolved this element,
+    // read the computed value (which the CSS animation machinery mutates) so
+    // `@keyframes`/WAAPI/transition on `d` take effect. Only unstyled nodes
+    // fall back to the raw attribute.
+    let d = match computed {
+        Some(cv) => match cv.get_svg().clone_d() {
+            style::values::specified::DProperty::Path(data) => path_data_to_string(&data)?,
+            style::values::specified::DProperty::None => return None,
+        },
+        None => get("d")?,
+    };
     kurbo::BezPath::from_svg(&d).ok().map(|bez| {
         Shape::Path(Path {
             path: bez_to_path_data(&bez),
             path_length: parse_path_length(get),
         })
     })
+}
+
+/// Serialize a stylo [`style::values::specified::SVGPathData`] back to its raw
+/// SVG path string (no `path("…")` wrapper, no quotes) so `kurbo` can re-parse it.
+fn path_data_to_string(data: &style::values::specified::SVGPathData) -> Option<String> {
+    use std::fmt::Write as _;
+    let mut out = String::new();
+    {
+        let mut writer = style_traits::CssWriter::new(&mut out);
+        data.to_css(&mut writer, false).ok()?;
+    }
+    Some(out)
 }
 
 /// Convert a parsed [`kurbo::BezPath`] into the model's pure [`PathData`].

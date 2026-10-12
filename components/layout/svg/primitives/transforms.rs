@@ -9,15 +9,49 @@ use servo_svg::transform::TransformOp;
 use svgtypes::{TransformListParser, TransformListToken};
 
 /// Convert a CSS `transform` property from Stylo's [`ComputedValues`] into
-/// the SVG engine's [`TransformOp`] list.
+/// the SVG engine's [`TransformOp`] list, honoring `transform-origin`.
+///
+/// The origin (in user units) is applied as `translate(origin) · transform ·
+/// translate(-origin)`, so that e.g. `scale()` expands about the origin point
+/// in all directions instead of only down-right from the viewport's top-left.
 pub(crate) fn css_transform_from_computed(
     values: &style::properties::ComputedValues,
+    reference_width: f32,
+    reference_height: f32,
 ) -> Vec<TransformOp> {
+    use style::values::computed::Length as ComputedLength;
+    use style::values::generics::transform::ToAbsoluteLength;
+
     let list = &values.get_box().transform;
     if list.0.is_empty() {
         return Vec::new();
     }
-    convert_transform_operations(&list.0)
+    let ops = convert_transform_operations(&list.0);
+
+    // `transform-origin` applies to the CSS `transform` property only (the SVG
+    // `transform` attribute always transforms about the coordinate origin).
+    // Percentages resolve against the nearest SVG viewport (the default
+    // `transform-box: view-box`), threaded in as `reference_width`/`height`.
+    let origin = &values.get_box().transform_origin;
+    let ox = ToAbsoluteLength::to_pixel_length(
+        &origin.horizontal,
+        Some(ComputedLength::new(reference_width)),
+    )
+    .unwrap_or(0.0);
+    let oy = ToAbsoluteLength::to_pixel_length(
+        &origin.vertical,
+        Some(ComputedLength::new(reference_height)),
+    )
+    .unwrap_or(0.0);
+    if ox == 0.0 && oy == 0.0 {
+        return ops;
+    }
+
+    let mut result = Vec::with_capacity(ops.len() + 2);
+    result.push(TransformOp::Translate(ox, oy));
+    result.extend(ops);
+    result.push(TransformOp::Translate(-ox, -oy));
+    result
 }
 
 /// Convert a slice of Stylo [`TransformOperation`]s into SVG engine [`TransformOp`]s.

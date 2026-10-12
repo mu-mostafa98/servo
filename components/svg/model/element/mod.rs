@@ -41,6 +41,11 @@ pub struct SvgNode {
     /// Child nodes, `Arc`-shared so clean subtrees can be reused across
     /// incremental reflows by the layout-thread subtree cache.
     pub children: Vec<Arc<SvgNode>>,
+    /// The DOM node this render node was built from, as a raw `usize` address
+    /// (`OpaqueNode.0`). `None` for synthetic nodes (definition wrappers, test
+    /// fixtures). Hit-testing maps this back to a DOM node so `:hover` and
+    /// pointer events can target SVG content.
+    pub source_node: Option<usize>,
 }
 
 /// The kind of content an [`SvgNode`] carries.

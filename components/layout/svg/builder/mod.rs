@@ -304,7 +304,14 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
 
         // Text / tspan — extract text content from DOM children.
         if tag_name == "text" || tag_name == "tspan" {
-            return text::build_text_node(node, self.context, &self.css_rules, &self.element_ids);
+            return text::build_text_node(
+                node,
+                self.context,
+                &self.css_rules,
+                &self.element_ids,
+                vw,
+                vh,
+            );
         }
 
         // A nested `<svg>` (any `<svg>` except the root) establishes its own
@@ -339,6 +346,8 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             &self.css_rules,
             inherited,
             inherited_color,
+            vw,
+            vh,
         );
         let id = extract_id(&element);
         let (children, cross_ref) = resolve::resolve_children(
@@ -362,6 +371,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
                 transforms,
                 viewport,
                 children,
+                source_node: Some(node.opaque().0),
             },
             cross_ref,
         ))

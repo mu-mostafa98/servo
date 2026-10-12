@@ -179,6 +179,9 @@ pub struct NodeStyle {
     pub opacity: Opacity,
     /// Marker references (start/mid/end).
     pub markers: Option<MarkerRefs>,
+    /// Whether the element has `pointer-events: none`, which makes it (but not
+    /// its descendants) transparent to pointer events.
+    pub pointer_events_none: bool,
 }
 
 impl Default for NodeStyle {
@@ -194,6 +197,7 @@ impl Default for NodeStyle {
             filter: None,
             opacity: Opacity::ONE,
             markers: None,
+            pointer_events_none: false,
         }
     }
 }

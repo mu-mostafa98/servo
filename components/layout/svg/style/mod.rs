@@ -191,6 +191,8 @@ impl FromComputedValues for NodeStyle {
             filter: None,
             opacity: Opacity::new(values.get_effects().opacity),
             markers: None,
+            pointer_events_none: values.get_inherited_ui().pointer_events ==
+                style::computed_values::pointer_events::T::None,
         })
     }
 }
@@ -234,17 +236,25 @@ pub(crate) fn build_style(
     css_rules: &CssClassRules,
     inherited: Option<&NodeStyle>,
     inherited_color: Option<SvgColor>,
+    view_width: f32,
+    view_height: f32,
 ) -> (NodeStyle, Vec<TransformOp>, SvgColor) {
     let Some(element) = node.as_element() else {
         return (NodeStyle::default(), Vec::new(), SvgColor::black());
     };
-    let (mut style, css_transform, computed_color) = if element.style_data().is_some() {
+    // When Stylo resolved this element's style, its `fill`/`stroke`/`opacity`/
+    // `visibility`/`display` presentation attributes are already synthesized
+    // into the computed values (see `SVGElement::synthesize_presentational_hints`)
+    // with correct cascade precedence — inline style and class rules already
+    // beat the attributes. Re-applying them below would invert that precedence.
+    let stylo_resolved = element.style_data().is_some();
+    let (mut style, css_transform, computed_color) = if stylo_resolved {
         let computed = node.style(&context.style_context);
         let style = NodeStyle::from_computed_values(&computed).unwrap_or_default();
         let computed_color = absolute_to_svg_color(&computed.clone_color());
         (
             style,
-            css_transform_from_computed(&computed),
+            css_transform_from_computed(&computed, view_width, view_height),
             computed_color,
         )
     } else {
@@ -269,7 +279,7 @@ pub(crate) fn build_style(
     let attr_ops = parse_transform_str(&get_attr(&element, "transform").unwrap_or_default());
     let transforms: Vec<TransformOp> = [css_transform, attr_ops].concat();
     apply_css_class_rules(&element, css_rules, &mut style, &current_color);
-    apply_presentation_attrs(&element, &mut style, &current_color);
+    apply_presentation_attrs(&element, &mut style, &current_color, stylo_resolved);
     apply_render_hints_from_attrs(&element, &mut style);
     if let Some(inherited) = inherited {
         apply_use_inheritance(&element, &mut style, inherited);
@@ -365,38 +375,51 @@ fn apply_presentation_attrs(
     element: &ServoLayoutElement,
     style: &mut NodeStyle,
     current_color: &SvgColor,
+    stylo_resolved: bool,
 ) {
-    apply_stroke_presentation_attrs(element, style, current_color);
-    apply_fill_presentation_attrs(element, style, current_color);
+    // `fill`/`stroke`/`opacity`/`visibility`/`display` presentation attributes
+    // are synthesized into the computed style by Stylo (see
+    // `SVGElement::synthesize_presentational_hints`), so when Stylo resolved
+    // this element they are *already* applied with correct cascade precedence
+    // (inline style and class rules beat the attributes). Only apply them
+    // manually here for elements Stylo did not style — re-reading the raw
+    // attribute over a Stylo-resolved style would invert the cascade.
+    if !stylo_resolved {
+        apply_stroke_presentation_attrs(element, style, current_color);
+        apply_fill_presentation_attrs(element, style, current_color);
+
+        let style_attr = get_attr(element, "style");
+        let read_attr_or_inline = |name: &str| -> Option<String> {
+            get_attr(element, name).or_else(|| {
+                style_attr
+                    .as_ref()
+                    .and_then(|s| parse_inline_style_prop(s, name))
+            })
+        };
+        // visibility
+        if let Some(v) = read_attr_or_inline("visibility") {
+            match v.trim() {
+                "hidden" | "collapse" => style.visibility = Visibility::Hidden,
+                _ => {},
+            }
+        }
+        // opacity
+        if let Some(v) = read_attr_or_inline("opacity") {
+            if let Ok(op) = v.parse::<f32>() {
+                style.opacity = Opacity::new(op);
+            }
+        }
+        // display
+        if let Some(v) = read_attr_or_inline("display") {
+            if v.trim().eq_ignore_ascii_case("none") {
+                style.display = Display::None;
+            }
+        }
+    }
+
+    // `marker-*` is not synthesized by Stylo, and `filter` cannot round-trip
+    // through Servo's `Filter` computed type (its URL parameter is
+    // `Impossible`), so both are always applied manually.
     apply_marker_presentation_attrs(element, style);
-
-    let style_attr = get_attr(element, "style");
-    let read_attr_or_inline = |name: &str| -> Option<String> {
-        get_attr(element, name).or_else(|| {
-            style_attr
-                .as_ref()
-                .and_then(|s| parse_inline_style_prop(s, name))
-        })
-    };
-    // visibility
-    if let Some(v) = read_attr_or_inline("visibility") {
-        match v.trim() {
-            "hidden" | "collapse" => style.visibility = Visibility::Hidden,
-            _ => {},
-        }
-    }
-    // opacity
-    if let Some(v) = read_attr_or_inline("opacity") {
-        if let Ok(op) = v.parse::<f32>() {
-            style.opacity = Opacity::new(op);
-        }
-    }
-    // display
-    if let Some(v) = read_attr_or_inline("display") {
-        if v.trim().eq_ignore_ascii_case("none") {
-            style.display = Display::None;
-        }
-    }
-
     apply_filter_attribute(&element, style);
 }

@@ -270,6 +270,7 @@ mod tests {
             transforms: Vec::new(),
             viewport: None,
             children: Vec::new(),
+            source_node: None,
         })
     }
 

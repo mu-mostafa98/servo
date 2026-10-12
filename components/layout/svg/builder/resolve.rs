@@ -341,6 +341,7 @@ fn resolve_use_children<'dom>(
                             },
                         }),
                         children: target_node.children,
+                        source_node: target_node.source_node,
                     };
                     return vec![Arc::new(wrapper)];
                 }

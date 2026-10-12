@@ -56,6 +56,8 @@ pub(crate) fn build_text_node<'dom>(
     context: &LayoutContext,
     css_rules: &HashMap<String, HashMap<String, String>>,
     element_ids: &HashMap<String, ServoLayoutNode<'dom>>,
+    view_width: f32,
+    view_height: f32,
 ) -> Option<(SvgNode, CrossRef)> {
     let element = node.as_element()?;
     let fs: f32 = 16.0;
@@ -73,7 +75,7 @@ pub(crate) fn build_text_node<'dom>(
     if runs.is_empty() {
         let mut span = build_text(node, &get, fs)?;
         shape_text_span(&mut span, node, context);
-        let (style, transforms, _color) = build_style(node, context, css_rules, None, None);
+        let (style, transforms, _color) = build_style(node, context, css_rules, None, None, view_width, view_height);
         let id = extract_id(&element);
         return Some((
             SvgNode {
@@ -83,6 +85,7 @@ pub(crate) fn build_text_node<'dom>(
                 transforms,
                 viewport: None,
                 children: vec![],
+                source_node: Some(node.opaque().0),
             },
             CrossRef::None,
         ));
@@ -97,7 +100,7 @@ pub(crate) fn build_text_node<'dom>(
         if let Some(p) = &placement {
             place_on_path(&mut span, &p.path, p.start_offset, p.anchor);
         }
-        let (style, transforms, _color) = build_style(node, context, css_rules, None, None);
+        let (style, transforms, _color) = build_style(node, context, css_rules, None, None, view_width, view_height);
         let id = extract_id(&element);
         return Some((
             SvgNode {
@@ -107,6 +110,7 @@ pub(crate) fn build_text_node<'dom>(
                 transforms,
                 viewport: None,
                 children: vec![],
+                source_node: Some(node.opaque().0),
             },
             if has_text_path {
                 CrossRef::Complex
@@ -155,7 +159,7 @@ pub(crate) fn build_text_node<'dom>(
             // A `<textPath>` run is already positioned on the path; it does not
             // take part in the horizontal pen / vertical dy flow.
             let (run_style, run_transforms, _color) =
-                build_style(run_node, context, css_rules, None, None);
+                build_style(run_node, context, css_rules, None, None, view_width, view_height);
             let run_id = extract_id(&run_node.as_element()?);
             children.push(Arc::new(SvgNode {
                 id: run_id,
@@ -164,6 +168,7 @@ pub(crate) fn build_text_node<'dom>(
                 transforms: run_transforms,
                 viewport: None,
                 children: vec![],
+                source_node: Some(run_node.opaque().0),
             }));
             continue;
         }
@@ -184,7 +189,7 @@ pub(crate) fn build_text_node<'dom>(
         dy_pen += span.dy.iter().sum::<f32>();
         pen += span.total_advance();
         let (run_style, run_transforms, _color) =
-            build_style(run_node, context, css_rules, None, None);
+            build_style(run_node, context, css_rules, None, None, view_width, view_height);
         let run_id = extract_id(&run_node.as_element()?);
         children.push(Arc::new(SvgNode {
             id: run_id,
@@ -193,10 +198,11 @@ pub(crate) fn build_text_node<'dom>(
             transforms: run_transforms,
             viewport: None,
             children: vec![],
+            source_node: Some(run_node.opaque().0),
         }));
     }
 
-    let (style, transforms, _color) = build_style(node, context, css_rules, None, None);
+    let (style, transforms, _color) = build_style(node, context, css_rules, None, None, view_width, view_height);
     let id = extract_id(&element);
     Some((
         SvgNode {
@@ -206,6 +212,7 @@ pub(crate) fn build_text_node<'dom>(
             transforms,
             viewport: None,
             children,
+            source_node: Some(node.opaque().0),
         },
         if has_text_path {
             CrossRef::Complex

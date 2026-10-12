@@ -9,6 +9,7 @@
 
 pub(crate) mod effects;
 pub(crate) mod geometry;
+pub(crate) mod hit_test;
 pub(crate) mod renderer;
 pub(crate) mod tessellator;
 pub(crate) mod traversal;

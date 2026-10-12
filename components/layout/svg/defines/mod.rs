@@ -135,5 +135,6 @@ fn build_def_content_root(children: Vec<Arc<SvgNode>>) -> SvgNode {
         transforms: Vec::new(),
         viewport: None,
         children,
+        source_node: None,
     }
 }

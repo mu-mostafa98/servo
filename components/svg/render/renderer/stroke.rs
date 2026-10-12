@@ -552,6 +552,7 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
         filter: None,
         opacity: ctx.style.opacity,
         markers: None,
+        pointer_events_none: false,
         stroke: Some(StrokeParams {
             paint_server: stroke.paint_server.clone(),
             opacity: stroke.opacity,

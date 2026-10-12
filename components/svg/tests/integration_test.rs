@@ -743,6 +743,7 @@ fn clip_path_def_non_empty_shapes() {
         transforms: vec![],
         viewport: None,
         children: vec![],
+        source_node: None,
     };
     let def = ClipPathDef {
         root,
@@ -769,6 +770,7 @@ fn mask_def_with_shapes_and_styles() {
         transforms: vec![],
         viewport: None,
         children: vec![],
+        source_node: None,
     };
     let def = MaskDef {
         root,
@@ -826,6 +828,7 @@ fn pattern_def_basic() {
         transforms: vec![],
         viewport: None,
         children: vec![],
+        source_node: None,
     };
     let def = PatternDef {
         width: PatternLength::Number(20.0),
@@ -1155,6 +1158,7 @@ fn defs_container_in_tree() {
         transforms: vec![],
         viewport: None,
         children: vec![],
+        source_node: None,
     };
     assert!(matches!(defs.tag, SvgTag::Container(Container::Defs)));
 }
@@ -1169,6 +1173,7 @@ fn svg_node_with_transforms() {
         transforms: vec![TransformOp::Translate(50.0, 50.0)],
         viewport: None,
         children: vec![],
+        source_node: None,
     };
     assert_eq!(node.transforms.len(), 1);
 }
@@ -1341,6 +1346,7 @@ fn make_simple_tree() -> SvgTree {
         transforms: vec![],
         viewport: None,
         children: vec![],
+        source_node: None,
     };
     let child2 = SvgNode {
         id: Some(Id::new("child2")),
@@ -1357,6 +1363,7 @@ fn make_simple_tree() -> SvgTree {
         transforms: vec![],
         viewport: None,
         children: vec![],
+        source_node: None,
     };
     let root = SvgNode {
         id: Some(Id::new("root")),
@@ -1365,6 +1372,7 @@ fn make_simple_tree() -> SvgTree {
         transforms: vec![],
         viewport: None,
         children: vec![Arc::new(child1), Arc::new(child2)],
+        source_node: None,
     };
     SvgTree {
         root,
@@ -1402,6 +1410,7 @@ fn make_empty_tree() -> SvgTree {
         transforms: vec![],
         viewport: None,
         children: vec![],
+        source_node: None,
     };
     SvgTree {
         root,
