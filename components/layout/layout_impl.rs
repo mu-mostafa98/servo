@@ -118,6 +118,10 @@ static SERVO_CSS: &[u8] = include_bytes!("./stylesheets/servo.css");
 
 /// An override stylesheet that lets SVG children participate in the SVG
 /// engine's own layout instead of being hidden by `servo.css`.
+///
+/// Shadows `svg > * { display: none; }` in `servo.css` (same specificity, later
+/// UA stylesheet wins). If that rule's selector ever changes, this selector
+/// must change with it.
 #[cfg(feature = "servo-svg")]
 static SERVO_SVG_CSS: &[u8] = b"svg > * { display: inline; }";
 

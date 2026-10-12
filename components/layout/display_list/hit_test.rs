@@ -27,7 +27,7 @@ use crate::display_list::clip::{Clip, ClipId};
 use crate::display_list::paint_traversal::{PaintTraversal, PaintTraversalHandler};
 use crate::display_list::{StackingContext, StackingContextTree, ToWebRender, TraversalState};
 use crate::fragment_tree::{
-    BoxFragmentWithStyle, Fragment, FragmentFlags, ImageFragment, TextFragment,
+    BoxFragmentWithStyle, Fragment, FragmentFlags, ImageFragment, ImagePaintSource, TextFragment,
 };
 use crate::geom::PhysicalRect;
 
@@ -390,7 +390,7 @@ fn hit_test_svg_image(
 
     #[cfg(feature = "servo-svg")]
     {
-        let Some(ref svg_tree) = image_fragment.svg_render_tree else {
+        let Some(ImagePaintSource::Svg(svg_tree)) = image_fragment.paint_source.as_ref() else {
             return false;
         };
 

@@ -131,6 +131,12 @@ pub(crate) struct ImageResolver {
     /// as replaced elements and the layout is responsible for triggering the
     /// network load for the corresponding serialized data: urls (similar to
     /// background images).
+    ///
+    /// Only the `#[cfg(not(feature = "servo-svg"))]` path enqueues here — the
+    /// `servo-svg` engine builds an `Arc<SvgTree>` straight from the DOM (see
+    /// [`crate::svg::build_svg_tree`]) instead of serializing to a data URL, so
+    /// this queue stays empty when the feature is enabled. It is kept
+    /// unconditionally so the off-feature serialization path still compiles.
     pub pending_svg_elements_for_serialization: Mutex<Vec<UntrustedNodeAddress>>,
 
     /// A shared reference to script's map of DOM nodes with animated images. This is used

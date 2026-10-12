@@ -196,8 +196,10 @@ pub(crate) fn compute_damage_and_rebuild_box_tree_below_dirty_root<'dom>(
     // reflow. Stylo classifies SVG paint properties (`fill`, `stroke`, …) as
     // paint-only, so a style change to one produces only `Repaint`-level damage,
     // which never propagates up to that box and the change would be silently
-    // dropped. Upgrade any such change to box damage so it walks up to the `<svg>`
-    // replaced element and re-runs the build.
+    // dropped. `LayoutDamage::Relayout` (0b1111) is the superset of every restyle
+    // damage, so `intersects(Relayout)` below is true for `Repaint` through full
+    // relayout alike; upgrade any such restyle damage to box damage so it walks up
+    // to the `<svg>` replaced element and re-runs the build.
     #[cfg(feature = "servo-svg")]
     if element.is_svg_element() && element_damage.intersects(LayoutDamage::Relayout) {
         element_damage.insert(LayoutDamage::DescendantHasBoxDamage);

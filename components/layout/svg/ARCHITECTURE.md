@@ -11,6 +11,28 @@ model in `components/svg/`. It does not rasterize — it *builds* an
 is the single entry point (called from `crate::replaced`). Everything else is
 `pub(crate)`.
 
+## Boxless SVG children — a cross-layer invariant
+
+SVG child elements (`<rect>`, `<g>`, `<text>`, …) have **no CSS box of their
+own**. The whole SVG is laid out and painted from the single box of the root
+`<svg>` replaced element, which triggers `build_svg_tree` and then rasterizes
+the resulting tree. That one decision forces three carve-outs in the rest of
+layout/script, and they must stay in sync:
+
+1. **Box creation** — [`dom_traversal.rs`](../dom_traversal.rs) returns early for
+   any non-`<svg>` SVG element so it never becomes a box.
+2. **Damage** — [`traversal.rs`](../traversal.rs) upgrades any restyle damage on
+   an SVG element to `DescendantHasBoxDamage` so a `fill`/`stroke`/… change walks
+   up to the `<svg>` box and re-runs the build.
+3. **Animation** — `AnimationManager::has_rendered_svg_ancestor`
+   ([`animation_manager.rs`](../../../script/dom/document/animation_manager.rs))
+   keeps animations on boxless SVG children running while their nearest `<svg>`
+   ancestor is on screen.
+
+If you change damage propagation, box-tree construction, or the animation
+manager's "is this node being rendered" logic, check that all three still
+account for SVG children being boxless.
+
 ## The four layers
 
 | Layer | Role | Pattern |

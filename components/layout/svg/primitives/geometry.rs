@@ -251,6 +251,13 @@ fn parse_path(
 
 /// Serialize a stylo [`style::values::specified::SVGPathData`] back to its raw
 /// SVG path string (no `path("…")` wrapper, no quotes) so `kurbo` can re-parse it.
+///
+/// We round-trip through kurbo rather than mapping `SVGPathData::commands()`
+/// straight into the model: the model's [`PathData`] holds only `M`/`L`/`Q`/`C`/`Z`,
+/// while stylo's commands also carry elliptical arcs and `S`/`T` smooth curves.
+/// kurbo's SVG parser does that flattening for us (arc → cubic, smooth-curve
+/// control reflection, `H`/`V` → `L`). `SVGPathData::normalize()` would still
+/// leave non-degenerate arcs as arcs, so it is not a drop-in replacement.
 fn path_data_to_string(data: &style::values::specified::SVGPathData) -> Option<String> {
     use std::fmt::Write as _;
     let mut out = String::new();

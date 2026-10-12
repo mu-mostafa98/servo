@@ -65,7 +65,7 @@ use crate::display_list::paint_traversal::{PaintTraversal, PaintTraversalHandler
 use crate::fragment_tree::{
     BackgroundMode, BaseFragment, BoxFragment, BoxFragmentWithStyle, ContainingBlockCalculation,
     Fragment, FragmentFlags, FragmentStatus, FragmentTree, IFrameFragment, ImageFragment,
-    PositioningFragment, SpecificLayoutInfo, Tag, TextFragment,
+    ImagePaintSource, PositioningFragment, SpecificLayoutInfo, Tag, TextFragment,
 };
 use crate::geom::{
     LengthPercentageOrAuto, PhysicalPoint, PhysicalRect, PhysicalSides, PhysicalSize,
@@ -863,7 +863,7 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
         let common = self.common_properties(state, clip, &style);
 
         #[cfg(feature = "servo-svg")]
-        if let Some(ref svg_tree) = fragment.svg_render_tree {
+        if let Some(ImagePaintSource::Svg(svg_tree)) = fragment.paint_source.as_ref() {
             use servo_svg::render_svg_tree;
             let spatial_id = self.spatial_id(state.spatial_id);
             let clip_chain_id = self.clip_chain_id(state.clip_id);
@@ -896,13 +896,13 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
             return;
         }
 
-        if let Some(image_key) = fragment.image_key {
+        if let Some(ImagePaintSource::Image(image_key)) = fragment.paint_source.as_ref() {
             self.wr().push_image(
                 &common,
                 rect,
                 image_rendering,
                 wr::AlphaType::PremultipliedAlpha,
-                image_key,
+                *image_key,
                 wr::ColorF::WHITE,
             );
 

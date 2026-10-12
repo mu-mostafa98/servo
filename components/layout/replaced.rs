@@ -44,6 +44,7 @@ use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
 use crate::fragment_tree::{
     BaseFragment, BaseFragmentInfo, CollapsedBlockMargins, Fragment, IFrameFragment, ImageFragment,
+    ImagePaintSource,
 };
 use crate::geom::{LogicalVec2, PhysicalPoint, PhysicalRect, PhysicalSize};
 use crate::layout_box_base::{IndependentFormattingContextLayoutResult, LayoutBoxBase};
@@ -579,13 +580,11 @@ impl ReplacedContents {
                         style: style.clone().into(),
                         selected_style: self.selected_style.clone(),
                         clip,
-                        image_key: Some(image_key),
+                        paint_source: Some(ImagePaintSource::Image(image_key)),
                         showing_broken_image_icon: image_info.showing_broken_image_icon,
                         url: image_info.url.clone(),
                         natural_width: self.natural_size.width,
                         natural_height: self.natural_size.height,
-                        #[cfg(feature = "servo-svg")]
-                        svg_render_tree: None,
                         selected: self.selected.clone(),
                     }))
                 })
@@ -597,13 +596,11 @@ impl ReplacedContents {
                     style: style.clone().into(),
                     selected_style: self.selected_style.clone(),
                     clip,
-                    image_key: video_info.image_key,
+                    paint_source: video_info.image_key.map(ImagePaintSource::Image),
                     showing_broken_image_icon: false,
                     url: video_info.poster_url.clone(),
                     natural_width: self.natural_size.width,
                     natural_height: self.natural_size.height,
-                    #[cfg(feature = "servo-svg")]
-                    svg_render_tree: None,
                     selected: self.selected.clone(),
                 }))]
             },
@@ -645,13 +642,11 @@ impl ReplacedContents {
                     style: style.clone().into(),
                     selected_style: self.selected_style.clone(),
                     clip,
-                    image_key: Some(image_key),
+                    paint_source: Some(ImagePaintSource::Image(image_key)),
                     showing_broken_image_icon: false,
                     url: None,
                     natural_width: self.natural_size.width,
                     natural_height: self.natural_size.height,
-                    #[cfg(feature = "servo-svg")]
-                    svg_render_tree: None,
                     selected: self.selected.clone(),
                 }))]
             },
@@ -667,12 +662,11 @@ impl ReplacedContents {
                         style: style.clone().into(),
                         selected_style: self.selected_style.clone(),
                         clip,
-                        image_key: None,
+                        paint_source: Some(ImagePaintSource::Svg(tree.clone())),
                         showing_broken_image_icon: false,
                         url: None,
                         natural_width: self.natural_size.width,
                         natural_height: self.natural_size.height,
-                        svg_render_tree: Some(tree.clone()),
                         selected: self.selected.clone(),
                     }))];
                 }
@@ -728,13 +722,11 @@ impl ReplacedContents {
                             style: style.clone().into(),
                             selected_style: self.selected_style.clone(),
                             clip,
-                            image_key: Some(image_key),
+                            paint_source: Some(ImagePaintSource::Image(image_key)),
                             showing_broken_image_icon: false,
                             url: None,
                             natural_width: self.natural_size.width,
                             natural_height: self.natural_size.height,
-                            #[cfg(feature = "servo-svg")]
-                            svg_render_tree: None,
                             selected: self.selected.clone(),
                         }))
                     })
