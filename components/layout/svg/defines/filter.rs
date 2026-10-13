@@ -12,6 +12,7 @@ use web_atoms::ns;
 
 use super::{DefinitionParser, element_id};
 use crate::svg::builder::SvgTreeBuilder;
+use crate::svg::limits::MAX_STD_DEVIATION;
 use crate::svg::primitives::paint::parse_color_rgba;
 
 pub(crate) struct FilterParser;
@@ -92,12 +93,15 @@ impl DefinitionParser for FilterParser {
                 match pname.as_str() {
                     "feGaussianBlur" => {
                         let (sdx, sdy) = prim_get_float_pair("stdDeviation", 0.0);
-                        primitives.push(FilterPrimitive::GaussianBlur(sdx, sdy));
+                        primitives.push(FilterPrimitive::GaussianBlur(
+                            sdx.min(MAX_STD_DEVIATION),
+                            sdy.min(MAX_STD_DEVIATION),
+                        ));
                     },
                     "feDropShadow" => {
                         let dx = prim_get_float("dx", 2.0);
                         let dy = prim_get_float("dy", 2.0);
-                        let std_dev = prim_get_float("stdDeviation", 2.0);
+                        let std_dev = prim_get_float("stdDeviation", 2.0).min(MAX_STD_DEVIATION);
                         let flood_color_str =
                             prim_get("flood-color").unwrap_or_else(|| "black".to_owned());
                         let (r, g, b, a) = parse_color_rgba(&flood_color_str);

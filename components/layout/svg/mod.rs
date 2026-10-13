@@ -21,6 +21,7 @@
 
 pub(crate) mod builder;
 pub(crate) mod defines;
+pub(crate) mod limits;
 pub(crate) mod primitives;
 pub(crate) mod style;
 

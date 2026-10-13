@@ -21,6 +21,7 @@ use servo_svg::units::Length;
 use style::values::computed::{Length as CssLength, LengthPercentage};
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 
+use crate::svg::limits::MAX_PATH_SEGMENTS;
 use crate::svg::primitives::attrs::{get_attr, parse_length_resolved, parse_points};
 
 const SVG_DEFAULT_FONT_SIZE: f32 = 16.0;
@@ -241,11 +242,14 @@ fn parse_path(
         },
         None => get("d")?,
     };
-    kurbo::BezPath::from_svg(&d).ok().map(|bez| {
-        Shape::Path(Path {
+    kurbo::BezPath::from_svg(&d).ok().and_then(|bez| {
+        if bez.elements().len() > MAX_PATH_SEGMENTS {
+            return None;
+        }
+        Some(Shape::Path(Path {
             path: bez_to_path_data(&bez),
             path_length: parse_path_length(get),
-        })
+        }))
     })
 }
 

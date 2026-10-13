@@ -14,6 +14,7 @@ use style::values::generics::svg::SVGLength;
 use svgtypes::Color as SvgColor;
 
 use super::{FromComputedValues, ResolvedPaint, resolve_svg_paint};
+use crate::svg::limits::{MAX_DASH_COUNT, MAX_DASH_LENGTH, MAX_MITER_LIMIT, MAX_STROKE_WIDTH};
 use crate::svg::primitives::attrs::{
     SVG_DEFAULT_FONT_SIZE, get_attr, parse_inline_style_prop, parse_length_token,
 };
@@ -32,7 +33,8 @@ impl FromComputedValues for StrokeParams {
                 nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0)
             },
             _ => 1.0,
-        };
+        }
+        .min(MAX_STROKE_WIDTH);
         let line_cap = match inherited_svg.stroke_linecap {
             style::computed_values::stroke_linecap::T::Butt => LineCap::Butt,
             style::computed_values::stroke_linecap::T::Round => LineCap::Round,
@@ -43,7 +45,7 @@ impl FromComputedValues for StrokeParams {
             style::computed_values::stroke_linejoin::T::Round => LineJoin::Round,
             style::computed_values::stroke_linejoin::T::Bevel => LineJoin::Bevel,
         };
-        let miter_limit = inherited_svg.stroke_miterlimit.0;
+        let miter_limit = inherited_svg.stroke_miterlimit.0.min(MAX_MITER_LIMIT);
         let dash_array = match &inherited_svg.stroke_dasharray {
             SVGStrokeDashArray::Values(vs) => {
                 if vs.is_empty() {
@@ -51,7 +53,13 @@ impl FromComputedValues for StrokeParams {
                 } else {
                     Some(
                         vs.iter()
-                            .map(|v| v.0.to_length().map(|l| l.px()).unwrap_or(0.0))
+                            .take(MAX_DASH_COUNT)
+                            .map(|v| {
+                                v.0.to_length()
+                                    .map(|l| l.px())
+                                    .unwrap_or(0.0)
+                                    .min(MAX_DASH_LENGTH)
+                            })
                             .collect(),
                     )
                 }
@@ -61,7 +69,8 @@ impl FromComputedValues for StrokeParams {
         let dash_offset = match &inherited_svg.stroke_dashoffset {
             SVGLength::LengthPercentage(lp) => lp.to_length().map(|l| l.px()).unwrap_or(0.0),
             _ => 0.0,
-        };
+        }
+        .min(MAX_DASH_LENGTH);
         if width <= 0.0 {
             return None;
         }
@@ -135,7 +144,8 @@ pub(crate) fn apply_stroke_presentation_attrs(
         stroke.width = Length::new(
             parse_length_token(&v, SVG_DEFAULT_FONT_SIZE)
                 .unwrap_or(1.0)
-                .max(0.0),
+                .max(0.0)
+                .min(MAX_STROKE_WIDTH),
         );
     }
     if let Some(v) = read_attr("stroke-opacity") {
@@ -159,7 +169,7 @@ pub(crate) fn apply_stroke_presentation_attrs(
     }
     if let Some(v) = read_attr("stroke-miterlimit") {
         if let Ok(ml) = v.parse::<f32>() {
-            stroke.miter_limit = ml;
+            stroke.miter_limit = ml.min(MAX_MITER_LIMIT);
         }
     }
     if let Some(v) = read_attr("stroke-dasharray") {
@@ -173,9 +183,10 @@ pub(crate) fn apply_stroke_presentation_attrs(
                     if t.is_empty() {
                         None
                     } else {
-                        t.parse::<f32>().ok()
+                        t.parse::<f32>().ok().map(|d| d.min(MAX_DASH_LENGTH))
                     }
                 })
+                .take(MAX_DASH_COUNT)
                 .collect();
             stroke.dash_array = if dashes.is_empty() {
                 None
@@ -185,6 +196,8 @@ pub(crate) fn apply_stroke_presentation_attrs(
         }
     }
     if let Some(v) = read_attr("stroke-dashoffset") {
-        stroke.dash_offset = parse_length_token(&v, SVG_DEFAULT_FONT_SIZE).unwrap_or(0.0);
+        stroke.dash_offset = parse_length_token(&v, SVG_DEFAULT_FONT_SIZE)
+            .unwrap_or(0.0)
+            .min(MAX_DASH_LENGTH);
     }
 }

@@ -14,6 +14,7 @@ use servo_svg::units::Length;
 use svgtypes::ViewBox as SvgViewBox;
 use web_atoms::ns;
 
+use crate::svg::limits::MAX_VIEWPORT_DIMENSION;
 use crate::svg::primitives::attrs::{parse_inline_style_prop, parse_length_value};
 
 /// Default SVG font size used to resolve font-relative lengths (`em`/`ex`) on
@@ -112,8 +113,8 @@ pub(crate) fn extract_nested_viewport<'dom>(
         viewport: ViewportInfo {
             // A nested `<svg>` defaults to 100% of the parent viewport (§8.8), so
             // the fallback is the parent reference dimension itself.
-            width: Length::new(parse_len("width", parent_vw, parent_vw)),
-            height: Length::new(parse_len("height", parent_vh, parent_vh)),
+            width: Length::new(parse_len("width", parent_vw, parent_vw).min(MAX_VIEWPORT_DIMENSION)),
+            height: Length::new(parse_len("height", parent_vh, parent_vh).min(MAX_VIEWPORT_DIMENSION)),
             view_box: get("viewBox").as_deref().and_then(extract_viewbox),
             overflow_visible,
             aspect_ratio: get("preserveAspectRatio")
@@ -191,8 +192,8 @@ pub(crate) fn extract_viewbox(value: &str) -> Option<ViewBox> {
     value.parse::<SvgViewBox>().ok().map(|vb| ViewBox {
         min_x: Length::new(vb.x as f32),
         min_y: Length::new(vb.y as f32),
-        width: Length::new(vb.w as f32),
-        height: Length::new(vb.h as f32),
+        width: Length::new((vb.w as f32).min(MAX_VIEWPORT_DIMENSION)),
+        height: Length::new((vb.h as f32).min(MAX_VIEWPORT_DIMENSION)),
     })
 }
 
@@ -247,6 +248,13 @@ mod tests {
         let vb = extract_viewbox("-100 -100 200 200").unwrap();
         assert_eq!(vb.min_x.get(), -100.0);
         assert_eq!(vb.min_y.get(), -100.0);
+    }
+
+    #[test]
+    fn viewbox_dimension_clamped() {
+        let vb = extract_viewbox("0 0 200000000 300000000").unwrap();
+        assert_eq!(vb.width.get(), MAX_VIEWPORT_DIMENSION);
+        assert_eq!(vb.height.get(), MAX_VIEWPORT_DIMENSION);
     }
 
     #[test]

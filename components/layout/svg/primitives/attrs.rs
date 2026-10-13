@@ -19,6 +19,8 @@ use servo_svg::geometry::Point;
 use svgtypes::{Length as SvgLength, PointsParser};
 use web_atoms::ns;
 
+use crate::svg::limits::MAX_POINTS;
+
 // ======================= Attribute access =======================
 
 /// Read an attribute from an SVG DOM element as an owned string.
@@ -279,6 +281,7 @@ pub(crate) fn parse_points(get_attr: &dyn Fn(&str) -> Option<String>) -> Vec<Poi
     let value = get_attr("points").unwrap_or_default();
     PointsParser::from(value.as_str())
         .map(|(x, y)| Point::new(x as f32, y as f32))
+        .take(MAX_POINTS)
         .collect()
 }
 
