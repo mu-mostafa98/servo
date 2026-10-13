@@ -13,7 +13,9 @@ use embedder_traits::ViewportDetails;
 use euclid::{Scale, Size2D};
 use layout_api::{IFrameSize, LayoutElement, LayoutImageDestination, LayoutNode, SVGElementData};
 use malloc_size_of_derive::MallocSizeOf;
-use net_traits::image_cache::{Image, ImageOrMetadataAvailable, VectorImage};
+use net_traits::image_cache::{Image, ImageOrMetadataAvailable};
+#[cfg(not(feature = "servo-svg"))]
+use net_traits::image_cache::VectorImage;
 use net_traits::request::InternalRequest;
 use script::layout_dom::ServoLayoutNode;
 use servo_arc::Arc as ServoArc;
@@ -44,8 +46,9 @@ use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
 use crate::fragment_tree::{
     BaseFragment, BaseFragmentInfo, CollapsedBlockMargins, Fragment, IFrameFragment, ImageFragment,
-    ImagePaintSource,
 };
+#[cfg(feature = "servo-svg")]
+use crate::fragment_tree::SvgFragment;
 use crate::geom::{LogicalVec2, PhysicalPoint, PhysicalRect, PhysicalSize};
 use crate::layout_box_base::{IndependentFormattingContextLayoutResult, LayoutBoxBase};
 use crate::sizing::{
@@ -161,13 +164,17 @@ pub(crate) enum ReplacedContentKind {
     IFrame(IFrameInfo),
     Canvas(CanvasInfo),
     Video(VideoInfo),
+    /// An SVG rasterized through the image cache (the resvg path). Only present
+    /// when `servo-svg` is disabled; with the feature enabled, inline SVG is
+    /// rendered directly from its render tree via [`Self::Svg`].
+    #[cfg(not(feature = "servo-svg"))]
     SVGElement {
         vector_image: Option<VectorImage>,
         has_viewbox: bool,
-        #[cfg(feature = "servo-svg")]
-        #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
-        render_tree: Option<Arc<SvgTree>>,
     },
+    /// An inline SVG rendered directly from its render tree (see [`crate::svg`]).
+    #[cfg(feature = "servo-svg")]
+    Svg(#[ignore_malloc_size_of = "SVG render tree, tracked separately"] Option<Arc<SvgTree>>),
     Audio,
 }
 
@@ -312,14 +319,7 @@ impl ReplacedContents {
             let viewport_height = height.map(|h| h.px()).unwrap_or(150.0);
             let render_tree =
                 crate::svg::build_svg_tree(node, context, viewport_width, viewport_height);
-            return (
-                ReplacedContentKind::SVGElement {
-                    vector_image: None,
-                    has_viewbox: svg_data.view_box.is_some(),
-                    render_tree,
-                },
-                natural_size,
-            );
+            return (ReplacedContentKind::Svg(render_tree), natural_size);
         }
 
         #[cfg(not(feature = "servo-svg"))]
@@ -362,8 +362,6 @@ impl ReplacedContents {
                 ReplacedContentKind::SVGElement {
                     vector_image,
                     has_viewbox: svg_data.view_box.is_some(),
-                    #[cfg(feature = "servo-svg")]
-                    render_tree: None,
                 },
                 natural_size,
             )
@@ -580,7 +578,7 @@ impl ReplacedContents {
                         style: style.clone().into(),
                         selected_style: self.selected_style.clone(),
                         clip,
-                        paint_source: Some(ImagePaintSource::Image(image_key)),
+                        image_key: Some(image_key),
                         showing_broken_image_icon: image_info.showing_broken_image_icon,
                         url: image_info.url.clone(),
                         natural_width: self.natural_size.width,
@@ -596,7 +594,7 @@ impl ReplacedContents {
                     style: style.clone().into(),
                     selected_style: self.selected_style.clone(),
                     clip,
-                    paint_source: video_info.image_key.map(ImagePaintSource::Image),
+                    image_key: video_info.image_key,
                     showing_broken_image_icon: false,
                     url: video_info.poster_url.clone(),
                     natural_width: self.natural_size.width,
@@ -642,7 +640,7 @@ impl ReplacedContents {
                     style: style.clone().into(),
                     selected_style: self.selected_style.clone(),
                     clip,
-                    paint_source: Some(ImagePaintSource::Image(image_key)),
+                    image_key: Some(image_key),
                     showing_broken_image_icon: false,
                     url: None,
                     natural_width: self.natural_size.width,
@@ -651,27 +649,18 @@ impl ReplacedContents {
                 }))]
             },
             #[cfg(feature = "servo-svg")]
-            ReplacedContentKind::SVGElement { .. } => {
-                if let ReplacedContentKind::SVGElement {
-                    render_tree: Some(tree),
-                    ..
-                } = &self.kind
-                {
-                    return vec![Fragment::Image(Arc::new(ImageFragment {
-                        base,
-                        style: style.clone().into(),
-                        selected_style: self.selected_style.clone(),
-                        clip,
-                        paint_source: Some(ImagePaintSource::Svg(tree.clone())),
-                        showing_broken_image_icon: false,
-                        url: None,
-                        natural_width: self.natural_size.width,
-                        natural_height: self.natural_size.height,
-                        selected: self.selected.clone(),
-                    }))];
-                }
-                return vec![];
+            ReplacedContentKind::Svg(Some(tree)) => {
+                vec![Fragment::Svg(Arc::new(SvgFragment {
+                    base,
+                    style: style.clone().into(),
+                    selected_style: self.selected_style.clone(),
+                    clip,
+                    tree: Some(tree.clone()),
+                    selected: self.selected.clone(),
+                }))]
             },
+            #[cfg(feature = "servo-svg")]
+            ReplacedContentKind::Svg(None) => return vec![],
             #[cfg(not(feature = "servo-svg"))]
             ReplacedContentKind::SVGElement {
                 vector_image,
@@ -722,7 +711,7 @@ impl ReplacedContents {
                             style: style.clone().into(),
                             selected_style: self.selected_style.clone(),
                             clip,
-                            paint_source: Some(ImagePaintSource::Image(image_key)),
+                            image_key: Some(image_key),
                             showing_broken_image_icon: false,
                             url: None,
                             natural_width: self.natural_size.width,

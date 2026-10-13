@@ -55,6 +55,9 @@ pub(crate) enum Fragment {
     AbsoluteOrFixedPositionedPlaceholder(ArcRefCell<HoistedSharedFragment>),
     Text(#[conditional_malloc_size_of] Arc<TextFragment>),
     Image(#[conditional_malloc_size_of] Arc<ImageFragment>),
+    /// An inline `<svg>` element rendered directly from its servo-svg render tree.
+    #[cfg(feature = "servo-svg")]
+    Svg(#[conditional_malloc_size_of] Arc<SvgFragment>),
     IFrame(#[conditional_malloc_size_of] Arc<IFrameFragment>),
 }
 
@@ -114,19 +117,10 @@ pub(crate) struct TextFragment {
     pub is_empty_for_text_cursor: bool,
 }
 
-/// How an [`ImageFragment`]'s content is painted. A fragment may carry no paint
-/// source yet (an image still loading, or a broken image), in which case the
-/// caller falls back to [`ImageFragment::showing_broken_image_icon`].
-#[derive(MallocSizeOf)]
-pub(crate) enum ImagePaintSource {
-    /// A WebRender image (raster or vector) uploaded to the image cache.
-    Image(ImageKey),
-    /// A CPU-rasterized SVG render tree, rasterized inline during display-list
-    /// construction (see [`crate::svg`]).
-    #[cfg(feature = "servo-svg")]
-    Svg(#[ignore_malloc_size_of = "SVG render tree, tracked separately"] Arc<SvgTree>),
-}
-
+/// How an [`ImageFragment`]'s content is painted. An image fragment carries the
+/// WebRender [`ImageKey`] of its uploaded raster/vector image, or `None` while
+/// the image is still loading (or when it is broken), in which case the caller
+/// falls back to [`ImageFragment::showing_broken_image_icon`].
 #[derive(MallocSizeOf)]
 pub(crate) struct ImageFragment {
     pub base: BaseFragment,
@@ -135,7 +129,7 @@ pub(crate) struct ImageFragment {
     /// selected.
     pub selected_style: SharedStyle,
     pub clip: PhysicalRect<Au>,
-    pub paint_source: Option<ImagePaintSource>,
+    pub image_key: Option<ImageKey>,
     pub showing_broken_image_icon: bool,
     pub url: Option<ServoUrl>,
     /// The intrinsic (natural) width of the image, if known.
@@ -143,6 +137,26 @@ pub(crate) struct ImageFragment {
     /// The intrinsic (natural) height of the image, if known.
     pub natural_height: Option<Au>,
     /// Whether or not this image is selected.
+    #[conditional_malloc_size_of]
+    pub selected: Arc<AtomicBool>,
+}
+
+/// A fragment for an inline `<svg>` element, painted directly from its
+/// servo-svg render tree during display-list construction (see [`crate::svg`]).
+#[cfg(feature = "servo-svg")]
+#[derive(MallocSizeOf)]
+pub(crate) struct SvgFragment {
+    pub base: BaseFragment,
+    pub style: SharedStyle,
+    /// The style to use for the selection overlay if this [`SvgFragment`] is
+    /// selected.
+    pub selected_style: SharedStyle,
+    pub clip: PhysicalRect<Au>,
+    /// The root render tree, or `None` if tree construction failed (in which
+    /// case the element still occupies its laid-out box but paints nothing).
+    #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
+    pub tree: Option<Arc<SvgTree>>,
+    /// Whether or not this SVG is selected.
     #[conditional_malloc_size_of]
     pub selected: Arc<AtomicBool>,
 }
@@ -166,6 +180,8 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositionedPlaceholder(_) => return None,
             Fragment::Positioning(fragment) => RefOrAtomicRef::Ref(&fragment.base),
             Fragment::Image(fragment) => RefOrAtomicRef::Ref(&fragment.base),
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(fragment) => RefOrAtomicRef::Ref(&fragment.base),
             Fragment::IFrame(fragment) => RefOrAtomicRef::Ref(&fragment.base),
             Fragment::Float(fragment) => RefOrAtomicRef::Ref(&fragment.base),
         })
@@ -186,6 +202,8 @@ impl Fragment {
             Fragment::Text(..) |
             Fragment::Image(..) |
             Fragment::IFrame(..) => {},
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(..) => {},
         }
     }
 
@@ -208,6 +226,8 @@ impl Fragment {
             Fragment::Positioning(fragment) => fragment.print(tree),
             Fragment::Text(fragment) => fragment.print(tree),
             Fragment::Image(fragment) => fragment.print(tree),
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(fragment) => fragment.print(tree),
             Fragment::IFrame(fragment) => fragment.print(tree),
         }
     }
@@ -253,6 +273,8 @@ impl Fragment {
             Fragment::Text(..) |
             Fragment::Image(..) |
             Fragment::IFrame(..) => self.base().map(|base| base.rect()).unwrap_or_default(),
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(..) => self.base().map(|base| base.rect()).unwrap_or_default(),
         }
     }
 
@@ -285,6 +307,8 @@ impl Fragment {
             Fragment::Text(..) | Fragment::Image(..) | Fragment::IFrame(..) => {
                 Some(self.base()?.rect())
             },
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(..) => Some(self.base()?.rect()),
         }
     }
 
@@ -318,6 +342,8 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositionedPlaceholder(_) |
             Fragment::Image(_) |
             Fragment::IFrame(_) => None,
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(_) => None,
         }
     }
 
@@ -442,6 +468,8 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositionedPlaceholder(_) => return,
             Fragment::Positioning(fragment) => &fragment.style,
             Fragment::Image(fragment) => &fragment.style,
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(fragment) => &fragment.style,
             Fragment::IFrame(fragment) => &fragment.style,
             Fragment::Float(fragment) => &fragment.style,
         };
@@ -576,6 +604,17 @@ impl ImageFragment {
     pub fn print(&self, tree: &mut PrintTree) {
         tree.add_item(format!(
             "Image\
+                \nrect={:?}",
+            self.base.rect()
+        ));
+    }
+}
+
+#[cfg(feature = "servo-svg")]
+impl SvgFragment {
+    pub fn print(&self, tree: &mut PrintTree) {
+        tree.add_item(format!(
+            "Svg\
                 \nrect={:?}",
             self.base.rect()
         ));

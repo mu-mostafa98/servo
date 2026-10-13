@@ -26,9 +26,9 @@ use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize, RectExt};
 use crate::display_list::clip::{Clip, ClipId};
 use crate::display_list::paint_traversal::{PaintTraversal, PaintTraversalHandler};
 use crate::display_list::{StackingContext, StackingContextTree, ToWebRender, TraversalState};
-use crate::fragment_tree::{
-    BoxFragmentWithStyle, Fragment, FragmentFlags, ImageFragment, ImagePaintSource, TextFragment,
-};
+use crate::fragment_tree::{BoxFragmentWithStyle, Fragment, FragmentFlags, TextFragment};
+#[cfg(feature = "servo-svg")]
+use crate::fragment_tree::SvgFragment;
 use crate::geom::PhysicalRect;
 
 struct DomPositionCandidate {
@@ -210,13 +210,14 @@ impl PaintTraversalHandler for HitTest<'_> {
         Fragment::Box(fragment.box_fragment.clone()).hit_test(state, self);
     }
 
-    fn visit_image(
+    #[cfg(feature = "servo-svg")]
+    fn visit_svg(
         &mut self,
         state: &TraversalState,
         _containing_block: PhysicalRect<Au>,
-        fragment: &Arc<ImageFragment>,
+        fragment: &Arc<SvgFragment>,
     ) {
-        Fragment::Image(fragment.clone()).hit_test(state, self);
+        Fragment::Svg(fragment.clone()).hit_test(state, self);
     }
 
     fn visit_text(
@@ -346,25 +347,26 @@ impl Fragment {
                 FragmentFlags::empty(),
                 Cursor::Text,
             ),
-            Fragment::Image(image_fragment) => hit_test_svg_image(image_fragment, state, hit_test),
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(svg_fragment) => hit_test_svg(svg_fragment, state, hit_test),
             _ => false,
         }
     }
 }
 
-/// Hit-test an [`ImageFragment`] that carries an SVG render tree, so that
-/// `:hover` and pointer events can target the SVG shapes underneath the point.
+/// Hit-test a [`SvgFragment`], so that `:hover` and pointer events can target
+/// the SVG shapes underneath the point.
 ///
-/// SVG content is painted inside the image fragment's rect; the point is mapped
-/// from layout space into the SVG's own coordinate space (relative to the rect
-/// origin) and resolved against the topmost filled shape. Non-SVG images keep
-/// the historical behavior of not being hit-testable.
-fn hit_test_svg_image(
-    image_fragment: &ImageFragment,
+/// SVG content is painted inside the fragment's rect; the point is mapped from
+/// layout space into the SVG's own coordinate space (relative to the rect
+/// origin) and resolved against the topmost filled shape.
+#[cfg(feature = "servo-svg")]
+fn hit_test_svg(
+    svg_fragment: &SvgFragment,
     state: &TraversalState,
     hit_test: &mut HitTest,
 ) -> bool {
-    let style = image_fragment.style.borrow();
+    let style = svg_fragment.style.borrow();
 
     if style.get_inherited_ui().pointer_events == PointerEvents::None {
         return false;
@@ -379,7 +381,7 @@ fn hit_test_svg_image(
         return false;
     };
 
-    let fragment_rect = image_fragment
+    let fragment_rect = svg_fragment
         .base
         .rect()
         .translate(state.origin.to_vector())
@@ -388,27 +390,24 @@ fn hit_test_svg_image(
         return false;
     }
 
-    #[cfg(feature = "servo-svg")]
-    {
-        let Some(ImagePaintSource::Svg(svg_tree)) = image_fragment.paint_source.as_ref() else {
-            return false;
-        };
+    let Some(svg_tree) = svg_fragment.tree.as_ref() else {
+        return false;
+    };
 
-        // Map the point into the SVG viewport (relative to its top-left, in
-        // CSS px) and ask the engine for the topmost filled shape underneath.
-        let point_in_svg = (point_in_spatial_node - fragment_rect.min).to_point();
-        let Some(source_node) =
-            servo_svg::hit_test_svg_tree(svg_tree, point_in_svg, fragment_rect.size())
-        else {
-            return false;
-        };
+    // Map the point into the SVG viewport (relative to its top-left, in
+    // CSS px) and ask the engine for the topmost filled shape underneath.
+    let point_in_svg = (point_in_spatial_node - fragment_rect.min).to_point();
+    let Some(source_node) =
+        servo_svg::hit_test_svg_tree(svg_tree, point_in_svg, fragment_rect.size())
+    else {
+        return false;
+    };
 
-        hit_test.items.push(HitTestResultItem {
-            node: OpaqueNode(source_node),
-            point_in_target: point_in_svg.cast_unit(),
-            cursor: cursor(style.get_inherited_ui().cursor.keyword, Cursor::Default),
-        });
-    }
+    hit_test.items.push(HitTestResultItem {
+        node: OpaqueNode(source_node),
+        point_in_target: point_in_svg.cast_unit(),
+        cursor: cursor(style.get_inherited_ui().cursor.keyword, Cursor::Default),
+    });
 
     // Keep searching — the walk is back-to-front and an SVG may not fully cover
     // its rect, so a fragment painted above this one may still win.

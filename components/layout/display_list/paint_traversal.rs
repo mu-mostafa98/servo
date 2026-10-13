@@ -16,6 +16,8 @@ use crate::fragment_tree::{
     BoxFragment, BoxFragmentWithStyle, Fragment, FragmentFlags, IFrameFragment, ImageFragment,
     PositioningFragment, Tag, TextFragment,
 };
+#[cfg(feature = "servo-svg")]
+use crate::fragment_tree::SvgFragment;
 use crate::geom::{PhysicalPoint, PhysicalRect};
 
 pub(crate) struct PaintTraversal<'a, Handler: PaintTraversalHandler> {
@@ -287,6 +289,8 @@ impl<'a, Handler: PaintTraversalHandler> PaintTraversal<'a, Handler> {
             Fragment::Text(..) |
             Fragment::Image(..) |
             Fragment::IFrame(..) => {},
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(..) => {},
         }
 
         saw_inline_level_or_replaced
@@ -372,6 +376,8 @@ impl<'a, Handler: PaintTraversalHandler> PaintTraversal<'a, Handler> {
             Fragment::IFrame(_) |
             Fragment::Image(_) |
             Fragment::Text(..) => {},
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(_) => {},
         }
     }
 
@@ -401,6 +407,10 @@ impl<'a, Handler: PaintTraversalHandler> PaintTraversal<'a, Handler> {
                 unreachable!("Unexpected direct descendant PositioningContext of inline.")
             },
             Fragment::Image(..) | Fragment::IFrame(..) => {
+                unreachable!("Unexpected replaced content direct descendant of inline.")
+            },
+            #[cfg(feature = "servo-svg")]
+            Fragment::Svg(..) => {
                 unreachable!("Unexpected replaced content direct descendant of inline.")
             },
         }
@@ -482,6 +492,13 @@ impl<'a, Handler: PaintTraversalHandler> PaintTraversal<'a, Handler> {
                     self.handler
                         .visit_image(state, containing_block, image_fragment);
                 },
+                #[cfg(feature = "servo-svg")]
+                Fragment::Svg(svg_fragment) => {
+                    let containing_block =
+                        PhysicalRect::new(state.origin, box_fragment.content_rect().size);
+                    self.handler
+                        .visit_svg(state, containing_block, svg_fragment);
+                },
                 Fragment::IFrame(iframe_fragment) => {
                     self.handler.visit_iframe(state, iframe_fragment);
                 },
@@ -526,6 +543,14 @@ pub(crate) trait PaintTraversalHandler {
         _state: &TraversalState,
         _containing_block: PhysicalRect<Au>,
         _fragment: &Arc<ImageFragment>,
+    ) {
+    }
+    #[cfg(feature = "servo-svg")]
+    fn visit_svg(
+        &mut self,
+        _state: &TraversalState,
+        _containing_block: PhysicalRect<Au>,
+        _fragment: &Arc<SvgFragment>,
     ) {
     }
     fn visit_text(

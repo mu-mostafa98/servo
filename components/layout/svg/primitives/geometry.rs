@@ -259,7 +259,6 @@ fn parse_path(
 /// control reflection, `H`/`V` → `L`). `SVGPathData::normalize()` would still
 /// leave non-degenerate arcs as arcs, so it is not a drop-in replacement.
 fn path_data_to_string(data: &style::values::specified::SVGPathData) -> Option<String> {
-    use std::fmt::Write as _;
     let mut out = String::new();
     {
         let mut writer = style_traits::CssWriter::new(&mut out);

@@ -140,7 +140,6 @@ impl VirtualMethods for SVGElement {
                 &local_name!("stroke-dashoffset") |
                 &local_name!("stroke-miterlimit") |
                 &local_name!("stroke-opacity") |
-                &local_name!("display") |
                 &local_name!("visibility") |
                 &local_name!("opacity") |
                 &local_name!("vector-effect") |
