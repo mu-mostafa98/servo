@@ -154,7 +154,7 @@ pub(crate) struct SvgFragment {
     pub clip: PhysicalRect<Au>,
     /// The root render tree, or `None` if tree construction failed (in which
     /// case the element still occupies its laid-out box but paints nothing).
-    #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
+    #[conditional_malloc_size_of]
     pub tree: Option<Arc<SvgTree>>,
     /// Whether or not this SVG is selected.
     #[conditional_malloc_size_of]

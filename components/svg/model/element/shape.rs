@@ -11,13 +11,14 @@
 
 use crate::model::geometry::{PathData, Point};
 use crate::model::units::Length;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// SVG `<rect>` element.
 ///
 /// `rx`/`ry` are `Option<Length>`: `None` is SVG 2's `auto` value, resolved to
 /// a used radius against the sibling (or to `0` when both are `auto`) at render
 /// time.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub struct Rectangle {
     pub x: Length,
     pub y: Length,
@@ -30,7 +31,7 @@ pub struct Rectangle {
 }
 
 /// SVG `<circle>` element.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub struct Circle {
     pub cx: Length,
     pub cy: Length,
@@ -43,7 +44,7 @@ pub struct Circle {
 /// Like [`Rectangle`], `rx`/`ry` are `Option<Length>`: SVG 2 makes the radii
 /// support `auto`, so a single `auto` radius derives its used value from the
 /// other (producing a circle), while `auto`+`auto` disables rendering.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub struct Ellipse {
     pub cx: Length,
     pub cy: Length,
@@ -53,7 +54,7 @@ pub struct Ellipse {
 }
 
 /// SVG `<line>` element.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub struct Line {
     pub x1: Length,
     pub y1: Length,
@@ -63,28 +64,28 @@ pub struct Line {
 }
 
 /// SVG `<polyline>` element — an open sequence of connected line segments.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct Polyline {
     pub points: Vec<Point>,
     pub path_length: Option<f32>,
 }
 
 /// SVG `<polygon>` element — a closed shape formed by connected line segments.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct Polygon {
     pub points: Vec<Point>,
     pub path_length: Option<f32>,
 }
 
 /// SVG `<path>` element with its `d` attribute parsed into a [`PathData`].
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct Path {
     pub path: PathData,
     pub path_length: Option<f32>,
 }
 
 /// An SVG geometric shape.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub enum Shape {
     Rect(Rectangle),
     Circle(Circle),

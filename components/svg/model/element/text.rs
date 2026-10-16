@@ -7,9 +7,10 @@
 //! Text spec: <https://www.w3.org/TR/SVG2/text.html>
 
 use crate::model::resource::ResourceKey;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// A pre-shaped glyph with position and advance.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub struct ShapedGlyph {
     /// X position of this glyph (cumulative, includes previous advances).
     pub x: f32,
@@ -29,7 +30,7 @@ pub struct ShapedGlyph {
 }
 
 /// A single text span within an SVG `<text>` or `<tspan>` element.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct TextSpan {
     /// The text content.
     pub text: String,
@@ -116,7 +117,7 @@ impl TextSpan {
 
 /// Vertical alignment of the text relative to the `y` coordinate
 /// (SVG `dominant-baseline`).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, MallocSizeOf)]
 pub enum DominantBaseline {
     /// Alphabetic baseline (the default).
     #[default]
@@ -145,7 +146,7 @@ pub enum DominantBaseline {
 /// - `Start`: left-aligned (default for LTR text)
 /// - `Middle`: centered on `x`
 /// - `End`: right-aligned
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, MallocSizeOf)]
 pub enum TextAnchor {
     Start,
     Middle,
@@ -165,7 +166,7 @@ impl TextAnchor {
 }
 
 /// How `textLength` is applied to a text run (SVG `lengthAdjust` attribute).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, MallocSizeOf)]
 pub enum LengthAdjust {
     /// Only the space between glyphs is adjusted; glyphs keep their natural size.
     #[default]

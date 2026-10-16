@@ -174,7 +174,7 @@ pub(crate) enum ReplacedContentKind {
     },
     /// An inline SVG rendered directly from its render tree (see [`crate::svg`]).
     #[cfg(feature = "servo-svg")]
-    Svg(#[ignore_malloc_size_of = "SVG render tree, tracked separately"] Option<Arc<SvgTree>>),
+    Svg(#[conditional_malloc_size_of] Option<Arc<SvgTree>>),
     Audio,
 }
 

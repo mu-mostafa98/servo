@@ -10,8 +10,10 @@
 //! `transform` attribute lives in the layout layer
 //! (`components/layout/svg/primitives/transforms.rs`).
 
+use malloc_size_of_derive::MallocSizeOf;
+
 /// A single SVG transform operation, in the order it was specified.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub enum TransformOp {
     /// Translate by `(tx, ty)` in user units.
     Translate(f32, f32),

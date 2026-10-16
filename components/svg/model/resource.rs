@@ -4,6 +4,8 @@
 
 //! Opaque handles to WebRender resources uploaded by the layout layer.
 
+use malloc_size_of_derive::MallocSizeOf;
+
 /// An opaque handle to a WebRender resource (an image or font instance)
 /// uploaded by the layout layer during build.
 ///
@@ -11,7 +13,7 @@
 /// WebRender dependency; the render layer reconstructs the concrete
 /// [`webrender_api`] key type (`ImageKey` / `FontInstanceKey`) when pushing
 /// display items.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, MallocSizeOf)]
 pub struct ResourceKey {
     /// WebRender id namespace.
     pub namespace: u32,

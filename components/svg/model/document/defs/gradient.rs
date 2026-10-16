@@ -7,9 +7,10 @@
 use svgtypes::Color as SvgColor;
 
 use crate::model::transform::TransformOp;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// Definitions collected from `<defs>` during render tree construction.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub enum GradientDef {
     Linear(LinearGradient),
     Radial(RadialGradient),
@@ -123,14 +124,14 @@ impl GradientDef {
 }
 
 /// How gradient coordinates are interpreted.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, MallocSizeOf)]
 pub enum GradientUnits {
     ObjectBoundingBox,
     UserSpaceOnUse,
 }
 
 /// How the gradient is extended beyond the 0..1 stop range.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, MallocSizeOf)]
 pub enum SpreadMethod {
     /// Clamp to the nearest stop color (default).
     Pad,
@@ -140,7 +141,7 @@ pub enum SpreadMethod {
     Repeat,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub enum GradientLength {
     Number(f32),
     Percentage(f32),
@@ -178,7 +179,7 @@ impl GradientLength {
 /// resolution so an inherited value can be told apart from a locally-defaulted
 /// one (which matters for `fx`/`fy`, whose default is the gradient's own
 /// `cx`/`cy` rather than a constant).
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, MallocSizeOf)]
 pub struct GradientExplicit {
     pub x1: bool,
     pub y1: bool,
@@ -197,7 +198,7 @@ pub struct GradientExplicit {
 }
 
 /// SVG `<linearGradient>` element data.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct LinearGradient {
     pub id: String,
     /// Referenced gradient id (via `href`/`xlink:href`), without the `#` prefix.
@@ -219,7 +220,7 @@ pub struct LinearGradient {
 }
 
 /// SVG `<radialGradient>` element data.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct RadialGradient {
     pub id: String,
     /// Referenced gradient id (via `href`/`xlink:href`), without the `#` prefix.
@@ -246,10 +247,11 @@ pub struct RadialGradient {
 }
 
 /// A single `<stop>` element in a gradient.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub struct GradientStop {
     /// Offset in the range 0.0 – 1.0.
     pub offset: f32,
     /// Color at this offset.
+    #[ignore_malloc_size_of = "svgtypes::Color has no heap allocation"]
     pub color: SvgColor,
 }

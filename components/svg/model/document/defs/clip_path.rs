@@ -5,9 +5,10 @@
 //! `<clipPath>` definitions and their coordinate-system units.
 
 use crate::model::element::SvgNode;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// A clip path definition collected from `<clipPath>`.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub struct ClipPathDef {
     /// The clipping region, stored as a nested node subtree so that `<g>`,
     /// `<use>`, `<text>` and nested-`<defs>` children are not silently dropped.
@@ -17,7 +18,7 @@ pub struct ClipPathDef {
 }
 
 /// Coordinate system for clip path contents.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum ClipPathUnits {
     /// Coordinates are relative to the object's bounding box (0..1 range).
     ObjectBoundingBox,

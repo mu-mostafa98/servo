@@ -7,16 +7,17 @@
 use crate::model::document::{AspectRatio, ViewBox};
 use crate::model::element::SvgNode;
 use crate::model::transform::TransformOp;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// Coordinate system for pattern tile sizing.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum PatternUnits {
     ObjectBoundingBox,
     UserSpaceOnUse,
 }
 
 /// Coordinate system for pattern content.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum PatternContentUnits {
     ObjectBoundingBox,
     UserSpaceOnUse,
@@ -32,7 +33,7 @@ pub enum PatternContentUnits {
 ///
 /// The percentage/unit is preserved here (rather than baked to `f32` at parse
 /// time) because the reference box is only known at render time.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub enum PatternLength {
     Number(f32),
     Percentage(f32),
@@ -68,7 +69,7 @@ impl PatternLength {
 }
 
 /// A pattern definition collected from `<pattern>`.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub struct PatternDef {
     pub width: PatternLength,
     pub height: PatternLength,

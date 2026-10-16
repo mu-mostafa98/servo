@@ -16,8 +16,10 @@
 
 use std::fmt;
 
+use malloc_size_of_derive::MallocSizeOf;
+
 /// An opacity value, clamped to the valid `[0, 1]` range on construction.
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, MallocSizeOf)]
 pub struct Opacity(f32);
 
 impl Opacity {
@@ -42,7 +44,7 @@ impl Default for Opacity {
 }
 
 /// An element id (a fragment identifier without the leading `#`).
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, MallocSizeOf)]
 pub struct Id(String);
 
 impl Id {
@@ -75,7 +77,7 @@ impl fmt::Display for Id {
 ///
 /// Note: SVG lengths may be negative (e.g. `x`/`y` coordinates), so unlike
 /// [`Opacity`] this newtype does not clamp.
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, MallocSizeOf)]
 pub struct Length(f32);
 
 impl Length {

@@ -680,6 +680,13 @@ impl Layout for LayoutThread {
             size: self.stacking_context_tree.size_of(ops),
         });
 
+        #[cfg(feature = "servo-svg")]
+        reports.push(Report {
+            path: path![formatted_url, "layout-thread", "svg-subtree-cache"],
+            kind: ReportKind::ExplicitJemallocHeapSize,
+            size: self.svg_subtree_cache.conditional_size_of(ops),
+        });
+
         reports.extend(self.image_cache.memory_reports(formatted_url, ops));
     }
 

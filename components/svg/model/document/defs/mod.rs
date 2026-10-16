@@ -21,6 +21,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::model::units::Id;
+use malloc_size_of_derive::MallocSizeOf;
 
 mod clip_path;
 mod filter;
@@ -47,12 +48,12 @@ pub use self::pattern::{PatternContentUnits, PatternDef, PatternLength, PatternU
 /// definition maps on [`crate::model::document::SvgTree`]. The tree is never
 /// mutated after build, which is what lets clean subtrees be shared across
 /// incremental reflows.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub enum DefRef<T> {
     /// Raw `#id` (without the `#` prefix), not yet resolved.
     Ref(Id),
     /// Typed definition handle, already bound (no lookup needed).
-    Resolved(Arc<T>),
+    Resolved(#[conditional_malloc_size_of] Arc<T>),
 }
 
 // Manual `Clone` rather than a derived one: both variants clone without

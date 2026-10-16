@@ -8,9 +8,10 @@
 
 use crate::model::document::AspectRatio;
 use crate::model::resource::ResourceKey;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// An SVG `<image>` element referencing an external raster or vector image.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct SvgImage {
     /// X position of the top-left corner.
     pub x: f32,

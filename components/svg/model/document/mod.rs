@@ -24,24 +24,31 @@ pub use self::viewport::{
 };
 use crate::model::element::{SvgNode, SvgTreeVisitor, SvgTreeVisitorMut};
 use crate::model::style::paint_servers::PaintServer;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// The SVG render tree — a tree of [`SvgNode`]s plus viewport info
 /// and gradient/clip-path/pattern/mask/filter definitions collected from `<defs>`.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub struct SvgTree {
     pub root: SvgNode,
     pub viewport: ViewportInfo,
     /// Gradient definitions keyed by their `id` (without the `#` prefix).
+    #[conditional_malloc_size_of]
     pub gradients: HashMap<String, Arc<GradientDef>>,
     /// Clip path definitions keyed by their `id` (without the `#` prefix).
+    #[conditional_malloc_size_of]
     pub clip_paths: HashMap<String, Arc<ClipPathDef>>,
     /// Pattern definitions keyed by their `id` (without the `#` prefix).
+    #[conditional_malloc_size_of]
     pub patterns: HashMap<String, Arc<PatternDef>>,
     /// Mask definitions keyed by their `id` (without the `#` prefix).
+    #[conditional_malloc_size_of]
     pub masks: HashMap<String, Arc<MaskDef>>,
     /// Filter definitions keyed by their `id` (without the `#` prefix).
+    #[conditional_malloc_size_of]
     pub filters: HashMap<String, Arc<FilterDef>>,
     /// Marker definitions keyed by their `id` (without the `#` prefix).
+    #[conditional_malloc_size_of]
     pub markers: HashMap<String, Arc<MarkerDef>>,
 }
 

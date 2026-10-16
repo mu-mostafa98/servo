@@ -19,12 +19,13 @@ pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, MarkerRefs, Strok
 pub use self::paint_servers::PaintServer;
 use crate::model::document::{ClipPathDef, DefRef, FilterDef, MaskDef};
 use crate::model::units::Opacity;
+use malloc_size_of_derive::MallocSizeOf;
 
 // ======================= Visibility & Display =======================
 
 /// Element visibility.
 #[allow(dead_code)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub enum Visibility {
     Visible,
     Hidden,
@@ -32,7 +33,7 @@ pub enum Visibility {
 
 /// Element display type.
 #[allow(dead_code)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub enum Display {
     Inline,
     Block,
@@ -42,7 +43,7 @@ pub enum Display {
 // ======================= Rendering Hints =======================
 
 /// Rendering hints for SVG elements.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct RenderHints {
     pub vector_effect: Option<VectorEffect>,
     pub color_rendering: Option<ColorRendering>,
@@ -57,14 +58,14 @@ pub struct RenderHints {
 }
 
 /// Controls how strokes scale under transforms.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub enum VectorEffect {
     None,
     NonScalingStroke,
 }
 
 /// Color rendering quality hint.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub enum ColorRendering {
     Auto,
     OptimizeSpeed,
@@ -72,7 +73,7 @@ pub enum ColorRendering {
 }
 
 /// Color interpolation method.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub enum ColorInterpolation {
     Auto,
     Srgb,
@@ -80,7 +81,7 @@ pub enum ColorInterpolation {
 }
 
 /// Shape rendering quality hint.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub enum ShapeRendering {
     Auto,
     OptimizeSpeed,
@@ -89,7 +90,7 @@ pub enum ShapeRendering {
 }
 
 /// A single painting operation in the [`PaintOrder`] sequence.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum PaintOperation {
     Fill,
     Stroke,
@@ -102,7 +103,7 @@ pub enum PaintOperation {
 /// arbitrary ordering of the three painting operations.  The default order
 /// (and the order any omitted operations fall back to) is fill → stroke →
 /// markers, represented here as `[Fill, Stroke, Markers]`.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub struct PaintOrder {
     /// The three painting operations in the order they are rendered.
     pub order: [PaintOperation; 3],
@@ -137,7 +138,7 @@ impl PaintOrder {
 
 /// Text rendering quality hint.
 #[allow(dead_code)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub enum TextRendering {
     Auto,
     OptimizeSpeed,
@@ -147,7 +148,7 @@ pub enum TextRendering {
 
 /// Image rendering quality hint.
 #[allow(dead_code)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub enum ImageRendering {
     Auto,
     OptimizeSpeed,
@@ -160,7 +161,7 @@ pub enum ImageRendering {
 ///
 /// Layout-affecting properties (transforms) live on [`SvgNode`],
 /// not here — this struct only holds paint-level styling.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct NodeStyle {
     pub visibility: Visibility,
     pub display: Display,

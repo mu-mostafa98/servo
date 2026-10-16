@@ -25,6 +25,7 @@ use svgtypes::Color as SvgColor;
 
 use crate::model::document::{GradientDef, PatternDef};
 use crate::model::units::Id;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// A paint server reference — a solid color, a gradient, a pattern, a
 /// `url(#id)` reference, or a `context-fill`/`context-stroke` keyword.
@@ -36,18 +37,22 @@ use crate::model::units::Id;
 /// fallback color) against the current definition maps. Keeping the raw
 /// reference in the immutable tree is what lets clean subtrees be shared
 /// across incremental reflows.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub enum PaintServer {
     /// Solid color fill/stroke.
-    Solid(SvgColor),
+    Solid(#[ignore_malloc_size_of = "svgtypes::Color has no heap allocation"] SvgColor),
     /// A resolved gradient definition (`url(#myGrad)`).
-    Gradient(Arc<GradientDef>),
+    Gradient(#[conditional_malloc_size_of] Arc<GradientDef>),
     /// A resolved pattern definition (`url(#myPattern)`).
-    Pattern(Arc<PatternDef>),
+    Pattern(#[conditional_malloc_size_of] Arc<PatternDef>),
     /// Transient `url(#id)` reference, with an optional fallback color used if
     /// the reference cannot be resolved. `fallback: None` means "no paint" for
     /// a broken reference (SVG 2 behavior).
-    Ref { id: Id, fallback: Option<SvgColor> },
+    Ref {
+        id: Id,
+        #[ignore_malloc_size_of = "svgtypes::Color has no heap allocation"]
+        fallback: Option<SvgColor>,
+    },
     /// `context-fill`: inherit the fill paint from the referencing element's
     /// context (used by `<marker>`/`<use>`). Renders as no paint when there is
     /// no context element providing the value.

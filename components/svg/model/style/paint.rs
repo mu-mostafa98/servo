@@ -10,9 +10,10 @@
 use super::paint_servers::PaintServer;
 use crate::model::document::{DefRef, MarkerDef};
 use crate::model::units::{Length, Opacity};
+use malloc_size_of_derive::MallocSizeOf;
 
 /// SVG fill properties.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct FillParams {
     /// The paint applied to the interior — a solid color, gradient, or pattern.
     /// `None` means "no paint" (reached only transiently during building, e.g.
@@ -24,14 +25,14 @@ pub struct FillParams {
 }
 
 /// SVG fill rule: determines how overlapping regions are filled.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum FillRule {
     NonZero,
     EvenOdd,
 }
 
 /// SVG stroke properties.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct StrokeParams {
     /// The paint applied to the stroke — a solid color, gradient, or pattern.
     /// `None` means "no paint"; see [`FillParams::paint_server`].
@@ -46,7 +47,7 @@ pub struct StrokeParams {
 }
 
 /// SVG line cap style — how the ends of open paths are rendered.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum LineCap {
     Butt,
     Round,
@@ -54,7 +55,7 @@ pub enum LineCap {
 }
 
 /// SVG line join style — how corners are rendered in a polyline/polygon.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum LineJoin {
     Miter,
     MiterClip,
@@ -66,7 +67,7 @@ pub enum LineJoin {
 /// Marker references attached to a shape (`marker-start`, `marker-mid`,
 /// `marker-end`), each holding a [`DefRef`] to a [`MarkerDef`] — a raw `#id`
 /// during tree building, a typed `Arc` handle after the resolve pass.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, MallocSizeOf)]
 pub struct MarkerRefs {
     pub start: Option<DefRef<MarkerDef>>,
     pub mid: Option<DefRef<MarkerDef>>,

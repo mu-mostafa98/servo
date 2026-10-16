@@ -6,8 +6,10 @@
 
 use std::fmt;
 
+use malloc_size_of_derive::MallocSizeOf;
+
 /// Errors that can occur during SVG attribute extraction and parsing.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub enum SvgEngineError {
     /// A required SVG attribute is missing (e.g. `<rect>` without `width`).
     MissingAttribute(String),

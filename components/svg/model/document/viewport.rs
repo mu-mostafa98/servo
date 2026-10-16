@@ -7,9 +7,10 @@
 //! Coordinate Systems spec: <https://www.w3.org/TR/SVG2/coords.html>
 
 use crate::model::units::Length;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// SVG `preserveAspectRatio` alignment type.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum AspectAlign {
     None,
     XMinYMin,
@@ -24,14 +25,14 @@ pub enum AspectAlign {
 }
 
 /// SVG `preserveAspectRatio` meet-or-slice.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum MeetOrSlice {
     Meet,
     Slice,
 }
 
 /// Parsed `preserveAspectRatio` value.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub struct AspectRatio {
     pub align: AspectAlign,
     pub meet_or_slice: MeetOrSlice,
@@ -48,7 +49,7 @@ impl Default for AspectRatio {
 }
 
 /// SVG `viewBox` attribute.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, MallocSizeOf)]
 pub struct ViewBox {
     pub min_x: Length,
     pub min_y: Length,
@@ -62,7 +63,7 @@ pub struct ViewBox {
 /// The root `<svg>` uses this directly (its size is imposed by CSS layout and
 /// it has no position). A nested `<svg>` adds a position on top of it, via
 /// [`SvgViewport`].
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct ViewportInfo {
     pub width: Length,
     pub height: Length,
@@ -79,7 +80,7 @@ pub struct ViewportInfo {
 /// a nested `<svg>` carries its own `x`/`y` attributes that position the
 /// sub-viewport in the parent user coordinate system, plus a [`ViewportInfo`]
 /// holding its size, `viewBox` fitting, and clip policy.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct SvgViewport {
     /// Position of the viewport in the parent user coordinate system.
     pub x: Length,

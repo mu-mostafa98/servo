@@ -37,6 +37,7 @@ use servo_svg::element::SvgNode;
 use ::style::dom::OpaqueNode;
 use ::style::properties::ComputedValues;
 use svgtypes::Color as SvgColor;
+use malloc_size_of_derive::MallocSizeOf;
 
 use crate::context::LayoutContext;
 use crate::svg::primitives::css::CssClassRules;
@@ -59,6 +60,7 @@ use crate::svg::primitives::css::CssClassRules;
 /// cross-reference (and any subtree containing a `<textPath>` or such a
 /// `<use>`) is still never cached, because its target's target can change
 /// without bumping either of their versions.
+#[derive(MallocSizeOf)]
 pub(crate) struct SvgSubtreeCache {
     /// Per-root caches, so each `<svg>` root's class-based CSS rules stay
     /// isolated and can be invalidated independently.
@@ -74,6 +76,7 @@ impl Default for SvgSubtreeCache {
 }
 
 /// The cache for a single root `<svg>` element.
+#[derive(MallocSizeOf)]
 struct SvgRootCache {
     /// The class-based CSS rules the cached subtrees were built with. A change
     /// to a `<style>` element clears this root's entries.
@@ -92,6 +95,7 @@ impl Default for SvgRootCache {
 }
 
 /// One cached, self-contained subtree.
+#[derive(MallocSizeOf)]
 struct SvgSubtreeCacheEntry {
     /// The producing DOM node's `inclusive_descendants_version` when built.
     dom_version: u64,
@@ -99,16 +103,19 @@ struct SvgSubtreeCacheEntry {
     vw: f32,
     vh: f32,
     /// The inherited `currentColor` the subtree was built against.
+    #[ignore_malloc_size_of = "svgtypes::Color has no heap allocation"]
     inherited_color: Option<SvgColor>,
     /// The producing node's computed style (`ComputedValues`) when built. Held
     /// by the entry so its address stays pinned, which makes the `ptr_eq`
     /// comparison on lookup sound (a real style change always allocates a new
     /// `Arc`).
+    #[conditional_malloc_size_of]
     computed_style: Option<ServoArc<ComputedValues>>,
     /// For a `<use>` subtree, its referenced target's version and computed style
     /// (see [`CrossRefFingerprint`]). `None` for any other subtree.
     cross_ref: Option<CrossRefFingerprint>,
     /// The cached subtree, shared across reflows.
+    #[conditional_malloc_size_of]
     subtree: Arc<SvgNode>,
 }
 
@@ -117,9 +124,10 @@ struct SvgSubtreeCacheEntry {
 /// cross-references, so this single pair fully captures when the `<use>` needs
 /// rebuilding (the target's version covers its subtree's mutations, and its
 /// computed style covers restyles that a version bump would miss).
-#[derive(Clone)]
+#[derive(Clone, MallocSizeOf)]
 pub(crate) struct CrossRefFingerprint {
     pub(crate) version: u64,
+    #[conditional_malloc_size_of]
     pub(crate) style: Option<ServoArc<ComputedValues>>,
 }
 

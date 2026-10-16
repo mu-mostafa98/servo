@@ -24,9 +24,10 @@ use crate::model::document::SvgViewport;
 use crate::model::style::NodeStyle;
 use crate::model::transform::TransformOp;
 use crate::model::units::Id;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// A single node in the SVG render tree.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub struct SvgNode {
     pub id: Option<Id>,
     pub tag: SvgTag,
@@ -40,6 +41,7 @@ pub struct SvgNode {
     pub viewport: Option<SvgViewport>,
     /// Child nodes, `Arc`-shared so clean subtrees can be reused across
     /// incremental reflows by the layout-thread subtree cache.
+    #[conditional_malloc_size_of]
     pub children: Vec<Arc<SvgNode>>,
     /// The DOM node this render node was built from, as a raw `usize` address
     /// (`OpaqueNode.0`). `None` for synthetic nodes (definition wrappers, test
@@ -49,7 +51,7 @@ pub struct SvgNode {
 }
 
 /// The kind of content an [`SvgNode`] carries.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub enum SvgTag {
     Shape(Shape),
     Text(TextSpan),
@@ -70,7 +72,7 @@ impl From<Container> for SvgTag {
 }
 
 /// A container element — a node whose children form an ordered group.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub enum Container {
     Group,
     Svg,

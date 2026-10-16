@@ -6,9 +6,10 @@
 
 use crate::model::document::ViewBox;
 use crate::model::element::SvgNode;
+use malloc_size_of_derive::MallocSizeOf;
 
 /// Coordinate system for marker sizing.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum MarkerUnits {
     /// Marker size scales with the referencing shape's stroke width (default).
     StrokeWidth,
@@ -17,7 +18,7 @@ pub enum MarkerUnits {
 }
 
 /// Orientation of a marker relative to the path.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, MallocSizeOf)]
 pub enum MarkerOrient {
     /// Rotate to align with the path tangent.
     Auto,
@@ -35,7 +36,7 @@ impl Default for MarkerOrient {
 }
 
 /// A marker definition collected from `<marker>`.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub struct MarkerDef {
     /// Marker content, stored as a nested node subtree (see
     /// [`crate::model::document::ClipPathDef::root`]).

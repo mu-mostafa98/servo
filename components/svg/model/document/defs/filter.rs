@@ -4,8 +4,10 @@
 
 //! `<filter>` definitions and their primitive operations.
 
+use malloc_size_of_derive::MallocSizeOf;
+
 /// A single SVG filter primitive operation.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub enum FilterPrimitive {
     /// Gaussian blur: std_deviation_x, std_deviation_y.
     GaussianBlur(f32, f32),
@@ -31,7 +33,7 @@ pub enum FilterPrimitive {
 }
 
 /// The kind of composite operation for `feComposite`.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub enum FeCompositeKind {
     /// Arithmetic composite: result = k1*i1*i2 + k2*i1 + k3*i2 + k4.
     Arithmetic { k1: f32, k2: f32, k3: f32, k4: f32 },
@@ -50,7 +52,7 @@ pub enum FeCompositeKind {
 }
 
 /// The kind of image source for `feImage`.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub enum FeImageKind {
     /// Reference to another element via URL fragment (e.g., `#myElement`).
     FragmentRef(String),
@@ -59,7 +61,7 @@ pub enum FeImageKind {
 }
 
 /// A filter definition collected from `<filter>`.
-#[derive(Debug)]
+#[derive(Debug, MallocSizeOf)]
 pub struct FilterDef {
     /// Filter primitives in order (applied left-to-right).
     pub primitives: Vec<FilterPrimitive>,
