@@ -23,6 +23,7 @@ use script_bindings::codegen::GenericBindings::WindowBinding::WindowMethods;
 use script_bindings::refcounted::Trusted;
 use serde::{Deserialize, Serialize};
 use servo_base::id::PipelineId;
+use servo_config::pref;
 use servo_constellation_traits::ScriptToConstellationMessage;
 use style::animation::{
     Animation, AnimationSetKey, AnimationState, DocumentAnimationSet, ElementAnimationSet,
@@ -36,17 +37,14 @@ use crate::dom::animationevent::AnimationEvent;
 use crate::dom::bindings::codegen::Bindings::AnimationEventBinding::AnimationEventInit;
 use crate::dom::bindings::codegen::Bindings::EventBinding::EventInit;
 use crate::dom::bindings::codegen::Bindings::TransitionEventBinding::TransitionEventInit;
-#[cfg(feature = "servo-svg")]
 use crate::dom::bindings::inheritance::Castable;
 use crate::dom::bindings::num::Finite;
 use crate::dom::bindings::root::{Dom, DomRoot};
 use crate::dom::bindings::str::DOMString;
 use crate::dom::bindings::trace::NoTrace;
-#[cfg(feature = "servo-svg")]
 use crate::dom::element::Element;
 use crate::dom::event::Event;
 use crate::dom::node::{Node, NodeDamage, NodeTraits, from_untrusted_node_address};
-#[cfg(feature = "servo-svg")]
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 use crate::dom::transitionevent::TransitionEvent;
 use crate::dom::window::Window;
@@ -202,7 +200,6 @@ impl AnimationManager {
     /// root — so they report "not rendered" even while the SVG they belong to
     /// is on screen, and their animations must keep running while that `<svg>`
     /// is rendered.
-    #[cfg(feature = "servo-svg")]
     fn has_rendered_svg_ancestor(node: &Node) -> bool {
         let Some(element) = node.downcast::<Element>() else {
             return false;
@@ -229,14 +226,15 @@ impl AnimationManager {
             let rooted_nodes = self.rooted_animation_nodes.borrow();
             for (key, set) in sets.iter_mut() {
                 if rooted_nodes.get(&NoTrace(key.node)).is_some_and(|node| {
-                    let not_rendered =
+                    let mut not_rendered =
                         !node.is_being_rendered_or_delegates_rendering(key.pseudo_element);
                     // SVG child elements have no CSS box of their own, so they
                     // report "not rendered" even while the SVG they belong to
                     // is on screen. Keep their animations running while the
                     // nearest `<svg>` ancestor is rendered.
-                    #[cfg(feature = "servo-svg")]
-                    let not_rendered = not_rendered && !Self::has_rendered_svg_ancestor(node);
+                    if pref!(layout_servo_svg_enabled) {
+                        not_rendered = not_rendered && !Self::has_rendered_svg_ancestor(node);
+                    }
                     not_rendered
                 }) {
                     set.cancel_all_animations();

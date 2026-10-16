@@ -8,6 +8,7 @@ use layout_api::{
     DangerousStyleElement, DangerousStyleNode, LayoutDamage, LayoutElement, LayoutNode,
 };
 use script::layout_dom::ServoLayoutNode;
+use servo_config::pref;
 use style::context::{SharedStyleContext, StyleContext};
 use style::dom::{NodeInfo, TElement, TNode};
 use style::selector_parser::RestyleDamage;
@@ -200,8 +201,10 @@ pub(crate) fn compute_damage_and_rebuild_box_tree_below_dirty_root<'dom>(
     // damage, so `intersects(Relayout)` below is true for `Repaint` through full
     // relayout alike; upgrade any such restyle damage to box damage so it walks up
     // to the `<svg>` replaced element and re-runs the build.
-    #[cfg(feature = "servo-svg")]
-    if element.is_svg_element() && element_damage.intersects(LayoutDamage::Relayout) {
+    if pref!(layout_servo_svg_enabled) &&
+        element.is_svg_element() &&
+        element_damage.intersects(LayoutDamage::Relayout)
+    {
         element_damage.insert(LayoutDamage::DescendantHasBoxDamage);
     }
 

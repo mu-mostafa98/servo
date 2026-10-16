@@ -157,16 +157,16 @@ Every cache decision is logged at `debug` level under the `svg` target. Build an
 run with:
 
 ```
-./mach build --features servo-svg -d                                  # build once (dev + SVG engine)
-RUST_LOG=svg=debug ./mach run -d <page>                               # sh / bash
-$env:RUST_LOG = "svg=debug"; ./mach run -d <page>                     # PowerShell
+./mach build -d                                                       # build once (dev)
+RUST_LOG=svg=debug ./mach run -d --pref layout_servo_svg_enabled <page>       # sh / bash
+$env:RUST_LOG = "svg=debug"; ./mach run -d --pref layout_servo_svg_enabled <page>  # PowerShell
 ```
 
 `-d` selects the dev/debug build on both commands — `debug!` is compiled out of
-release builds, and `mach run` picks the matching dev binary. `--features
-servo-svg` is a build-time flag: it compiles the SVG engine in, so it goes on
-`mach build`, not `mach run`. Point `<page>` at a specific `.html` file, not a
-directory.
+release builds, and `mach run` picks the matching dev binary. The SVG engine is
+always compiled in; the `layout_servo_svg_enabled` preference (default `false`)
+selects it at runtime, so it goes on `mach run`, not `mach build`. Point
+`<page>` at a specific `.html` file, not a directory.
 
 Each cacheable element emits exactly one line per rebuild:
 

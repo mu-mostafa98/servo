@@ -122,7 +122,6 @@ static SERVO_CSS: &[u8] = include_bytes!("./stylesheets/servo.css");
 /// Shadows `svg > * { display: none; }` in `servo.css` (same specificity, later
 /// UA stylesheet wins). If that rule's selector ever changes, this selector
 /// must change with it.
-#[cfg(feature = "servo-svg")]
 static SERVO_SVG_CSS: &[u8] = b"svg > * { display: inline; }";
 
 /// A CSS file to style the presentational hints.
@@ -213,7 +212,6 @@ pub struct LayoutThread {
 
     /// A persistent cache of clean SVG render subtrees, reused across reflows
     /// for incremental SVG build (Level 2; see [`crate::svg::SvgSubtreeCache`]).
-    #[cfg(feature = "servo-svg")]
     svg_subtree_cache: Arc<RwLock<crate::svg::SvgSubtreeCache>>,
 
     /// The executors for paint worklets.
@@ -680,7 +678,6 @@ impl Layout for LayoutThread {
             size: self.stacking_context_tree.size_of(ops),
         });
 
-        #[cfg(feature = "servo-svg")]
         reports.push(Report {
             path: path![formatted_url, "layout-thread", "svg-subtree-cache"],
             kind: ReportKind::ExplicitJemallocHeapSize,
@@ -878,7 +875,6 @@ impl LayoutThread {
             paint_api: config.paint_api,
             stylist: Stylist::new(device, QuirksMode::NoQuirks),
             resolved_images_cache: Default::default(),
-            #[cfg(feature = "servo-svg")]
             svg_subtree_cache: Default::default(),
             debug: opts::get().debug.clone(),
             previously_highlighted_dom_node: Cell::new(None),
@@ -1086,7 +1082,6 @@ impl LayoutThread {
             origin: reflow_request.origin.clone(),
             image_cache: self.image_cache.clone(),
             resolved_images_cache: self.resolved_images_cache.clone(),
-            #[cfg(feature = "servo-svg")]
             svg_subtree_cache: self.svg_subtree_cache.clone(),
             pending_images: Mutex::default(),
             pending_rasterization_images: Mutex::default(),
@@ -1794,17 +1789,22 @@ fn get_ua_stylesheets(shared_lock: &SharedRwLock) -> Rc<UserAgentStylesheets> {
             .get_or_init(|| {
                 // FIXME: presentational-hints.css should be at author origin with zero specificity.
                 //        (Does it make a difference?)
-                let user_agent_stylesheets = vec![
+                let mut user_agent_stylesheets = vec![
                     parse_ua_stylesheet(shared_lock, "user-agent.css", USER_AGENT_CSS),
                     parse_ua_stylesheet(shared_lock, "servo.css", SERVO_CSS),
-                    #[cfg(feature = "servo-svg")]
-                    parse_ua_stylesheet(shared_lock, "servo-svg.css", SERVO_SVG_CSS),
                     parse_ua_stylesheet(
                         shared_lock,
                         "presentational-hints.css",
                         PRESENTATIONAL_HINTS_CSS,
                     ),
                 ];
+                if pref!(layout_servo_svg_enabled) {
+                    user_agent_stylesheets.push(parse_ua_stylesheet(
+                        shared_lock,
+                        "servo-svg.css",
+                        SERVO_SVG_CSS,
+                    ));
+                }
 
                 let html_mode_stylesheet =
                     parse_ua_stylesheet(shared_lock, "html-mode.css", HTML_MODE_CSS);

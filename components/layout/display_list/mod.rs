@@ -13,7 +13,6 @@ use euclid::{Box2D, Point2D, Rect, Scale, SideOffsets2D, Size2D, UnknownUnit, Ve
 use fonts::ShapedTextSlice;
 use gradient::WebRenderGradient;
 use layout_api::ReflowStatistics;
-#[cfg(feature = "servo-svg")]
 use net_traits::image_cache::ImageCache;
 use paint_api::display_list::{PaintDisplayListInfo, SpatialTreeNodeInfo};
 use servo_arc::Arc as ServoArc;
@@ -67,7 +66,6 @@ use crate::fragment_tree::{
     Fragment, FragmentFlags, FragmentStatus, FragmentTree, IFrameFragment, ImageFragment,
     PositioningFragment, SpecificLayoutInfo, Tag, TextFragment,
 };
-#[cfg(feature = "servo-svg")]
 use crate::fragment_tree::SvgFragment;
 use crate::geom::{
     LengthPercentageOrAuto, PhysicalPoint, PhysicalRect, PhysicalSides, PhysicalSize,
@@ -75,12 +73,10 @@ use crate::geom::{
 use crate::replaced::NaturalSizes;
 use crate::style_ext::{BorderStyleColor, ComputedValuesExt};
 
-#[cfg(feature = "servo-svg")]
 /// Adapts the layout image cache to [`servo_svg::RasterImageUploader`] so the
 /// SVG engine can upload CPU-rasterized pixels inline, in document order.
 struct ImageCacheUploader(Arc<dyn ImageCache>);
 
-#[cfg(feature = "servo-svg")]
 impl servo_svg::RasterImageUploader for ImageCacheUploader {
     fn upload(
         &self,
@@ -925,7 +921,6 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
         }
     }
 
-    #[cfg(feature = "servo-svg")]
     fn visit_svg(
         &mut self,
         state: &TraversalState,

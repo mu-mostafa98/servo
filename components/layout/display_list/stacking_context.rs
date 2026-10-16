@@ -546,7 +546,6 @@ impl Fragment {
                 );
             },
             Fragment::Text(_) | Fragment::Image(_) | Fragment::IFrame(_) => {},
-            #[cfg(feature = "servo-svg")]
             Fragment::Svg(_) => {},
         }
     }

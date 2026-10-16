@@ -16,7 +16,6 @@ use servo_arc::Arc as ServoArc;
 use servo_base::id::PipelineId;
 use servo_base::print_tree::PrintTree;
 use servo_base::text::Utf32CodeUnits;
-#[cfg(feature = "servo-svg")]
 use servo_svg::document::SvgTree;
 use servo_url::ServoUrl;
 use style::Zero;
@@ -56,7 +55,6 @@ pub(crate) enum Fragment {
     Text(#[conditional_malloc_size_of] Arc<TextFragment>),
     Image(#[conditional_malloc_size_of] Arc<ImageFragment>),
     /// An inline `<svg>` element rendered directly from its servo-svg render tree.
-    #[cfg(feature = "servo-svg")]
     Svg(#[conditional_malloc_size_of] Arc<SvgFragment>),
     IFrame(#[conditional_malloc_size_of] Arc<IFrameFragment>),
 }
@@ -143,7 +141,6 @@ pub(crate) struct ImageFragment {
 
 /// A fragment for an inline `<svg>` element, painted directly from its
 /// servo-svg render tree during display-list construction (see [`crate::svg`]).
-#[cfg(feature = "servo-svg")]
 #[derive(MallocSizeOf)]
 pub(crate) struct SvgFragment {
     pub base: BaseFragment,
@@ -180,7 +177,6 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositionedPlaceholder(_) => return None,
             Fragment::Positioning(fragment) => RefOrAtomicRef::Ref(&fragment.base),
             Fragment::Image(fragment) => RefOrAtomicRef::Ref(&fragment.base),
-            #[cfg(feature = "servo-svg")]
             Fragment::Svg(fragment) => RefOrAtomicRef::Ref(&fragment.base),
             Fragment::IFrame(fragment) => RefOrAtomicRef::Ref(&fragment.base),
             Fragment::Float(fragment) => RefOrAtomicRef::Ref(&fragment.base),
@@ -202,7 +198,6 @@ impl Fragment {
             Fragment::Text(..) |
             Fragment::Image(..) |
             Fragment::IFrame(..) => {},
-            #[cfg(feature = "servo-svg")]
             Fragment::Svg(..) => {},
         }
     }
@@ -226,7 +221,6 @@ impl Fragment {
             Fragment::Positioning(fragment) => fragment.print(tree),
             Fragment::Text(fragment) => fragment.print(tree),
             Fragment::Image(fragment) => fragment.print(tree),
-            #[cfg(feature = "servo-svg")]
             Fragment::Svg(fragment) => fragment.print(tree),
             Fragment::IFrame(fragment) => fragment.print(tree),
         }
@@ -273,7 +267,6 @@ impl Fragment {
             Fragment::Text(..) |
             Fragment::Image(..) |
             Fragment::IFrame(..) => self.base().map(|base| base.rect()).unwrap_or_default(),
-            #[cfg(feature = "servo-svg")]
             Fragment::Svg(..) => self.base().map(|base| base.rect()).unwrap_or_default(),
         }
     }
@@ -307,7 +300,6 @@ impl Fragment {
             Fragment::Text(..) | Fragment::Image(..) | Fragment::IFrame(..) => {
                 Some(self.base()?.rect())
             },
-            #[cfg(feature = "servo-svg")]
             Fragment::Svg(..) => Some(self.base()?.rect()),
         }
     }
@@ -342,7 +334,6 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositionedPlaceholder(_) |
             Fragment::Image(_) |
             Fragment::IFrame(_) => None,
-            #[cfg(feature = "servo-svg")]
             Fragment::Svg(_) => None,
         }
     }
@@ -468,7 +459,6 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositionedPlaceholder(_) => return,
             Fragment::Positioning(fragment) => &fragment.style,
             Fragment::Image(fragment) => &fragment.style,
-            #[cfg(feature = "servo-svg")]
             Fragment::Svg(fragment) => &fragment.style,
             Fragment::IFrame(fragment) => &fragment.style,
             Fragment::Float(fragment) => &fragment.style,
@@ -610,7 +600,6 @@ impl ImageFragment {
     }
 }
 
-#[cfg(feature = "servo-svg")]
 impl SvgFragment {
     pub fn print(&self, tree: &mut PrintTree) {
         tree.add_item(format!(

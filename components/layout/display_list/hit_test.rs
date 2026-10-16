@@ -27,7 +27,6 @@ use crate::display_list::clip::{Clip, ClipId};
 use crate::display_list::paint_traversal::{PaintTraversal, PaintTraversalHandler};
 use crate::display_list::{StackingContext, StackingContextTree, ToWebRender, TraversalState};
 use crate::fragment_tree::{BoxFragmentWithStyle, Fragment, FragmentFlags, TextFragment};
-#[cfg(feature = "servo-svg")]
 use crate::fragment_tree::SvgFragment;
 use crate::geom::PhysicalRect;
 
@@ -210,7 +209,6 @@ impl PaintTraversalHandler for HitTest<'_> {
         Fragment::Box(fragment.box_fragment.clone()).hit_test(state, self);
     }
 
-    #[cfg(feature = "servo-svg")]
     fn visit_svg(
         &mut self,
         state: &TraversalState,
@@ -347,7 +345,6 @@ impl Fragment {
                 FragmentFlags::empty(),
                 Cursor::Text,
             ),
-            #[cfg(feature = "servo-svg")]
             Fragment::Svg(svg_fragment) => hit_test_svg(svg_fragment, state, hit_test),
             _ => false,
         }
@@ -360,7 +357,6 @@ impl Fragment {
 /// SVG content is painted inside the fragment's rect; the point is mapped from
 /// layout space into the SVG's own coordinate space (relative to the rect
 /// origin) and resolved against the topmost filled shape.
-#[cfg(feature = "servo-svg")]
 fn hit_test_svg(
     svg_fragment: &SvgFragment,
     state: &TraversalState,

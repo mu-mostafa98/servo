@@ -8,11 +8,9 @@ use std::sync::Arc;
 use embedder_traits::UntrustedNodeAddress;
 use euclid::Size2D;
 use fonts::FontContext;
-#[cfg(not(feature = "servo-svg"))]
-use layout_api::LayoutNode;
 use layout_api::{
-    AnimatingImages, IFrameSizes, LayoutImageDestination, PendingImage, PendingImageState,
-    PendingRasterizationImage,
+    AnimatingImages, IFrameSizes, LayoutImageDestination, LayoutNode, PendingImage,
+    PendingImageState, PendingRasterizationImage,
 };
 use net_traits::image_cache::{
     Image as CachedImage, ImageCache, ImageCacheResult, ImageOrMetadataAvailable, PendingImageId,
@@ -20,7 +18,6 @@ use net_traits::image_cache::{
 use net_traits::request::InternalRequest;
 use parking_lot::{Mutex, RwLock};
 use pixels::RasterImage;
-#[cfg(not(feature = "servo-svg"))]
 use script::layout_dom::ServoLayoutNode;
 use servo_base::id::PainterId;
 use servo_url::{ImmutableOrigin, ServoUrl};
@@ -33,7 +30,6 @@ use uuid::Uuid;
 use webrender_api::ImageKey;
 use webrender_api::units::{DeviceIntSize, DeviceSize};
 
-#[cfg(feature = "servo-svg")]
 use crate::svg::SvgSubtreeCache;
 
 pub(crate) type CachedImageOrError = Result<CachedImage, ResolveImageError>;
@@ -132,11 +128,10 @@ pub(crate) struct ImageResolver {
     /// network load for the corresponding serialized data: urls (similar to
     /// background images).
     ///
-    /// Only the `#[cfg(not(feature = "servo-svg"))]` path enqueues here — the
-    /// `servo-svg` engine builds an `Arc<SvgTree>` straight from the DOM (see
-    /// [`crate::svg::build_svg_tree`]) instead of serializing to a data URL, so
-    /// this queue stays empty when the feature is enabled. It is kept
-    /// unconditionally so the off-feature serialization path still compiles.
+    /// Only the resvg path (used when `layout_servo_svg_enabled` is false)
+    /// enqueues here — the native SVG engine builds an `Arc<SvgTree>` straight
+    /// from the DOM (see [`crate::svg::build_svg_tree`]) instead of serializing
+    /// to a data URL, so this queue stays empty when the pref is enabled.
     pub pending_svg_elements_for_serialization: Mutex<Vec<UntrustedNodeAddress>>,
 
     /// A shared reference to script's map of DOM nodes with animated images. This is used
@@ -150,7 +145,6 @@ pub(crate) struct ImageResolver {
 
     /// A persistent cache of clean SVG render subtrees, reused across reflows
     /// for incremental SVG build (see [`crate::svg::SvgSubtreeCache`]).
-    #[cfg(feature = "servo-svg")]
     pub svg_subtree_cache: Arc<RwLock<SvgSubtreeCache>>,
 
     /// The current animation timeline value used to properly initialize animating images.
@@ -306,7 +300,6 @@ impl ImageResolver {
         }
     }
 
-    #[cfg(not(feature = "servo-svg"))]
     pub(crate) fn queue_svg_element_for_serialization(&self, element: ServoLayoutNode<'_>) {
         self.pending_svg_elements_for_serialization
             .lock()
