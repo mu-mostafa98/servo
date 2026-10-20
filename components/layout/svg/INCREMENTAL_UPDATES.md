@@ -78,7 +78,7 @@ when `build_svg_tree` re-runs, it reuses the subtrees that haven't changed.
 ### The cache
 
 A persistent [`SvgSubtreeCache`](mod.rs) lives on the layout thread (surfaced
-per reflow through `ImageResolver::svg_subtree_cache`). It is keyed by
+per reflow through `LayoutContext::svg_subtree_cache`). It is keyed by
 `OpaqueNode` — the DOM node that produced each subtree — and each entry stores:
 
 - the built subtree, shared as `Arc<SvgNode>`;

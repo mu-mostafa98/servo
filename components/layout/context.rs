@@ -48,6 +48,12 @@ pub(crate) struct LayoutContext<'a> {
     /// tree construction. Later passed to display list construction.
     pub image_resolver: Arc<ImageResolver>,
 
+    /// A persistent cache of clean SVG render subtrees, reused across reflows
+    /// for incremental SVG build (see [`crate::svg::SvgSubtreeCache`]). Lives on
+    /// the layout context — not the [`ImageResolver`] — because it is part of the
+    /// SVG build pipeline, not image resolution.
+    pub svg_subtree_cache: Arc<RwLock<SvgSubtreeCache>>,
+
     /// The [`PainterId`] that identifies which `RenderingContext` that this layout targets.
     pub painter_id: PainterId,
 
@@ -142,10 +148,6 @@ pub(crate) struct ImageResolver {
     // A cache that maps image resources used in CSS (e.g as the `url()` value
     // for `background-image` or `content` property) to the final resolved image data.
     pub resolved_images_cache: Arc<RwLock<HashMap<ServoUrl, CachedImageOrError>>>,
-
-    /// A persistent cache of clean SVG render subtrees, reused across reflows
-    /// for incremental SVG build (see [`crate::svg::SvgSubtreeCache`]).
-    pub svg_subtree_cache: Arc<RwLock<SvgSubtreeCache>>,
 
     /// The current animation timeline value used to properly initialize animating images.
     pub animation_timeline_value: f64,

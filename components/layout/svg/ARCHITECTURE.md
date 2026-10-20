@@ -97,7 +97,7 @@ Within [`builder`](builder/):
 
 `build_svg_tree` re-runs on every box rebuild. To avoid rebuilding unchanged
 subtrees, the builder keeps a persistent cache ([`SvgSubtreeCache`](mod.rs)) on
-the layout thread (surfaced per reflow through `ImageResolver::svg_subtree_cache`),
+the layout thread (surfaced per reflow through `LayoutContext::svg_subtree_cache`),
 keyed by `OpaqueNode`. A subtree is reused when, for the DOM node that produced it:
 
 - its `inclusive_descendants_version` is unchanged (no DOM mutation in it or

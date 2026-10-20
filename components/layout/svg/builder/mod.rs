@@ -110,7 +110,6 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         // cached subtree under this root is out of date; clear it before any
         // lookup so this build starts from a consistent view.
         context
-            .image_resolver
             .svg_subtree_cache
             .write()
             .ensure_css_rules(node.opaque(), &css_rules);
@@ -402,7 +401,6 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         cross_ref: Option<&CrossRefFingerprint>,
     ) -> Result<Arc<SvgNode>, CacheMiss> {
         self.context
-            .image_resolver
             .svg_subtree_cache
             .read()
             .lookup(
@@ -429,7 +427,6 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         subtree: Arc<SvgNode>,
     ) {
         self.context
-            .image_resolver
             .svg_subtree_cache
             .write()
             .store(

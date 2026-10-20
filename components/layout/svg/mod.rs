@@ -43,7 +43,7 @@ use crate::context::LayoutContext;
 use crate::svg::primitives::css::CssClassRules;
 
 /// Persistent cache of clean SVG render subtrees, shared across reflows via
-/// [`LayoutContext::image_resolver`].
+/// [`LayoutContext::svg_subtree_cache`].
 ///
 /// This is the Level 2 incremental-build cache: subtrees are keyed by the DOM
 /// node that produced them and reused when that node's `inclusive_descendants_version`
