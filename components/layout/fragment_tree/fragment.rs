@@ -197,8 +197,8 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositionedPlaceholder(..) |
             Fragment::Text(..) |
             Fragment::Image(..) |
+            Fragment::Svg(..) |
             Fragment::IFrame(..) => {},
-            Fragment::Svg(..) => {},
         }
     }
 
@@ -266,8 +266,8 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositionedPlaceholder(_) |
             Fragment::Text(..) |
             Fragment::Image(..) |
+            Fragment::Svg(..) |
             Fragment::IFrame(..) => self.base().map(|base| base.rect()).unwrap_or_default(),
-            Fragment::Svg(..) => self.base().map(|base| base.rect()).unwrap_or_default(),
         }
     }
 
@@ -297,10 +297,10 @@ impl Fragment {
             // rectangle should include that.
             Fragment::Positioning(fragment) => Some(fragment.base.rect()),
             Fragment::AbsoluteOrFixedPositionedPlaceholder(_) => None,
-            Fragment::Text(..) | Fragment::Image(..) | Fragment::IFrame(..) => {
+            Fragment::Text(..) | Fragment::Image(..) | Fragment::Svg(..) |
+            Fragment::IFrame(..) => {
                 Some(self.base()?.rect())
             },
-            Fragment::Svg(..) => Some(self.base()?.rect()),
         }
     }
 
@@ -333,8 +333,8 @@ impl Fragment {
             Fragment::Text(_) |
             Fragment::AbsoluteOrFixedPositionedPlaceholder(_) |
             Fragment::Image(_) |
+            Fragment::Svg(_) |
             Fragment::IFrame(_) => None,
-            Fragment::Svg(_) => None,
         }
     }
 

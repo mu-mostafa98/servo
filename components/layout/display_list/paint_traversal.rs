@@ -14,9 +14,8 @@ use crate::display_list::{
 };
 use crate::fragment_tree::{
     BoxFragment, BoxFragmentWithStyle, Fragment, FragmentFlags, IFrameFragment, ImageFragment,
-    PositioningFragment, Tag, TextFragment,
+    PositioningFragment, SvgFragment, Tag, TextFragment,
 };
-use crate::fragment_tree::SvgFragment;
 use crate::geom::{PhysicalPoint, PhysicalRect};
 
 pub(crate) struct PaintTraversal<'a, Handler: PaintTraversalHandler> {
@@ -287,8 +286,8 @@ impl<'a, Handler: PaintTraversalHandler> PaintTraversal<'a, Handler> {
             Fragment::AbsoluteOrFixedPositionedPlaceholder(..) |
             Fragment::Text(..) |
             Fragment::Image(..) |
+            Fragment::Svg(..) |
             Fragment::IFrame(..) => {},
-            Fragment::Svg(..) => {},
         }
 
         saw_inline_level_or_replaced
@@ -373,8 +372,8 @@ impl<'a, Handler: PaintTraversalHandler> PaintTraversal<'a, Handler> {
             Fragment::Float(..) |
             Fragment::IFrame(_) |
             Fragment::Image(_) |
+            Fragment::Svg(..) |
             Fragment::Text(..) => {},
-            Fragment::Svg(_) => {},
         }
     }
 
@@ -403,10 +402,7 @@ impl<'a, Handler: PaintTraversalHandler> PaintTraversal<'a, Handler> {
             Fragment::Positioning(..) => {
                 unreachable!("Unexpected direct descendant PositioningContext of inline.")
             },
-            Fragment::Image(..) | Fragment::IFrame(..) => {
-                unreachable!("Unexpected replaced content direct descendant of inline.")
-            },
-            Fragment::Svg(..) => {
+            Fragment::Image(..) | Fragment::Svg(..) | Fragment::IFrame(..) => {
                 unreachable!("Unexpected replaced content direct descendant of inline.")
             },
         }

@@ -545,8 +545,7 @@ impl Fragment {
                     text_decorations,
                 );
             },
-            Fragment::Text(_) | Fragment::Image(_) | Fragment::IFrame(_) => {},
-            Fragment::Svg(_) => {},
+            Fragment::Text(_) | Fragment::Image(_) | Fragment::Svg(_) | Fragment::IFrame(_) => {},
         }
     }
 }
