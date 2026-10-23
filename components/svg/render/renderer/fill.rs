@@ -18,7 +18,9 @@ use webrender_api::{ClipChainId, CommonItemProperties, SpaceAndClipInfo};
 
 use crate::model::document::{GradientDef, GradientUnits, PatternUnits};
 use crate::model::style::paint_servers::PaintServer;
-use crate::render::renderer::{RenderContext, color_interpolation, gradient, pattern, to_colorf};
+use crate::render::renderer::{
+    MAX_PAINT_SERVER_DEPTH, RenderContext, color_interpolation, gradient, pattern, to_colorf,
+};
 use crate::render::tessellator;
 use crate::render::tessellator::FillStyle;
 
@@ -245,6 +247,9 @@ fn handle_pattern_fill(
     fill_rule: crate::model::style::FillRule,
     ctx: &mut RenderContext,
 ) {
+    if ctx.def_depth >= MAX_PAINT_SERVER_DEPTH {
+        return;
+    }
     if def.root.children.is_empty() {
         return;
     }

@@ -254,6 +254,7 @@ fn fill_gradient_stroke(
         native_rendering: ctx.native_rendering,
         sink: ctx.sink,
         defs: ctx.defs,
+        def_depth: ctx.def_depth,
     };
     gradient::fill_rect_with_gradient(
         def,
@@ -578,6 +579,7 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
         native_rendering: ctx.native_rendering,
         sink: ctx.sink,
         defs: ctx.defs,
+        def_depth: ctx.def_depth,
     };
 
     for pair in pts.windows(2) {

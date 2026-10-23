@@ -397,6 +397,7 @@ fn scanline_fill_triangle(
                             native_rendering: ctx.native_rendering,
                             sink: ctx.sink,
                             defs: ctx.defs,
+                            def_depth: ctx.def_depth + 1,
                         };
                         shape.render(&mut shape_ctx);
                     });

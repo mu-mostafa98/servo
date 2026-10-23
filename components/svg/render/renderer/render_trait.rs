@@ -13,6 +13,11 @@ use crate::model::document::Defs;
 use crate::model::element::shape::Shape;
 use crate::model::style::NodeStyle;
 
+/// Maximum nesting depth when rendering a referenced definition's content (a
+/// `<pattern>` whose content itself references a `<pattern>`, transitively).
+/// A self-referencing pattern would otherwise recurse until the stack overflows.
+pub(crate) const MAX_PAINT_SERVER_DEPTH: u32 = 32;
+
 /// Bundled rendering parameters passed to every [`Render::render`] call.
 pub(crate) struct RenderContext<'a> {
     pub style: &'a NodeStyle,
@@ -45,6 +50,10 @@ pub(crate) struct RenderContext<'a> {
     /// Read-only view over the definition maps, used to resolve `url(#id)`
     /// paint-server references at render time.
     pub defs: Defs<'a>,
+    /// Nesting depth into definition rendering (pattern content). Incremented
+    /// each time a definition's content is rendered; a definition that reaches
+    /// [`MAX_PAINT_SERVER_DEPTH`] renders nothing further, breaking cycles.
+    pub def_depth: u32,
 }
 
 impl<'a> RenderContext<'a> {
@@ -80,6 +89,7 @@ impl<'a> RenderContext<'a> {
             native_rendering: false,
             sink,
             defs,
+            def_depth: 0,
         }
     }
 }

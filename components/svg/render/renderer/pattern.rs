@@ -9,7 +9,9 @@ use webrender_api::units::{LayoutPoint, LayoutRect, LayoutTransform};
 use webrender_api::{PropertyBinding, ReferenceFrameKind, TransformStyle};
 
 use crate::model::document::{PatternContentUnits, PatternDef, PatternUnits};
-use crate::render::renderer::{Render, RenderContext, clip_chain_option, transform};
+use crate::render::renderer::{
+    MAX_PAINT_SERVER_DEPTH, Render, RenderContext, clip_chain_option, transform,
+};
 use crate::render::traversal::compute_viewbox_transform;
 
 /// Fill a rectangle with a repeating pattern.
@@ -18,6 +20,9 @@ pub(crate) fn fill_rect_with_pattern(
     bounds: LayoutRect,
     ctx: &mut RenderContext,
 ) {
+    if ctx.def_depth >= MAX_PAINT_SERVER_DEPTH {
+        return;
+    }
     if def.root.children.is_empty() {
         return;
     }
@@ -188,6 +193,7 @@ pub(crate) fn fill_rect_with_pattern(
                     native_rendering: true,
                     sink: ctx.sink,
                     defs: ctx.defs,
+                    def_depth: ctx.def_depth + 1,
                 };
                 shape.render(&mut shape_ctx);
             });
