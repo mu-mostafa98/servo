@@ -2,9 +2,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+//! Pure SVG data model.
+//!
+//! This half of the engine has **no** dependency on WebRender, vello, or the
+//! [`crate::render`] half — it only describes *what* an SVG is (elements,
+//! style, document structure, units), not *how* it is drawn.
+
 pub mod document;
 pub mod element;
+pub mod error;
 pub mod geometry;
+pub mod resource;
 pub mod style;
 pub mod transform;
 pub mod units;

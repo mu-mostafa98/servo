@@ -16,6 +16,8 @@ use net_traits::request::InternalRequest;
 use script::layout_dom::ServoLayoutNode;
 use servo_arc::Arc as ServoArc;
 use servo_base::id::{BrowsingContextId, PipelineId};
+use servo_config::pref;
+use servo_svg::document::SvgTree;
 use servo_url::ServoUrl;
 use style::Zero;
 use style::attr::AttrValue;
@@ -40,6 +42,7 @@ use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
 use crate::fragment_tree::{
     BaseFragment, BaseFragmentInfo, CollapsedBlockMargins, Fragment, IFrameFragment, ImageFragment,
+    SvgFragment,
 };
 use crate::geom::{LogicalVec2, PhysicalPoint, PhysicalRect, PhysicalSize};
 use crate::layout_box_base::{IndependentFormattingContextLayoutResult, LayoutBoxBase};
@@ -156,10 +159,15 @@ pub(crate) enum ReplacedContentKind {
     IFrame(IFrameInfo),
     Canvas(CanvasInfo),
     Video(VideoInfo),
+    /// An SVG rasterized through the image cache (the resvg path). Used when
+    /// `layout_servo_svg_enabled` is false; with the pref enabled, inline
+    /// SVG is rendered directly from its render tree via [`Self::Svg`].
     SVGElement {
         vector_image: Option<VectorImage>,
         has_viewbox: bool,
     },
+    /// An inline SVG rendered directly from its render tree (see [`crate::svg`]).
+    Svg(#[conditional_malloc_size_of] Option<Arc<SvgTree>>),
     Audio,
 }
 
@@ -293,6 +301,21 @@ impl ReplacedContents {
             ratio,
         };
 
+        if pref!(layout_servo_svg_enabled) {
+            // Feed the resolved viewport dimensions (already computed from the
+            // `width`/`height` presentation attributes above) into the tree so
+            // percentage resolution uses the actual viewport, not re-parsed raw
+            // attributes. Fall back to the SVG initial viewport (300×150) when
+            // neither attribute resolves to a length.
+            let viewport_width = width.map(|w| w.px()).unwrap_or(300.0);
+            let viewport_height = height.map(|h| h.px()).unwrap_or(150.0);
+            let render_tree =
+                crate::svg::build_svg_tree(node, context, viewport_width, viewport_height);
+            return (ReplacedContentKind::Svg(render_tree), natural_size);
+        }
+
+        // Legacy resvg path (the default while the pref is off): serialize the
+        // `<svg>` to a data URL and rasterize it through the image cache.
         let svg_source = match svg_data.source {
             None => {
                 // The SVGSVGElement is not yet serialized, so we add it to a list
@@ -616,6 +639,17 @@ impl ReplacedContents {
                     selected: self.selected.clone(),
                 }))]
             },
+            ReplacedContentKind::Svg(Some(tree)) => {
+                vec![Fragment::Svg(Arc::new(SvgFragment {
+                    base,
+                    style: style.clone().into(),
+                    selected_style: self.selected_style.clone(),
+                    clip,
+                    tree: Some(tree.clone()),
+                    selected: self.selected.clone(),
+                }))]
+            },
+            ReplacedContentKind::Svg(None) => return vec![],
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox,
