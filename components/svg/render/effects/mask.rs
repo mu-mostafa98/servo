@@ -19,8 +19,9 @@ use vello_cpu::peniko::{Fill, Gradient, GradientKind};
 use webrender_api::units::LayoutPoint;
 
 use crate::model::document::{Defs, MaskContentUnits, MaskDef, MaskType};
-use crate::model::style::FillRule;
+use crate::model::style::{ColorInterpolation, FillRule};
 use crate::model::style::paint::FillParams;
+use crate::render::renderer::color_interpolation_of_style;
 use crate::render::renderer::path::{
     apply_paint, resolve_fill_paint, scale_paint, transform_to_affine,
 };
@@ -67,6 +68,7 @@ pub(crate) fn rasterize_mask(
         node_opacity: f32,
         fill_rule: FillRule,
         bbox: Rect,
+        color_interpolation: ColorInterpolation,
     }
 
     // First pass: collect shape fills and the union bounding box, applying the
@@ -110,6 +112,7 @@ pub(crate) fn rasterize_mask(
             node_opacity: style.opacity.get(),
             fill_rule,
             bbox,
+            color_interpolation: color_interpolation_of_style(style),
         });
     });
 
@@ -152,18 +155,23 @@ pub(crate) fn rasterize_mask(
             &s.bbox,
             s.node_opacity,
             defs,
+            s.color_interpolation,
         ) else {
             continue;
         };
 
         // Gradients are resolved in the shape's own bbox-local space; shift
         // them into union-local space before scaling to device resolution.
-        if let crate::render::renderer::path::ResolvedPaint::Gradient(g) = &mut paint {
-            translate_gradient(
-                g,
-                (s.bbox.x0 - union.x0) as f64,
-                (s.bbox.y0 - union.y0) as f64,
-            );
+        if let crate::render::renderer::path::ResolvedPaint::Gradient(g, transform) = &mut paint {
+            let dx = (s.bbox.x0 - union.x0) as f64;
+            let dy = (s.bbox.y0 - union.y0) as f64;
+            translate_gradient(g, dx, dy);
+            // A radial paint transform is a scale-about-the-center, so shift its
+            // center by conjugating with a translation.
+            if let Some(t) = transform {
+                let shift = vello_cpu::kurbo::Affine::translate((dx, dy));
+                *t = shift * *t * vello_cpu::kurbo::Affine::translate((-dx, -dy));
+            }
         }
 
         context.set_fill_rule(match s.fill_rule {

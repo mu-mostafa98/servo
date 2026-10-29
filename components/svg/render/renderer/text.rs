@@ -8,6 +8,7 @@
 //! `FontInstanceKey` is available. Falls back to estimated rectangles.
 //! Supports fill, stroke, and text-anchor alignment.
 
+use lyon::math::Point as LyonPoint;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize, LayoutTransform};
 use webrender_api::{
     ColorF, CommonItemProperties, GlyphInstance, PropertyBinding, ReferenceFrameKind,
@@ -16,11 +17,14 @@ use webrender_api::{
 
 use crate::model::element::text::TextSpan;
 use crate::model::style::paint_servers::PaintServer;
-use crate::render::renderer::{Render, RenderContext, to_colorf};
+use crate::render::renderer::{
+    Render, RenderContext, paint_order_stroke_before_fill, stroke, to_colorf,
+};
 use crate::render::to_wr_font_key;
 
 const FALLBACK_ADVANCE: f32 = 8.0;
 const FALLBACK_HEIGHT: f32 = 16.0;
+
 /// Approximate descent below the baseline, so descenders (p/g/y/j/q) are not
 /// clipped by the text bounds rect.
 const DESCENT: f32 = 4.0;
@@ -53,19 +57,71 @@ impl Render for TextSpan {
         let total_advance = self.total_advance();
         let anchor_offset = self.anchor_offset() * total_advance;
 
-        // Render stroke first if paint-order dictates.
-        if let Some(stroke) = &ctx.style.stroke {
-            if let Some(PaintServer::Solid(svg_color)) = &stroke.paint_server {
-                let color = to_colorf(svg_color);
+        // Element-level opacity multiplies on top of fill-/stroke-opacity
+        // (mirrors `fill.rs`/`stroke.rs`), so `<g opacity>` and
+        // `opacity`/`fill-opacity`/`stroke-opacity` on text all apply.
+        let node_opacity = ctx.style.opacity.get();
+
+        // Resolve the effective stroke/fill colors, folding opacity into alpha.
+        let stroke_color = ctx.style.stroke.as_ref().and_then(|stroke| {
+            stroke
+                .paint_server
+                .as_ref()
+                .and_then(|paint| match paint {
+                    PaintServer::Solid(svg_color) => {
+                        let mut color = to_colorf(svg_color);
+                        color.a *= stroke.opacity.get() * node_opacity;
+                        Some(color)
+                    },
+                    // Gradient/pattern text paint is not supported yet.
+                    _ => None,
+                })
+        });
+        let fill_color = ctx.style.fill.as_ref().and_then(|fill| {
+            fill.paint_server.as_ref().and_then(|paint| match paint {
+                PaintServer::Solid(svg_color) => {
+                    let mut color = to_colorf(svg_color);
+                    color.a *= fill.opacity.get() * node_opacity;
+                    Some(color)
+                },
+                _ => None,
+            })
+        });
+
+        // Whether we can stroke through real glyph outlines (a solid stroke and
+        // at least one glyph with a flattened outline). Rotated or horizontally
+        // scaled glyphs fall back to the legacy approximation below.
+        let no_rotation = !self.rotate.iter().any(|a| *a != 0.0);
+        let outline_stroke = no_rotation &&
+            self.glyph_hscale == 1.0 &&
+            ctx.style
+                .stroke
+                .as_ref()
+                .and_then(|stroke| stroke.paint_server.as_ref())
+                .is_some_and(|paint| matches!(paint, PaintServer::Solid(_))) &&
+            self.glyphs
+                .iter()
+                .any(|g| g.outline.as_ref().is_some_and(|o| !o.is_empty()));
+
+        // Honor `paint-order`: default is fill under stroke; `stroke fill`
+        // swaps them so the stroke sits under the fill.
+        if paint_order_stroke_before_fill(ctx) {
+            if outline_stroke {
+                self.emit_stroke_outlines(ctx, anchor_offset);
+            } else if let Some(color) = stroke_color {
                 self.emit(ctx, anchor_offset, Some(color), None);
             }
-        }
-
-        // Render fill.
-        if let Some(fill) = &ctx.style.fill {
-            if let Some(PaintServer::Solid(svg_color)) = &fill.paint_server {
-                let color = to_colorf(svg_color);
+            if let Some(color) = fill_color {
                 self.emit(ctx, anchor_offset, None, Some(color));
+            }
+        } else {
+            if let Some(color) = fill_color {
+                self.emit(ctx, anchor_offset, None, Some(color));
+            }
+            if outline_stroke {
+                self.emit_stroke_outlines(ctx, anchor_offset);
+            } else if let Some(color) = stroke_color {
+                self.emit(ctx, anchor_offset, Some(color), None);
             }
         }
     }
@@ -96,6 +152,34 @@ impl TextSpan {
             self.emit_glyphs(ctx, anchor_offset, stroke_color, fill_color);
         } else {
             self.emit_rects(ctx, anchor_offset, stroke_color, fill_color);
+        }
+    }
+
+    /// Stroke each glyph through its flattened outline, delegating to the shared
+    /// [`stroke::stroke_polyline`] pipeline so the stroke honors width, caps,
+    /// joins, dashes, and paint-order just like any other stroked shape.
+    ///
+    /// Only called for non-rotated, non-scaled runs; the glyph outlines are in
+    /// user space relative to each glyph's baseline origin, so they are offset
+    /// by the glyph position here.
+    fn emit_stroke_outlines(&self, ctx: &mut RenderContext, anchor_offset: f32) {
+        let local_x = self.origin_x() + self.advance_offset + anchor_offset;
+        let local_y = self.origin_y();
+
+        for g in &self.glyphs {
+            let Some(outline) = g.outline.as_ref() else {
+                continue;
+            };
+            for contour in outline {
+                if contour.len() < 2 {
+                    continue;
+                }
+                let pts: Vec<LyonPoint> = contour
+                    .iter()
+                    .map(|&(cx, cy)| LyonPoint::new(local_x + g.x + cx, local_y + g.y + cy))
+                    .collect();
+                stroke::stroke_polyline(&pts, ctx);
+            }
         }
     }
 

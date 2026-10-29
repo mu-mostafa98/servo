@@ -8,7 +8,7 @@ use std::hash::{Hash, Hasher};
 
 use euclid::Transform2D;
 use kurbo::{BezPath, PathEl, Point as KurboPoint, Shape};
-use vello_cpu::color::{AlphaColor, DynamicColor, Srgb};
+use vello_cpu::color::{AlphaColor, ColorSpaceTag, DynamicColor, Srgb};
 use vello_cpu::peniko::{ColorStop, ColorStops, Extend, Gradient};
 use webrender_api::DisplayListBuilder;
 use webrender_api::units::{LayoutPoint, LayoutRect};
@@ -16,9 +16,9 @@ use webrender_api::units::{LayoutPoint, LayoutRect};
 use crate::model::document::{Defs, GradientDef, GradientUnits, SpreadMethod};
 use crate::model::element::shape::Path;
 use crate::model::style::paint_servers::PaintServer;
-use crate::model::style::{FillParams, FillRule, StrokeParams};
+use crate::model::style::{ColorInterpolation, FillParams, FillRule, LineCap, LineJoin, StrokeParams};
 use crate::render::geometry::{ComplexClip, path_data_to_bez};
-use crate::render::renderer::{Render, RenderContext, fill_rule};
+use crate::render::renderer::{Render, RenderContext, color_interpolation, fill_rule};
 use crate::{RasterSink, RasterizedImage};
 
 /// Tolerance for flattening bezier curves into line segments.
@@ -29,7 +29,12 @@ const FLATTEN_TOLERANCE: f64 = 0.1;
 /// A resolved paint for rasterization — either a solid color or a gradient.
 pub(crate) enum ResolvedPaint {
     Solid(AlphaColor<Srgb>),
-    Gradient(Gradient),
+    /// A gradient plus an optional paint transform.  Radial gradients in
+    /// `objectBoundingBox` units become elliptical under a non-uniform bounding
+    /// box (§13.2.2), but peniko's `Gradient` models only circular radii — the
+    /// ellipse is encoded as a circle plus a non-uniform paint transform (see
+    /// [`radial_to_peniko`]).
+    Gradient(Gradient, Option<vello_cpu::kurbo::Affine>),
 }
 
 /// Renders an SVG `<path>` via vello_cpu (solid or gradient, preserving curves).
@@ -107,7 +112,27 @@ impl Render for Path {
             None,
             self.path_length,
             ctx.defs,
+            color_interpolation(ctx),
         );
+    }
+}
+
+/// Map an SVG [`LineCap`] to kurbo's [`Cap`].
+fn line_cap_to_kurbo(cap: LineCap) -> vello_cpu::kurbo::Cap {
+    match cap {
+        LineCap::Butt => vello_cpu::kurbo::Cap::Butt,
+        LineCap::Round => vello_cpu::kurbo::Cap::Round,
+        LineCap::Square => vello_cpu::kurbo::Cap::Square,
+    }
+}
+
+/// Map an SVG [`LineJoin`] to kurbo's [`Join`]. `miter-clip` and `arcs` have no
+/// direct kurbo equivalent; approximate them as miter and round respectively.
+fn line_join_to_kurbo(join: LineJoin) -> vello_cpu::kurbo::Join {
+    match join {
+        LineJoin::Miter | LineJoin::MiterClip => vello_cpu::kurbo::Join::Miter,
+        LineJoin::Round | LineJoin::Arcs => vello_cpu::kurbo::Join::Round,
+        LineJoin::Bevel => vello_cpu::kurbo::Join::Bevel,
     }
 }
 
@@ -128,6 +153,11 @@ pub(crate) fn transform_to_affine(xform: &Transform2D<f32, (), ()>) -> vello_cpu
 
 /// Rasterize a `BezPath` (solid fill/stroke or gradient) via vello_cpu into a
 /// [`RasterizedImage`], uploaded and pushed inline through `sink`.
+///
+/// `shape_ci` is the referencing shape's effective `color-interpolation`
+/// (resolved to `Srgb`/`LinearRGB`); a gradient's own authored value still
+/// takes precedence over it.
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn rasterize_bez(
     bez: &BezPath,
     fill: Option<&FillParams>,
@@ -144,6 +174,7 @@ pub(crate) fn rasterize_bez(
     alpha_mask: Option<&crate::render::effects::mask::MaskRaster>,
     path_length: Option<f32>,
     defs: Defs<'_>,
+    shape_ci: ColorInterpolation,
 ) {
     // Approximate scalar scale of the accumulated node transform, used to keep
     // stroke widths/dashes proportional. `sqrt(|det|)` is exact for uniform
@@ -172,7 +203,23 @@ pub(crate) fn rasterize_bez(
     // Expand the pixmap to include the stroke, which is centered on the path
     // outline and would otherwise be clipped at the fill's bounding box.
     if let Some(s) = stroke {
-        let inset = s.width.get() as f64 * css_scale as f64 / 2.0;
+        // A centered stroke extends half its width beyond the path outline.
+        // Sharp miter joins extend further — up to (width/2) × miter-limit —
+        // and would be clipped at the pixmap edge if we only reserved the
+        // half-width (a clipped miter tip renders like a bevel). Square caps
+        // likewise reach (width/2) × √2 at their corners.
+        let half_width = s.width.get() as f64 * css_scale as f64 / 2.0;
+        let join_inset = match s.line_join {
+            LineJoin::Miter | LineJoin::MiterClip => {
+                half_width * (s.miter_limit.max(1.0) as f64)
+            },
+            _ => half_width,
+        };
+        let cap_inset = match s.line_cap {
+            LineCap::Square => half_width * std::f64::consts::SQRT_2,
+            _ => half_width,
+        };
+        let inset = join_inset.max(cap_inset);
         bbox = kurbo::Rect::new(
             bbox.x0 - inset,
             bbox.y0 - inset,
@@ -249,6 +296,7 @@ pub(crate) fn rasterize_bez(
             &bbox,
             node_opacity,
             defs,
+            shape_ci,
         ) {
             context.set_fill_rule(match f.fill_rule {
                 FillRule::NonZero => vello_cpu::peniko::Fill::NonZero,
@@ -268,10 +316,13 @@ pub(crate) fn rasterize_bez(
             &bbox,
             node_opacity,
             defs,
+            shape_ci,
         ) {
             apply_paint(&mut context, scale_paint(paint, scale as f64));
-            let mut vello_stroke =
-                vello_cpu::kurbo::Stroke::new(s.width.get() as f64 * total_scale as f64);
+            let mut vello_stroke = vello_cpu::kurbo::Stroke::new(s.width.get() as f64 * total_scale as f64)
+                .with_caps(line_cap_to_kurbo(s.line_cap))
+                .with_join(line_join_to_kurbo(s.line_join))
+                .with_miter_limit(s.miter_limit.max(1.0) as f64);
             // Dash lengths/offset are in user units, so scale them by the
             // same factor as the path (viewBox scale × node-transform scale
             // × device scale) before handing them to kurbo, which implements
@@ -399,15 +450,32 @@ pub(crate) fn rasterize_bez(
 /// Set the resolved paint on the render context.
 pub(crate) fn apply_paint(context: &mut vello_cpu::RenderContext, paint: ResolvedPaint) {
     match paint {
-        ResolvedPaint::Solid(c) => context.set_paint(c),
-        ResolvedPaint::Gradient(g) => context.set_paint(g),
+        ResolvedPaint::Solid(c) => {
+            context.reset_paint_transform();
+            context.set_paint(c);
+        },
+        ResolvedPaint::Gradient(g, transform) => {
+            context.set_paint(g);
+            match transform {
+                Some(t) => context.set_paint_transform(t),
+                None => context.reset_paint_transform(),
+            }
+        },
     }
 }
 
 /// Scale a resolved paint's gradient geometry into device space.
 pub(crate) fn scale_paint(mut paint: ResolvedPaint, scale: f64) -> ResolvedPaint {
-    if let ResolvedPaint::Gradient(g) = &mut paint {
+    if let ResolvedPaint::Gradient(g, transform) = &mut paint {
         scale_gradient(g, scale);
+        // The paint transform lives in the same space as the gradient geometry,
+        // so it must scale to device space too.  Conjugating a scale-around-a-
+        // center transform by a uniform scale scales its center while leaving the
+        // (non-uniform) scale factor unchanged.
+        if let Some(t) = transform {
+            let uniform = vello_cpu::kurbo::Affine::scale(scale);
+            *t = uniform * *t * vello_cpu::kurbo::Affine::scale(1.0 / scale);
+        }
     }
     paint
 }
@@ -443,6 +511,7 @@ pub(crate) fn resolve_fill_paint(
     bbox: &kurbo::Rect,
     node_opacity: f32,
     defs: Defs<'_>,
+    shape_ci: ColorInterpolation,
 ) -> Option<ResolvedPaint> {
     resolve_paint(
         &fill.paint_server,
@@ -453,6 +522,7 @@ pub(crate) fn resolve_fill_paint(
         viewbox_scale,
         bbox,
         defs,
+        shape_ci,
     )
 }
 
@@ -465,6 +535,7 @@ fn resolve_stroke_paint(
     bbox: &kurbo::Rect,
     node_opacity: f32,
     defs: Defs<'_>,
+    shape_ci: ColorInterpolation,
 ) -> Option<ResolvedPaint> {
     resolve_paint(
         &stroke.paint_server,
@@ -475,6 +546,7 @@ fn resolve_stroke_paint(
         viewbox_scale,
         bbox,
         defs,
+        shape_ci,
     )
 }
 
@@ -489,17 +561,16 @@ fn resolve_paint(
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
     defs: Defs<'_>,
+    shape_ci: ColorInterpolation,
 ) -> Option<ResolvedPaint> {
     // Bind any `url(#id)` reference to a definition now, at render time.
     let resolved = paint_server.as_ref().and_then(|p| defs.resolve_paint_server(p));
     match &resolved {
-        Some(PaintServer::Gradient(def)) => Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
-            def.as_ref(),
-            w,
-            h,
-            viewbox_scale,
-            bbox,
-        ))),
+        Some(PaintServer::Gradient(def)) => {
+            let (gradient, transform) =
+                gradient_def_to_peniko(def.as_ref(), w, h, viewbox_scale, bbox, shape_ci);
+            Some(ResolvedPaint::Gradient(gradient, transform))
+        },
         Some(PaintServer::Solid(color)) => Some(ResolvedPaint::Solid(vello_color(
             color,
             paint_opacity * node_opacity,
@@ -521,10 +592,11 @@ fn gradient_def_to_peniko(
     h: f32,
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
-) -> Gradient {
+    shape_ci: ColorInterpolation,
+) -> (Gradient, Option<vello_cpu::kurbo::Affine>) {
     match def {
-        GradientDef::Linear(lg) => linear_to_peniko(lg, w, h, viewbox_scale, bbox),
-        GradientDef::Radial(rg) => radial_to_peniko(rg, w, h, viewbox_scale, bbox),
+        GradientDef::Linear(lg) => (linear_to_peniko(lg, w, h, viewbox_scale, bbox, shape_ci), None),
+        GradientDef::Radial(rg) => radial_to_peniko(rg, w, h, viewbox_scale, bbox, shape_ci),
     }
 }
 
@@ -535,6 +607,7 @@ fn linear_to_peniko(
     h: f32,
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
+    shape_ci: ColorInterpolation,
 ) -> Gradient {
     let (x1, y1, x2, y2) = match lg.units {
         GradientUnits::ObjectBoundingBox => (
@@ -556,6 +629,7 @@ fn linear_to_peniko(
     );
     g.extend = spread_to_extend(lg.spread_method);
     g.stops = stops_to_colorstops(&lg.stops);
+    g.interpolation_cs = gradient_ci_to_tag(resolve_gradient_ci(lg.color_interpolation, shape_ci));
     g
 }
 
@@ -566,35 +640,90 @@ fn radial_to_peniko(
     h: f32,
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
-) -> Gradient {
-    let scale = crate::render::renderer::gradient::normalized_diagonal(w, h);
-    let (cx, cy, r, fx, fy, fr) = match rg.units {
+    shape_ci: ColorInterpolation,
+) -> (Gradient, Option<vello_cpu::kurbo::Affine>) {
+    // Resolve the center, focal point, outer radii, and focal radius into the
+    // pixmap-local (bbox-relative) space.  For `objectBoundingBox` units the
+    // outer radius resolves against *both* bbox dimensions (§13.2.2): a
+    // non-square bounding box turns the conceptually-circular gradient into an
+    // ellipse.  `userSpaceOnUse` is uniform, so its gradient is a circle.
+    let (cx, cy, rx, ry, fx, fy, fr) = match rg.units {
         GradientUnits::ObjectBoundingBox => (
             rg.cx.to_object_bbox() * w,
             rg.cy.to_object_bbox() * h,
-            rg.r.to_object_bbox() * scale,
+            rg.r.to_object_bbox() * w,
+            rg.r.to_object_bbox() * h,
             rg.fx.to_object_bbox() * w,
             rg.fy.to_object_bbox() * h,
-            rg.fr.to_object_bbox() * scale,
+            rg.fr.to_object_bbox() * w,
         ),
-        GradientUnits::UserSpaceOnUse => (
-            rg.cx.to_user_space(w) * viewbox_scale.0 - bbox.x0 as f32,
-            rg.cy.to_user_space(h) * viewbox_scale.1 - bbox.y0 as f32,
-            rg.r.to_user_space(scale) * viewbox_scale.0,
-            rg.fx.to_user_space(w) * viewbox_scale.0 - bbox.x0 as f32,
-            rg.fy.to_user_space(h) * viewbox_scale.1 - bbox.y0 as f32,
-            rg.fr.to_user_space(scale) * viewbox_scale.0,
-        ),
+        GradientUnits::UserSpaceOnUse => {
+            let nd = crate::render::renderer::gradient::normalized_diagonal(w, h);
+            let r = rg.r.to_user_space(nd) * viewbox_scale.0;
+            (
+                rg.cx.to_user_space(w) * viewbox_scale.0 - bbox.x0 as f32,
+                rg.cy.to_user_space(h) * viewbox_scale.1 - bbox.y0 as f32,
+                r,
+                r,
+                rg.fx.to_user_space(w) * viewbox_scale.0 - bbox.x0 as f32,
+                rg.fy.to_user_space(h) * viewbox_scale.1 - bbox.y0 as f32,
+                rg.fr.to_user_space(nd) * viewbox_scale.0,
+            )
+        },
     };
+
+    // peniko's `Gradient` models only circular radii, so an ellipse (rx != ry) is
+    // expressed as a circle of radius `rx` plus a paint transform that scales `y`
+    // by `ry / rx` about the center.  The gradient — including its focal point —
+    // is evaluated in that circle space, so the focal point is pre-transformed
+    // into it as well.
+    let is_ellipse = rx > 0.0 && ry > 0.0 && (rx - ry).abs() > f32::EPSILON;
+    let paint_transform = if is_ellipse {
+        let k = (ry / rx) as f64;
+        Some(
+            vello_cpu::kurbo::Affine::translate((cx as f64, cy as f64)) *
+                vello_cpu::kurbo::Affine::scale_non_uniform(1.0, k) *
+                vello_cpu::kurbo::Affine::translate((-cx as f64, -cy as f64)),
+        )
+    } else {
+        None
+    };
+    let (focal_x, focal_y) = if is_ellipse {
+        (fx, cy + (fy - cy) * (rx / ry))
+    } else {
+        (fx, fy)
+    };
+
     let mut g = Gradient::new_two_point_radial(
-        vello_cpu::kurbo::Point::new(fx as f64, fy as f64),
+        vello_cpu::kurbo::Point::new(focal_x as f64, focal_y as f64),
         fr.max(0.0), // focal radius (fr); clamp negative to 0 per SVG 2
         vello_cpu::kurbo::Point::new(cx as f64, cy as f64),
-        r,
+        rx,
     );
     g.extend = spread_to_extend(rg.spread_method);
     g.stops = stops_to_colorstops(&rg.stops);
-    g
+    g.interpolation_cs = gradient_ci_to_tag(resolve_gradient_ci(rg.color_interpolation, shape_ci));
+    (g, paint_transform)
+}
+
+/// The effective color-interpolation of a gradient: the gradient's own authored
+/// value wins; `auto` defers to the referencing shape's value (`shape_ci`).
+fn resolve_gradient_ci(gradient_ci: ColorInterpolation, shape_ci: ColorInterpolation) -> ColorInterpolation {
+    match gradient_ci {
+        ColorInterpolation::Auto => shape_ci,
+        other => other,
+    }
+}
+
+/// Map an SVG [`ColorInterpolation`] to peniko's interpolation color space.
+///
+/// `Auto` and `Srgb` both interpolate in sRGB; `LinearRGB` uses linear-light
+/// interpolation (`ColorSpaceTag::LinearSrgb`).
+fn gradient_ci_to_tag(ci: ColorInterpolation) -> ColorSpaceTag {
+    match ci {
+        ColorInterpolation::LinearRGB => ColorSpaceTag::LinearSrgb,
+        ColorInterpolation::Srgb | ColorInterpolation::Auto => ColorSpaceTag::Srgb,
+    }
 }
 
 /// Convert svg-text gradient stops to peniko [`ColorStops`].

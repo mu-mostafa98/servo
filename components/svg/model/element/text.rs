@@ -10,7 +10,7 @@ use crate::model::resource::ResourceKey;
 use malloc_size_of_derive::MallocSizeOf;
 
 /// A pre-shaped glyph with position and advance.
-#[derive(Debug, Clone, Copy, MallocSizeOf)]
+#[derive(Debug, Clone, MallocSizeOf)]
 pub struct ShapedGlyph {
     /// X position of this glyph (cumulative, includes previous advances).
     pub x: f32,
@@ -27,6 +27,11 @@ pub struct ShapedGlyph {
     /// runs shape different characters with different fonts, so the key is
     /// stored per-glyph rather than once per span.
     pub font_instance_key: Option<ResourceKey>,
+    /// Flattened glyph outline as a list of closed contours, in font-size
+    /// scaled pixels with SVG y-down orientation, relative to the glyph's
+    /// baseline origin. `None` when the glyph has no outline (spaces, bitmap
+    /// glyphs) or the platform does not provide one. Used to stroke text.
+    pub outline: Option<Vec<Vec<(f32, f32)>>>,
 }
 
 /// A single text span within an SVG `<text>` or `<tspan>` element.

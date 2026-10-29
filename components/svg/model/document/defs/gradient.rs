@@ -6,6 +6,7 @@
 
 use svgtypes::Color as SvgColor;
 
+use crate::model::style::ColorInterpolation;
 use crate::model::transform::TransformOp;
 use malloc_size_of_derive::MallocSizeOf;
 
@@ -39,6 +40,15 @@ impl GradientDef {
         match self {
             GradientDef::Linear(lg) => lg.spread_method,
             GradientDef::Radial(rg) => rg.spread_method,
+        }
+    }
+
+    /// The `color-interpolation` value authored on the gradient element
+    /// (`auto` means "inherit from the referencing shape").
+    pub fn color_interpolation(&self) -> ColorInterpolation {
+        match self {
+            GradientDef::Linear(lg) => lg.color_interpolation,
+            GradientDef::Radial(rg) => rg.color_interpolation,
         }
     }
 
@@ -195,6 +205,7 @@ pub struct GradientExplicit {
     pub spread_method: bool,
     pub transform: bool,
     pub stops: bool,
+    pub color_interpolation: bool,
 }
 
 /// SVG `<linearGradient>` element data.
@@ -215,6 +226,9 @@ pub struct LinearGradient {
     pub transform: Vec<TransformOp>,
     /// How the gradient extends beyond its stop range.
     pub spread_method: SpreadMethod,
+    /// The `color-interpolation` value authored on the gradient element
+    /// (`auto` defers to the referencing shape's property).
+    pub color_interpolation: ColorInterpolation,
     /// Which attributes were explicitly specified (see [`GradientExplicit`]).
     pub explicit: GradientExplicit,
 }
@@ -242,6 +256,9 @@ pub struct RadialGradient {
     pub transform: Vec<TransformOp>,
     /// How the gradient extends beyond its stop range.
     pub spread_method: SpreadMethod,
+    /// The `color-interpolation` value authored on the gradient element
+    /// (`auto` defers to the referencing shape's property).
+    pub color_interpolation: ColorInterpolation,
     /// Which attributes were explicitly specified (see [`GradientExplicit`]).
     pub explicit: GradientExplicit,
 }

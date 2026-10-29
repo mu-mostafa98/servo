@@ -595,6 +595,7 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
                     glyph_id: 0,
                     character: ch,
                     font_instance_key: None,
+                    outline: None,
                 });
             }
             cur_x += advance;
@@ -657,14 +658,17 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
             cur_x += span.dx.get(char_idx).copied().unwrap_or(0.0);
             cur_y += span.dy.get(char_idx).copied().unwrap_or(0.0);
             let advance = glyph_info.advance().to_f32_px();
+            let glyph_id = glyph_info.id() as u32;
+            let outline = font.glyph_outline(glyph_id, font_size);
 
             glyphs.push(ShapedGlyph {
                 x: cur_x - origin_x,
                 y: cur_y - origin_y + baseline_shift,
                 advance,
-                glyph_id: glyph_info.id() as u32,
+                glyph_id,
                 character: chars[char_idx],
                 font_instance_key: Some(key),
+                outline,
             });
             cur_x += advance;
             run_char_index += usize::from(glyph_info.character_count()).max(1);

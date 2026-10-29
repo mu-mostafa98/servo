@@ -360,10 +360,12 @@ fn apply_use_inheritance(
         }
     }
 
-    // Element-level opacity.
-    if !has_presentation_attr(element, "opacity") {
-        style.opacity = inherited.opacity;
-    }
+    // Element-level `opacity` is deliberately NOT inherited here. Unlike
+    // `fill`/`stroke`/`visibility`, CSS `opacity` is a non-inherited property
+    // whose effect on a `<use>` is group compositing over the expanded shadow
+    // content — not a per-leaf value. The render traversal threads the `<use>`
+    // element's own opacity down as a group opacity, so propagating it into the
+    // shadow leaves here would double-apply it.
 
     // Visibility.
     if !has_presentation_attr(element, "visibility") {

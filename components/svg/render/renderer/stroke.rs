@@ -24,12 +24,13 @@ use webrender_api::{
 
 use crate::model::document::{GradientDef, GradientUnits};
 use crate::model::style::paint_servers::PaintServer;
-use crate::model::style::{Display, LineCap, NodeStyle, StrokeParams, Visibility};
+use crate::model::style::{Display, FillRule, LineCap, LineJoin, NodeStyle, StrokeParams, Visibility};
 use crate::model::units::Length;
 use crate::render::renderer::{
-    RenderContext, ZERO_LENGTH_EPSILON, clip_chain_option, effective_stroke_width, gradient,
-    make_common_props, to_colorf,
+    RenderContext, ZERO_LENGTH_EPSILON, clip_chain_option, crisp_edges, effective_stroke_width,
+    effective_stroke_widths, gradient, make_common_props, to_colorf,
 };
+use crate::render::tessellator::{FillStyle, tessellate_contours, tessellate_polygon};
 
 // ======================= Dash Interval Decomposition =======================
 
@@ -128,6 +129,42 @@ pub(crate) fn stroke_line_segment(x1: f32, y1: f32, x2: f32, y2: f32, ctx: &mut 
     let my = (y1 + y2) / 2.0;
     let angle = dy.atan2(dx);
     let half_w = stroke_width / 2.0;
+
+    // `shape-rendering="crispEdges"` — a solid stroke is rasterized via the
+    // scanline tessellator (aliased spans) instead of a rotated rect, because
+    // WebRender always anti-aliases a rotated rect's diagonal edges.
+    if crisp_edges(ctx) {
+        let paint = stroke
+            .paint_server
+            .as_ref()
+            .and_then(|p| ctx.defs.resolve_paint_server(p));
+        if let Some(PaintServer::Solid(svg_color)) = &paint {
+            let mut color = to_colorf(svg_color);
+            color.a *= stroke.opacity.get() * ctx.style.opacity.get();
+            if let Some(dash_array) = &stroke.dash_array &&
+                !dash_array.is_empty()
+            {
+                for (t0, t1) in dash_intervals(len, dash_array, stroke.dash_offset) {
+                    if t1 <= t0 {
+                        continue;
+                    }
+                    stroke_line_segment_crisp(
+                        x1 + dx * t0,
+                        y1 + dy * t0,
+                        x1 + dx * t1,
+                        y1 + dy * t1,
+                        half_w,
+                        color,
+                        stroke.line_cap,
+                        ctx,
+                    );
+                }
+            } else {
+                stroke_line_segment_crisp(x1, y1, x2, y2, half_w, color, stroke.line_cap, ctx);
+            }
+            return;
+        }
+    }
 
     // Rotated reference frame aligned with the line direction.
     // The line becomes a horizontal rect centered at the origin of this frame.
@@ -387,11 +424,32 @@ pub(crate) fn stroke_rect(
         .paint_server
         .as_ref()
         .and_then(|p| ctx.defs.resolve_paint_server(p));
-    if let Some(PaintServer::Solid(svg_color)) = &paint {
+
+    // `shape-rendering="crispEdges"` — a rounded (circle/ellipse/rounded-rect)
+    // border is always anti-aliased by WebRender, so rasterize the ring via the
+    // scanline tessellator to get genuinely aliased edges. Plain axis-aligned
+    // rects are already crisp and need no special handling.
+    if crisp_edges(ctx) &&
+        let Some(r) = radii &&
+        let Some(PaintServer::Solid(svg_color)) = &paint
+    {
         let mut color = to_colorf(svg_color);
         color.a *= stroke.opacity.get() * ctx.style.opacity.get();
         let stroke_width = effective_stroke_width(ctx, stroke.width.get());
-        let widths = LayoutSideOffsets::new_all_same(stroke_width);
+        stroke_rounded_rect_crisp(bounds, r, stroke_width, color, ctx);
+        return;
+    }
+
+    if let Some(PaintServer::Solid(svg_color)) = &paint {
+        let mut color = to_colorf(svg_color);
+        color.a *= stroke.opacity.get() * ctx.style.opacity.get();
+        let (stroke_width_x, stroke_width_y) = effective_stroke_widths(ctx, stroke.width.get());
+        let widths = LayoutSideOffsets::new(
+            stroke_width_y,
+            stroke_width_x,
+            stroke_width_y,
+            stroke_width_x,
+        );
         let details = BorderDetails::Normal(NormalBorder {
             left: BorderSide {
                 color,
@@ -582,6 +640,12 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
         def_depth: ctx.def_depth,
     };
 
+    // Fill the join wedges first so the per-segment bands paint over any
+    // shared edge, avoiding double-blend seams at the corner.
+    if pts.len() >= 3 {
+        stroke_polyline_joins(pts, adjusted_width, &mut line_ctx);
+    }
+
     for pair in pts.windows(2) {
         stroke_line_segment(
             line_ctx.svg_origin.x + pair[0].x,
@@ -591,6 +655,160 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
             &mut line_ctx,
         );
     }
+}
+
+/// Fill the `stroke-linejoin` wedges at each interior vertex of a polyline.
+///
+/// The per-segment rotated rects are drawn with butt ends, leaving a
+/// wedge-shaped gap at each corner. This fills that gap according to
+/// `stroke-linejoin` (miter / bevel / round) using the scanline tessellator,
+/// which — unlike vello_cpu — honors reference frames (required for pattern
+/// content).
+fn stroke_polyline_joins(pts: &[LyonPoint], adjusted_width: f32, ctx: &mut RenderContext) {
+    let Some(stroke) = &ctx.style.stroke else {
+        return;
+    };
+    let Some(PaintServer::Solid(svg_color)) = stroke
+        .paint_server
+        .as_ref()
+        .and_then(|p| ctx.defs.resolve_paint_server(p))
+    else {
+        return;
+    };
+    let mut color = to_colorf(&svg_color);
+    color.a *= stroke.opacity.get() * ctx.style.opacity.get();
+    let half_width = adjusted_width / 2.0;
+    if half_width <= 0.0 {
+        return;
+    }
+
+    for i in 1..pts.len().saturating_sub(1) {
+        let a = LyonPoint::new(ctx.svg_origin.x + pts[i - 1].x, ctx.svg_origin.y + pts[i - 1].y);
+        let b = LyonPoint::new(ctx.svg_origin.x + pts[i].x, ctx.svg_origin.y + pts[i].y);
+        let c = LyonPoint::new(ctx.svg_origin.x + pts[i + 1].x, ctx.svg_origin.y + pts[i + 1].y);
+        let Some(wedge) = stroke_join_wedge(a, b, c, half_width, stroke.line_join, stroke.miter_limit)
+        else {
+            continue;
+        };
+        let fill = FillStyle::Solid(color);
+        tessellate_polygon(&wedge, FillRule::NonZero, &fill, ctx);
+    }
+
+    // Closed contour: `close()` re-appends the start point, so `pts.first()`
+    // equals `pts.last()`. The interior loop above skips both the first and the
+    // duplicate last vertex, leaving a wedge-shaped gap at the seam where the
+    // closing segment meets the first segment. Fill that seam too, using the
+    // closing segment (last distinct point → start) and the first segment
+    // (start → second point).
+    if pts.len() >= 3 && pts.first() == pts.last() {
+        let a = LyonPoint::new(
+            ctx.svg_origin.x + pts[pts.len() - 2].x,
+            ctx.svg_origin.y + pts[pts.len() - 2].y,
+        );
+        let b = LyonPoint::new(ctx.svg_origin.x + pts[0].x, ctx.svg_origin.y + pts[0].y);
+        let c = LyonPoint::new(ctx.svg_origin.x + pts[1].x, ctx.svg_origin.y + pts[1].y);
+        if let Some(wedge) =
+            stroke_join_wedge(a, b, c, half_width, stroke.line_join, stroke.miter_limit)
+        {
+            let fill = FillStyle::Solid(color);
+            tessellate_polygon(&wedge, FillRule::NonZero, &fill, ctx);
+        }
+    }
+}
+
+/// Compute the stroke join wedge polygon at vertex `b` (between segments `a→b`
+/// and `b→c`), in absolute coordinates. Returns `None` when no join is needed
+/// (degenerate or collinear segments).
+///
+/// The wedge is the small convex region the per-segment stroke bands leave
+/// uncovered at a corner. `stroke-linejoin` selects its shape:
+/// - **miter**: the two outer edges are extended to their intersection;
+///   falls back to a bevel when the miter length ratio exceeds `miter_limit`.
+/// - **bevel**: a straight cut between the two outer corners.
+/// - **round**: an arc between the two outer corners.
+fn stroke_join_wedge(
+    a: LyonPoint,
+    b: LyonPoint,
+    c: LyonPoint,
+    half_width: f32,
+    join: LineJoin,
+    miter_limit: f32,
+) -> Option<Vec<LyonPoint>> {
+    let (mut d_inx, mut d_iny) = (b.x - a.x, b.y - a.y);
+    let l1 = (d_inx * d_inx + d_iny * d_iny).sqrt();
+    if l1 < ZERO_LENGTH_EPSILON {
+        return None;
+    }
+    (d_inx, d_iny) = (d_inx / l1, d_iny / l1);
+    let (mut d_outx, mut d_outy) = (c.x - b.x, c.y - b.y);
+    let l2 = (d_outx * d_outx + d_outy * d_outy).sqrt();
+    if l2 < ZERO_LENGTH_EPSILON {
+        return None;
+    }
+    (d_outx, d_outy) = (d_outx / l2, d_outy / l2);
+
+    let cross = d_inx * d_outy - d_iny * d_outx;
+    if cross.abs() < 1e-6 {
+        return None;
+    }
+    // The outer (convex) side normal of a direction `d` is `sign(cross) * (d.y, -d.x)`.
+    let s = if cross > 0.0 { 1.0 } else { -1.0 };
+    let (n1x, n1y) = (s * d_iny, -s * d_inx);
+    let (n2x, n2y) = (s * d_outy, -s * d_outx);
+    let p1 = LyonPoint::new(b.x + half_width * n1x, b.y + half_width * n1y);
+    let p2 = LyonPoint::new(b.x + half_width * n2x, b.y + half_width * n2y);
+
+    match join {
+        LineJoin::Bevel => Some(vec![b, p1, p2]),
+        LineJoin::Miter | LineJoin::MiterClip => {
+            let m = line_intersection(p1, (d_inx, d_iny), p2, (d_outx, d_outy))?;
+            let miter_len = ((m.x - b.x).powi(2) + (m.y - b.y).powi(2)).sqrt();
+            let width = 2.0 * half_width;
+            if width > 0.0 && miter_len / width > miter_limit.max(1.0) {
+                Some(vec![b, p1, p2]) // miter limit exceeded → bevel
+            } else {
+                Some(vec![b, p1, m, p2])
+            }
+        },
+        LineJoin::Round | LineJoin::Arcs => {
+            let ang1 = n1y.atan2(n1x);
+            let ang2 = n2y.atan2(n2x);
+            // Sweep from `ang1` to `ang2` along the short outer arc.
+            let mut sweep = ang2 - ang1;
+            while sweep > std::f32::consts::PI {
+                sweep -= std::f32::consts::TAU;
+            }
+            while sweep <= -std::f32::consts::PI {
+                sweep += std::f32::consts::TAU;
+            }
+            let steps = ((sweep.abs() / std::f32::consts::FRAC_PI_6).ceil() as usize).clamp(1, 32);
+            let mut wedge = Vec::with_capacity(steps + 2);
+            wedge.push(b);
+            for k in 0..=steps {
+                let ang = ang1 + sweep * (k as f32 / steps as f32);
+                wedge.push(LyonPoint::new(
+                    b.x + half_width * ang.cos(),
+                    b.y + half_width * ang.sin(),
+                ));
+            }
+            Some(wedge)
+        },
+    }
+}
+
+/// Intersection of the two infinite lines `p + t*r` and `q + u*s`.
+fn line_intersection(
+    p: LyonPoint,
+    r: (f32, f32),
+    q: LyonPoint,
+    s: (f32, f32),
+) -> Option<LyonPoint> {
+    let denom = r.0 * s.1 - r.1 * s.0;
+    if denom.abs() < 1e-9 {
+        return None;
+    }
+    let t = ((q.x - p.x) * s.1 - (q.y - p.y) * s.0) / denom;
+    Some(LyonPoint::new(p.x + t * r.0, p.y + t * r.1))
 }
 
 /// Minimum subdivision size for gradient strokes along polylines.
@@ -668,28 +886,36 @@ fn stroke_polyline_gradient(
         },
     };
 
-    // Pre-compute radial focal point and radius in absolute space for later use.
-    let rad_fx_fy_r2 = match grad_def {
+    // Pre-compute radial focal point, outer radii, and focal radius in absolute
+    // space for later use.  The outer radii resolve against the bbox width/height
+    // respectively (an ellipse under §13.2.2's non-uniform bounding-box scale).
+    let rad_fx_fy_rx_ry = match grad_def {
         GradientDef::Radial(rg) => {
-            let (fx, fy, r2) = match rg.units {
+            let (fx, fy, rx, ry, fr) = match rg.units {
                 GradientUnits::ObjectBoundingBox => {
                     let scale = gradient::normalized_diagonal(bbox_w, bbox_h);
                     (
                         ctx.svg_origin.x + min_x + rg.fx.to_object_bbox() * bbox_w,
                         ctx.svg_origin.y + min_y + rg.fy.to_object_bbox() * bbox_h,
-                        (rg.r.to_object_bbox() * scale).max(1.0),
+                        (rg.r.to_object_bbox() * bbox_w).max(1.0),
+                        (rg.r.to_object_bbox() * bbox_h).max(1.0),
+                        (rg.fr.to_object_bbox() * scale).max(0.0),
                     )
                 },
                 GradientUnits::UserSpaceOnUse => {
+                    // User space is uniform, so a radial gradient is a circle here.
                     let scale = gradient::normalized_diagonal(bbox_w, bbox_h);
+                    let r = rg.r.to_user_space(scale).max(1.0);
                     (
                         ctx.svg_origin.x + rg.fx.to_user_space(bbox_w),
                         ctx.svg_origin.y + rg.fy.to_user_space(bbox_h),
-                        rg.r.to_user_space(scale).max(1.0),
+                        r,
+                        r,
+                        rg.fr.to_user_space(scale).max(0.0),
                     )
                 },
             };
-            Some((fx, fy, r2))
+            Some((fx, fy, rx, ry, fr))
         },
         GradientDef::Linear(_) => None,
     };
@@ -733,15 +959,23 @@ fn stroke_polyline_gradient(
                     c
                 },
                 GradientDef::Radial(rg) => {
-                    // `rad_fx_fy_r2` is `Some` whenever `grad_def` is radial;
+                    // `rad_fx_fy_rx_ry` is `Some` whenever `grad_def` is radial;
                     // this guard is defensive only.
-                    let Some((fx, fy, r2)) = rad_fx_fy_r2 else {
+                    let Some((fx, fy, rx, ry, fr)) = rad_fx_fy_rx_ry else {
                         continue;
                     };
                     let dx = mx - fx;
                     let dy = my - fy;
-                    let dist_sq = (dx * dx + dy * dy) / (r2 * r2).max(1.0);
-                    let t = dist_sq.sqrt().min(1.0);
+                    // Normalized elliptical distance: `1.0` on the outer ellipse.
+                    let d = ((dx / rx).powi(2) + (dy / ry).powi(2)).sqrt();
+                    let fr_norm = fr / rx.min(ry);
+                    let t = if d <= fr_norm {
+                        0.0
+                    } else if fr_norm >= 1.0 {
+                        1.0
+                    } else {
+                        ((d - fr_norm) / (1.0 - fr_norm)).min(1.0)
+                    };
                     let mut c = gradient::color_at_t(&rg.stops, t);
                     c.a *= opacity;
                     c
@@ -819,6 +1053,202 @@ fn draw_rotated_stroke_segment(
         ctx,
     );
     ctx.wr.pop_reference_frame();
+}
+
+// ======================= Crisp (aliased) stroke =======================
+
+/// Arc segments per 90° corner. For a circle this yields 64 points around the
+/// full circumference — a maximum chord deviation well under a pixel at the
+/// radii used in typical SVG icons, so the polygon approximation is invisible
+/// relative to the deliberate aliasing of `crispEdges`.
+const CRISP_ARC_SEGMENTS: usize = 16;
+
+/// Append a quarter-ellipse arc to `pts`, sweeping `sweep` radians from `a0`.
+/// Points are `(cx + rx·cos a, cy + ry·sin a)` in screen space (y-down).
+/// Consecutive duplicates (which arise where an arc meets a straight edge)
+/// are skipped so the tessellator never sees a zero-length edge.
+fn push_arc(pts: &mut Vec<LyonPoint>, cx: f32, cy: f32, rx: f32, ry: f32, a0: f32, sweep: f32) {
+    for k in 0..=CRISP_ARC_SEGMENTS {
+        let a = a0 + sweep * (k as f32 / CRISP_ARC_SEGMENTS as f32);
+        push_unique(pts, LyonPoint::new(cx + rx * a.cos(), cy + ry * a.sin()));
+    }
+}
+
+/// Append `p` unless it coincides with the last point already in `pts`.
+fn push_unique(pts: &mut Vec<LyonPoint>, p: LyonPoint) {
+    let dup = pts.last().is_some_and(|l| (l.x - p.x).abs() < 1e-4 && (l.y - p.y).abs() < 1e-4);
+    if !dup {
+        pts.push(p);
+    }
+}
+
+/// Flatten a rounded rectangle (or full ellipse, when `rx`/`ry` are half the
+/// size) into a closed polygon outline. Clockwise in screen space.
+fn rounded_rect_outline(bounds: LayoutRect, rx: f32, ry: f32) -> Vec<LyonPoint> {
+    let x0 = bounds.min.x;
+    let y0 = bounds.min.y;
+    let w = bounds.size().width;
+    let h = bounds.size().height;
+    let rx = rx.clamp(0.0, w * 0.5);
+    let ry = ry.clamp(0.0, h * 0.5);
+
+    let mut pts = Vec::new();
+    if rx <= 0.0 || ry <= 0.0 {
+        push_unique(&mut pts, LyonPoint::new(x0, y0));
+        push_unique(&mut pts, LyonPoint::new(x0 + w, y0));
+        push_unique(&mut pts, LyonPoint::new(x0 + w, y0 + h));
+        push_unique(&mut pts, LyonPoint::new(x0, y0 + h));
+        return pts;
+    }
+
+    // Top edge.
+    push_unique(&mut pts, LyonPoint::new(x0 + rx, y0));
+    push_unique(&mut pts, LyonPoint::new(x0 + w - rx, y0));
+    // Top-right corner, from "up" (-90°) to "right" (0°).
+    push_arc(
+        &mut pts,
+        x0 + w - rx,
+        y0 + ry,
+        rx,
+        ry,
+        -std::f32::consts::FRAC_PI_2,
+        std::f32::consts::FRAC_PI_2,
+    );
+    // Right edge.
+    push_unique(&mut pts, LyonPoint::new(x0 + w, y0 + h - ry));
+    // Bottom-right corner, 0° → 90°.
+    push_arc(
+        &mut pts,
+        x0 + w - rx,
+        y0 + h - ry,
+        rx,
+        ry,
+        0.0,
+        std::f32::consts::FRAC_PI_2,
+    );
+    // Bottom edge.
+    push_unique(&mut pts, LyonPoint::new(x0 + rx, y0 + h));
+    // Bottom-left corner, 90° → 180°.
+    push_arc(
+        &mut pts,
+        x0 + rx,
+        y0 + h - ry,
+        rx,
+        ry,
+        std::f32::consts::FRAC_PI_2,
+        std::f32::consts::FRAC_PI_2,
+    );
+    // Left edge.
+    push_unique(&mut pts, LyonPoint::new(x0, y0 + ry));
+    // Top-left corner, 180° → 270°.
+    push_arc(
+        &mut pts,
+        x0 + rx,
+        y0 + ry,
+        rx,
+        ry,
+        std::f32::consts::PI,
+        std::f32::consts::FRAC_PI_2,
+    );
+    pts
+}
+
+/// Stroke a rounded rectangle (circle/ellipse/rounded-rect) with a solid colour
+/// using crisp, aliased edges. The ring is the band between the outer outline
+/// and the outline inset by `stroke_width` — the same geometry WebRender's
+/// `push_border` produces for a rounded border, so a `crispEdges` shape matches
+/// its `geometricPrecision` twin in size and differs only in aliasing.
+fn stroke_rounded_rect_crisp(
+    bounds: LayoutRect,
+    radii: BorderRadius,
+    stroke_width: f32,
+    color: ColorF,
+    ctx: &mut RenderContext,
+) {
+    // `rect_bounds_and_radii` sets all four corners to the same (rx, ry).
+    let rx = radii.top_left.width;
+    let ry = radii.top_left.height;
+
+    let outer = rounded_rect_outline(bounds, rx, ry);
+    let inner_bounds = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(bounds.min.x + stroke_width, bounds.min.y + stroke_width),
+        LayoutSize::new(
+            (bounds.size().width - stroke_width * 2.0).max(0.0),
+            (bounds.size().height - stroke_width * 2.0).max(0.0),
+        ),
+    );
+    let inner = rounded_rect_outline(
+        inner_bounds,
+        (rx - stroke_width).max(0.0),
+        (ry - stroke_width).max(0.0),
+    );
+
+    let fill = FillStyle::Solid(color);
+    tessellate_contours(&[&outer, &inner], FillRule::EvenOdd, &fill, ctx);
+}
+
+/// Stroke a single line segment with a solid colour using crisp, aliased edges.
+/// Builds the segment's outline (a rectangle, or a pill for round caps) in
+/// absolute coordinates and fills it via the scanline tessellator.
+fn stroke_line_segment_crisp(
+    x1: f32,
+    y1: f32,
+    x2: f32,
+    y2: f32,
+    half_w: f32,
+    color: ColorF,
+    line_cap: LineCap,
+    ctx: &mut RenderContext,
+) {
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+    let len = (dx * dx + dy * dy).sqrt();
+    if len < ZERO_LENGTH_EPSILON {
+        return;
+    }
+    let ux = dx / len;
+    let uy = dy / len;
+    let nx = -uy;
+    let ny = ux;
+
+    let pts: Vec<LyonPoint> = match line_cap {
+        LineCap::Butt => vec![
+            LyonPoint::new(x1 + nx * half_w, y1 + ny * half_w),
+            LyonPoint::new(x1 - nx * half_w, y1 - ny * half_w),
+            LyonPoint::new(x2 - nx * half_w, y2 - ny * half_w),
+            LyonPoint::new(x2 + nx * half_w, y2 + ny * half_w),
+        ],
+        LineCap::Square => {
+            let ex = ux * half_w;
+            let ey = uy * half_w;
+            vec![
+                LyonPoint::new(x1 - ex + nx * half_w, y1 - ey + ny * half_w),
+                LyonPoint::new(x1 - ex - nx * half_w, y1 - ey - ny * half_w),
+                LyonPoint::new(x2 + ex - nx * half_w, y2 + ey - ny * half_w),
+                LyonPoint::new(x2 + ex + nx * half_w, y2 + ey + ny * half_w),
+            ]
+        },
+        LineCap::Round => {
+            // A stadium (pill): semicircular cap around each endpoint joined by
+            // the two straight sides (the sides are implied by the closed
+            // contour). `a0` is the perpendicular (normal) direction.
+            let a0 = uy.atan2(ux) + std::f32::consts::FRAC_PI_2;
+            let mut v = Vec::with_capacity(2 * (CRISP_ARC_SEGMENTS + 1));
+            for k in 0..=CRISP_ARC_SEGMENTS {
+                let a = a0 + std::f32::consts::PI * (k as f32 / CRISP_ARC_SEGMENTS as f32);
+                v.push(LyonPoint::new(x1 + half_w * a.cos(), y1 + half_w * a.sin()));
+            }
+            for k in 0..=CRISP_ARC_SEGMENTS {
+                let a = a0 + std::f32::consts::PI +
+                    std::f32::consts::PI * (k as f32 / CRISP_ARC_SEGMENTS as f32);
+                v.push(LyonPoint::new(x2 + half_w * a.cos(), y2 + half_w * a.sin()));
+            }
+            v
+        },
+    };
+
+    let fill = FillStyle::Solid(color);
+    tessellate_contours(&[&pts], FillRule::NonZero, &fill, ctx);
 }
 
 // ======================= Tests =======================

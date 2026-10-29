@@ -21,12 +21,15 @@ use webrender_api::{
 use crate::RasterSink;
 use crate::model::document::*;
 use crate::model::element::*;
+use crate::model::units::Opacity;
 use crate::render::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::render::effects::filter::get_filter_ops;
 use crate::render::effects::mask::{MaskRaster, rasterize_mask};
 use crate::render::geometry::ComplexClip;
 use crate::render::renderer::path::rasterize_bez;
-use crate::render::renderer::{Render, RenderContext, clip_chain_option, transform};
+use crate::render::renderer::{
+    Render, RenderContext, clip_chain_option, color_interpolation_of_style, transform,
+};
 
 // ======================= Public Entry Point =======================
 
@@ -68,6 +71,7 @@ pub fn render_svg_tree(
         root_spatial_id,
         svg_clip_chain,
         wr,
+        (1.0, 1.0),
         1.0,
         viewbox_scale,
         device_scale,
@@ -199,7 +203,8 @@ fn render_node(
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
-    parent_scale: f32,
+    parent_scale: (f32, f32),
+    group_opacity: f32,
     viewbox_scale: (f32, f32),
     device_scale: f32,
     mut raster_offset: LayoutPoint,
@@ -322,6 +327,14 @@ fn render_node(
         defs,
     );
 
+    // Group opacity accumulates multiplicatively down the tree: each element's
+    // own `opacity` composes with every ancestor group's. Leaves bake the
+    // combined value into their paint alpha (vello rasters carry it into their
+    // pixels), while containers simply thread it to their children. This avoids
+    // a stacking-context opacity filter, which cannot reach CPU-rasterized
+    // images (they are pushed with the outer SVG spatial id).
+    let effective_opacity = group_opacity * node.style.opacity.get();
+
     // Step 4 — Render the element.
     let shape_params = EffectParams {
         mask: &resolved.mask,
@@ -334,6 +347,7 @@ fn render_node(
         cur_spatial_id,
         resolved.clip_chain,
         accumulated_scale,
+        effective_opacity,
         wr,
         &shape_params,
         cur_viewbox_scale,
@@ -352,6 +366,7 @@ fn render_node(
         cur_spatial_id,
         resolved.clip_chain,
         accumulated_scale,
+        effective_opacity,
         wr,
         cur_viewbox_scale,
         device_scale,
@@ -480,14 +495,14 @@ fn apply_node_transforms(
     node: &SvgNode,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
-    parent_scale: f32,
+    parent_scale: (f32, f32),
     wr: &mut DisplayListBuilder,
-) -> (LayoutPoint, SpatialId, u32, f32) {
+) -> (LayoutPoint, SpatialId, u32, (f32, f32)) {
     let mut cur_spatial_id = spatial_id;
     let mut cur_origin = *svg_origin;
     let mut pushed_count: u32 = 0;
     let node_scale = transform::compute_transform_scale(&node.transforms);
-    let accumulated_scale = parent_scale * node_scale;
+    let accumulated_scale = (parent_scale.0 * node_scale.0, parent_scale.1 * node_scale.1);
     for op in &node.transforms {
         let result = transform::apply_transform_op(op, cur_origin, cur_spatial_id, wr);
         cur_origin = result.child_origin;
@@ -507,7 +522,8 @@ fn emit_element(
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     node_clip_chain: ClipChainId,
-    accumulated_scale: f32,
+    accumulated_scale: (f32, f32),
+    opacity: f32,
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
     viewbox_scale: (f32, f32),
@@ -526,6 +542,7 @@ fn emit_element(
             cur_spatial_id,
             node_clip_chain,
             accumulated_scale,
+            opacity,
             wr,
             params,
             viewbox_scale,
@@ -542,6 +559,7 @@ fn emit_element(
             cur_origin,
             cur_spatial_id,
             node_clip_chain,
+            opacity,
             wr,
             params,
             viewbox_scale,
@@ -556,6 +574,7 @@ fn emit_element(
             cur_origin,
             cur_spatial_id,
             node_clip_chain,
+            opacity,
             wr,
             params,
             viewbox_scale,
@@ -571,11 +590,12 @@ fn emit_element(
 /// Render a geometric shape with full clip-path, mask, and filter support.
 fn emit_shape(
     shape: &crate::model::element::shape::Shape,
-    style: crate::model::style::NodeStyle,
+    mut style: crate::model::style::NodeStyle,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     node_clip_chain: ClipChainId,
-    accumulated_scale: f32,
+    accumulated_scale: (f32, f32),
+    opacity: f32,
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
     viewbox_scale: (f32, f32),
@@ -589,6 +609,11 @@ fn emit_shape(
     if !style.is_visible() {
         return;
     }
+
+    // Fold the accumulated group opacity (this node's own `opacity` × all
+    // ancestor groups) into the style, so every downstream paint — native
+    // primitives, gradient stops, and vello rasters alike — bakes it in.
+    style.opacity = Opacity::new(opacity);
 
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, node_clip_chain, wr);
 
@@ -656,7 +681,7 @@ fn draw_shape(
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
-    accumulated_scale: f32,
+    accumulated_scale: (f32, f32),
     complex_clips: &[ComplexClip],
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
@@ -760,6 +785,7 @@ fn draw_shape(
                     alpha_mask,
                     shape.path_length(),
                     defs,
+                    color_interpolation_of_style(style),
                 );
             }
         }
@@ -814,7 +840,7 @@ fn emit_native_gradients(
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
-    accumulated_scale: f32,
+    accumulated_scale: (f32, f32),
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
     defs: Defs<'_>,
@@ -1173,6 +1199,7 @@ fn emit_marker(
             None,
             m_shape.path_length(),
             defs,
+            color_interpolation_of_style(m_style),
         );
     });
 }
@@ -1220,6 +1247,7 @@ fn emit_leaf<T: crate::render::renderer::Render>(
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
+    opacity: f32,
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
     viewbox_scale: (f32, f32),
@@ -1240,13 +1268,18 @@ fn emit_leaf<T: crate::render::renderer::Render>(
         _ => clip_chain_id,
     };
 
+    // Fold the accumulated group opacity into the leaf's own style (the same
+    // way `emit_shape` does) so text/image paint bakes it into alpha.
+    let mut style = node.style.clone();
+    style.opacity = Opacity::new(opacity);
+
     let mut ctx = RenderContext::new(
-        &node.style,
+        &style,
         *cur_origin,
         cur_spatial_id,
         effective_clip,
         &mut *wr,
-        1.0,
+        (1.0, 1.0),
         viewbox_scale,
         device_scale,
         raster_offset,
@@ -1269,7 +1302,8 @@ fn recurse_children(
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     clip_chain: ClipChainId,
-    accumulated_scale: f32,
+    accumulated_scale: (f32, f32),
+    group_opacity: f32,
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
     device_scale: f32,
@@ -1296,6 +1330,7 @@ fn recurse_children(
             clip_chain,
             wr,
             accumulated_scale,
+            group_opacity,
             viewbox_scale,
             device_scale,
             raster_offset,

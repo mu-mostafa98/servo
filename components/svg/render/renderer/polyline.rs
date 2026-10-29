@@ -13,7 +13,8 @@ use crate::model::element::shape::Polyline;
 use crate::model::style::FillRule;
 use crate::render::renderer::path::rasterize_bez;
 use crate::render::renderer::{
-    Render, RenderContext, fill, fill_rule, paint_order_stroke_before_fill, stroke,
+    Render, RenderContext, color_interpolation, fill, fill_rule, paint_order_stroke_before_fill,
+    stroke,
 };
 
 /// Renders an SVG `<polyline>`.
@@ -63,6 +64,7 @@ impl Render for Polyline {
             None,
             self.path_length,
             ctx.defs,
+            color_interpolation(ctx),
         );
     }
 }

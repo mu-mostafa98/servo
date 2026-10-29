@@ -19,7 +19,7 @@ use webrender_api::{ClipChainId, CommonItemProperties, SpaceAndClipInfo};
 use crate::model::document::{GradientDef, GradientUnits, PatternUnits};
 use crate::model::style::paint_servers::PaintServer;
 use crate::render::renderer::{
-    MAX_PAINT_SERVER_DEPTH, RenderContext, color_interpolation, gradient, pattern, to_colorf,
+    MAX_PAINT_SERVER_DEPTH, RenderContext, gradient, pattern, to_colorf,
 };
 use crate::render::tessellator;
 use crate::render::tessellator::FillStyle;
@@ -114,9 +114,9 @@ pub(crate) fn fill_polygon(
                     tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
                 },
                 GradientDef::Radial(rg) => {
-                    let (fx, fy, radius, fr) =
+                    let (fx, fy, rx, ry, fr) =
                         resolve_radial_gradient_coords(rg, bx, by, bw, bh, ctx);
-                    let fill_style = build_radial_fill_style(rg, fx, fy, radius, fr, opacity, ctx);
+                    let fill_style = build_radial_fill_style(rg, fx, fy, rx, ry, fr, opacity, ctx);
                     tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
                 },
             }
@@ -165,9 +165,11 @@ fn resolve_linear_gradient_coords(
     }
 }
 
-/// Convert a radial gradient's focal point, radius, and focal radius to absolute
-/// layout coordinates.  Returns `(fx, fy, radius, fr)` — the radius resolves
-/// against the normalized diagonal (§13.2.2), not the box width/height.
+/// Convert a radial gradient's focal point, outer radii, and focal radius to
+/// absolute layout coordinates.  Returns `(fx, fy, rx, ry, fr)` — the outer
+/// radii resolve against the bounding-box width/height respectively (an ellipse
+/// under the non-uniform bounding-box scale of §13.2.2), and `fr` stays a scalar
+/// (normalized against the smaller radius later).
 fn resolve_radial_gradient_coords(
     rg: &crate::model::document::RadialGradient,
     bx: f32,
@@ -175,21 +177,27 @@ fn resolve_radial_gradient_coords(
     bw: f32,
     bh: f32,
     ctx: &RenderContext,
-) -> (f32, f32, f32, f32) {
+) -> (f32, f32, f32, f32, f32) {
     let nd = gradient::normalized_diagonal(bw, bh);
     match rg.units {
         GradientUnits::ObjectBoundingBox => (
             bx + rg.fx.to_object_bbox() * bw,
             by + rg.fy.to_object_bbox() * bh,
-            (rg.r.to_object_bbox() * nd).max(1.0),
+            (rg.r.to_object_bbox() * bw).max(1.0),
+            (rg.r.to_object_bbox() * bh).max(1.0),
             (rg.fr.to_object_bbox() * nd).max(0.0),
         ),
-        GradientUnits::UserSpaceOnUse => (
-            ctx.svg_origin.x + rg.fx.to_user_space(bw),
-            ctx.svg_origin.y + rg.fy.to_user_space(bh),
-            rg.r.to_user_space(nd).max(1.0),
-            rg.fr.to_user_space(nd).max(0.0),
-        ),
+        GradientUnits::UserSpaceOnUse => {
+            // User space is uniform, so a radial gradient is a circle here.
+            let r = rg.r.to_user_space(nd).max(1.0);
+            (
+                ctx.svg_origin.x + rg.fx.to_user_space(bw),
+                ctx.svg_origin.y + rg.fy.to_user_space(bh),
+                r,
+                r,
+                rg.fr.to_user_space(nd).max(0.0),
+            )
+        },
     }
 }
 
@@ -210,7 +218,7 @@ fn build_linear_fill_style<'a>(
         gx2,
         gy2,
         opacity,
-        color_interpolation: color_interpolation(ctx),
+        color_interpolation: gradient::resolve_color_interpolation(lg.color_interpolation, ctx),
         spread_method: lg.spread_method,
     }
 }
@@ -220,7 +228,8 @@ fn build_radial_fill_style<'a>(
     rg: &'a crate::model::document::RadialGradient,
     fx: f32,
     fy: f32,
-    radius: f32,
+    rx: f32,
+    ry: f32,
     fr: f32,
     opacity: f32,
     ctx: &RenderContext,
@@ -229,12 +238,13 @@ fn build_radial_fill_style<'a>(
         stops: &rg.stops,
         fx,
         fy,
-        r: radius,
-        // `fr` is clamped to `r` per §13.2.2 ("if fr is greater than r, then fr
-        // is clamped to the value of r").
-        fr: fr.min(radius),
+        rx,
+        ry,
+        // `fr` is clamped to the smaller outer radius per §13.2.2 ("if fr is
+        // greater than r, then fr is clamped to the value of r").
+        fr: fr.min(rx.min(ry)),
         opacity,
-        color_interpolation: color_interpolation(ctx),
+        color_interpolation: gradient::resolve_color_interpolation(rg.color_interpolation, ctx),
         spread_method: rg.spread_method,
     }
 }

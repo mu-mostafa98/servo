@@ -687,6 +687,7 @@ fn linear_gradient_default_x2() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        color_interpolation: ColorInterpolation::Auto,
         explicit: GradientExplicit::default(),
     };
     assert_eq!(lg.x2.to_object_bbox(), 1.0);
@@ -707,6 +708,7 @@ fn radial_gradient_default_center() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        color_interpolation: ColorInterpolation::Auto,
         explicit: GradientExplicit::default(),
     };
     assert_eq!(rg.cx.to_object_bbox(), 0.5);
@@ -1245,6 +1247,7 @@ fn tree_with_gradient_def() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        color_interpolation: ColorInterpolation::Auto,
         explicit: GradientExplicit::default(),
     }));
     tree.gradients.insert("g1".into(), grad);
@@ -1265,6 +1268,7 @@ fn tree_gradient_insert_and_check() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        color_interpolation: ColorInterpolation::Auto,
         explicit: GradientExplicit::default(),
     }));
     tree.gradients.insert("g1".into(), grad);
