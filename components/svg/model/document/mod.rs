@@ -14,10 +14,12 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 pub use self::defs::{
-    ClipPathDef, ClipPathUnits, DefRef, FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive,
-    GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,
-    MarkerDef, MarkerOrient, MarkerUnits, MaskContentUnits, MaskDef, MaskType, PatternContentUnits,
-    PatternDef, PatternLength, PatternUnits, RadialGradient, SpreadMethod,
+    BlendMode, ClipPathDef, ClipPathUnits, ColorChannel, ComponentTransfer,
+    ComponentTransferFunc, DefRef, FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive,
+    FilterPrimitiveNode, GradientDef, GradientExplicit, GradientLength, GradientStop,
+    GradientUnits, LinearGradient, MarkerDef, MarkerOrient, MarkerUnits, MaskContentUnits,
+    MaskDef, MaskType, MorphologyOperator, PatternContentUnits, PatternDef, PatternLength,
+    PatternUnits, RadialGradient, SpreadMethod,
 };
 pub use self::viewport::{
     AspectAlign, AspectRatio, MeetOrSlice, SvgViewport, ViewBox, ViewportInfo,

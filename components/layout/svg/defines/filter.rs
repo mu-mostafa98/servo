@@ -7,7 +7,10 @@
 use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use servo_svg::document::{FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive};
+use servo_svg::document::{
+    BlendMode, ColorChannel, ComponentTransfer, ComponentTransferFunc, FeCompositeKind,
+    FeImageKind, FilterDef, FilterPrimitive, FilterPrimitiveNode, MorphologyOperator,
+};
 use web_atoms::ns;
 
 use super::{DefinitionParser, element_id};
@@ -54,7 +57,7 @@ impl DefinitionParser for FilterParser {
         let width = get_region("width", 1.2);
         let height = get_region("height", 1.2);
 
-        let mut primitives = Vec::new();
+        let mut primitives: Vec<FilterPrimitiveNode> = Vec::new();
         for prim_child in node.dom_children() {
             if let Some(prim_elem) = prim_child.as_element() {
                 let pname = prim_elem.local_name().to_string();
@@ -62,6 +65,17 @@ impl DefinitionParser for FilterParser {
                     prim_elem
                         .attribute_as_str(&ns!(), &LocalName::from(attr))
                         .map(|s| s.to_string())
+                };
+                // Wrap a parsed primitive together with its `in`/`in2`/`result`
+                // wiring (all optional; a missing `in` defaults to the previous
+                // result at render time).
+                let mut push = |op: FilterPrimitive| {
+                    primitives.push(FilterPrimitiveNode {
+                        op,
+                        in1: prim_get("in"),
+                        in2: prim_get("in2"),
+                        result: prim_get("result"),
+                    });
                 };
                 let prim_get_float = |attr: &str, default: f32| -> f32 {
                     prim_get(attr)
@@ -93,7 +107,7 @@ impl DefinitionParser for FilterParser {
                 match pname.as_str() {
                     "feGaussianBlur" => {
                         let (sdx, sdy) = prim_get_float_pair("stdDeviation", 0.0);
-                        primitives.push(FilterPrimitive::GaussianBlur(
+                        push(FilterPrimitive::GaussianBlur(
                             sdx.min(MAX_STD_DEVIATION),
                             sdy.min(MAX_STD_DEVIATION),
                         ));
@@ -106,7 +120,7 @@ impl DefinitionParser for FilterParser {
                             prim_get("flood-color").unwrap_or_else(|| "black".to_owned());
                         let (r, g, b, a) = parse_color_rgba(&flood_color_str);
                         let flood_opacity = prim_get_float("flood-opacity", 1.0);
-                        primitives.push(FilterPrimitive::DropShadow(
+                        push(FilterPrimitive::DropShadow(
                             dx,
                             dy,
                             std_dev,
@@ -121,7 +135,7 @@ impl DefinitionParser for FilterParser {
                         match type_attr.trim() {
                             "saturate" => {
                                 let s = prim_get_float("values", 1.0);
-                                primitives.push(FilterPrimitive::Saturate(s));
+                                push(FilterPrimitive::Saturate(s));
                             },
                             "hueRotate" => {
                                 // SVG hueRotate matrix (filter-effects-1 §feColorMatrix),
@@ -131,7 +145,7 @@ impl DefinitionParser for FilterParser {
                                 let lum_r = 0.213;
                                 let lum_g = 0.715;
                                 let lum_b = 0.072;
-                                primitives.push(FilterPrimitive::ColorMatrix([
+                                push(FilterPrimitive::ColorMatrix([
                                     lum_r + cos * (1.0 - lum_r) - sin * lum_r,
                                     lum_g - cos * lum_g - sin * lum_g,
                                     lum_b - cos * lum_b + sin * (1.0 - lum_b),
@@ -155,7 +169,7 @@ impl DefinitionParser for FilterParser {
                                 ]));
                             },
                             "luminanceToAlpha" => {
-                                primitives.push(FilterPrimitive::LuminanceToAlpha);
+                                push(FilterPrimitive::LuminanceToAlpha);
                             },
                             _ => {
                                 // "matrix" or unknown — parse 20 values, default identity
@@ -178,21 +192,21 @@ impl DefinitionParser for FilterParser {
                                 for (i, v) in vals.iter().enumerate().take(20) {
                                     matrix[i] = *v;
                                 }
-                                primitives.push(FilterPrimitive::ColorMatrix(matrix));
+                                push(FilterPrimitive::ColorMatrix(matrix));
                             },
                         }
                     },
                     "feOffset" => {
                         let dx = prim_get_float("dx", 0.0);
                         let dy = prim_get_float("dy", 0.0);
-                        primitives.push(FilterPrimitive::Offset(dx, dy));
+                        push(FilterPrimitive::Offset(dx, dy));
                     },
                     "feFlood" => {
                         let flood_color_str =
                             prim_get("flood-color").unwrap_or_else(|| "black".to_owned());
                         let (r, g, b, a) = parse_color_rgba(&flood_color_str);
                         let flood_opacity = prim_get_float("flood-opacity", 1.0);
-                        primitives.push(FilterPrimitive::Flood(r, g, b, a * flood_opacity));
+                        push(FilterPrimitive::Flood(r, g, b, a * flood_opacity));
                     },
                     "feComposite" => {
                         let operator = prim_get("operator").unwrap_or_else(|| "over".to_owned());
@@ -211,10 +225,150 @@ impl DefinitionParser for FilterParser {
                             "lighter" => FeCompositeKind::Lighter,
                             _ => FeCompositeKind::Over,
                         };
-                        primitives.push(FilterPrimitive::Composite(composite));
+                        push(FilterPrimitive::Composite(composite));
+                    },
+                    "feBlend" => {
+                        let mode = prim_get("mode").unwrap_or_else(|| "normal".to_owned());
+                        let blend = match mode.trim() {
+                            "multiply" => BlendMode::Multiply,
+                            "screen" => BlendMode::Screen,
+                            "darken" => BlendMode::Darken,
+                            "lighten" => BlendMode::Lighten,
+                            "color-dodge" => BlendMode::ColorDodge,
+                            "color-burn" => BlendMode::ColorBurn,
+                            "hard-light" => BlendMode::HardLight,
+                            "soft-light" => BlendMode::SoftLight,
+                            "difference" => BlendMode::Difference,
+                            "exclusion" => BlendMode::Exclusion,
+                            "hue" => BlendMode::Hue,
+                            "saturation" => BlendMode::Saturation,
+                            "color" => BlendMode::Color,
+                            "luminosity" => BlendMode::Luminosity,
+                            _ => BlendMode::Normal,
+                        };
+                        push(FilterPrimitive::Blend(blend));
+                    },
+                    "feMerge" => {
+                        // feMerge composites its feMergeNode children in document
+                        // order (source-over). WebRender has no feMerge op, so the
+                        // render layer emulates it as a chain of feComposite over.
+                        let mut inputs = Vec::new();
+                        for merge_child in prim_child.dom_children() {
+                            if let Some(mc) = merge_child.as_element() {
+                                if mc.local_name().to_string() == "feMergeNode" {
+                                    if let Some(in_name) = mc
+                                        .attribute_as_str(&ns!(), &LocalName::from("in"))
+                                        .map(|s| s.to_string())
+                                    {
+                                        inputs.push(in_name);
+                                    }
+                                }
+                            }
+                        }
+                        push(FilterPrimitive::Merge(inputs));
+                    },
+                    "feComponentTransfer" => {
+                        // Each feFuncR/G/B/A child carries a transfer function;
+                        // a missing channel defaults to identity.
+                        let parse_func = |fe: &ServoLayoutNode| -> ComponentTransferFunc {
+                            let Some(e) = fe.as_element() else {
+                                return ComponentTransferFunc::Identity;
+                            };
+                            let fget = |attr: &str| {
+                                e.attribute_as_str(&ns!(), &LocalName::from(attr))
+                                    .map(|s| s.to_string())
+                            };
+                            // A single `<number>` attribute (slope/intercept/
+                            // amplitude/exponent/offset), defaulting when absent
+                            // or unparsable.
+                            let fget_float = |attr: &str, default: f32| -> f32 {
+                                fget(attr)
+                                    .and_then(|v| v.trim().parse::<f32>().ok())
+                                    .unwrap_or(default)
+                            };
+                            // table/discrete take a value list via `tableValues`
+                            // (the `values` fallback also accepted for robustness).
+                            let values = || -> Vec<f32> {
+                                fget("tableValues")
+                                    .or_else(|| fget("values"))
+                                    .unwrap_or_default()
+                                    .split(|c: char| c == ',' || c.is_ascii_whitespace())
+                                    .filter_map(|s| {
+                                        let t = s.trim();
+                                        if t.is_empty() {
+                                            None
+                                        } else {
+                                            t.parse::<f32>().ok()
+                                        }
+                                    })
+                                    .collect()
+                            };
+                            match fget("type").as_deref() {
+                                Some("identity") | None => ComponentTransferFunc::Identity,
+                                Some("table") => ComponentTransferFunc::Table(values()),
+                                Some("discrete") => ComponentTransferFunc::Discrete(values()),
+                                Some("linear") => ComponentTransferFunc::Linear {
+                                    slope: fget_float("slope", 1.0),
+                                    intercept: fget_float("intercept", 0.0),
+                                },
+                                Some("gamma") => ComponentTransferFunc::Gamma {
+                                    amplitude: fget_float("amplitude", 1.0),
+                                    exponent: fget_float("exponent", 1.0),
+                                    offset: fget_float("offset", 0.0),
+                                },
+                                _ => ComponentTransferFunc::Identity,
+                            }
+                        };
+                        let mut ct = ComponentTransfer {
+                            r: ComponentTransferFunc::Identity,
+                            g: ComponentTransferFunc::Identity,
+                            b: ComponentTransferFunc::Identity,
+                            a: ComponentTransferFunc::Identity,
+                        };
+                        for func_child in prim_child.dom_children() {
+                            if let Some(fe) = func_child.as_element() {
+                                let func = parse_func(&func_child);
+                                match fe.local_name().to_string().as_str() {
+                                    "feFuncR" => ct.r = func,
+                                    "feFuncG" => ct.g = func,
+                                    "feFuncB" => ct.b = func,
+                                    "feFuncA" => ct.a = func,
+                                    _ => {},
+                                }
+                            }
+                        }
+                        push(FilterPrimitive::ComponentTransfer(ct));
                     },
                     "feTile" => {
-                        primitives.push(FilterPrimitive::Tile);
+                        push(FilterPrimitive::Tile);
+                    },
+                    "feMorphology" => {
+                        // operator="dilate"|"erode" (default "erode"), radius is
+                        // a <number-optional-number> like stdDeviation.
+                        let operator = match prim_get("operator").as_deref() {
+                            Some("dilate") => MorphologyOperator::Dilate,
+                            _ => MorphologyOperator::Erode,
+                        };
+                        let (rx, ry) = prim_get_float_pair("radius", 0.0);
+                        push(FilterPrimitive::Morphology(operator, rx, ry));
+                    },
+                    "feDisplacementMap" => {
+                        // scale displaces `in` by a channel of `in2`; the
+                        // channel selectors default to alpha.
+                        let scale = prim_get_float("scale", 0.0);
+                        let channel = |attr: &str| -> ColorChannel {
+                            match prim_get(attr).as_deref() {
+                                Some("R") => ColorChannel::Red,
+                                Some("G") => ColorChannel::Green,
+                                Some("B") => ColorChannel::Blue,
+                                _ => ColorChannel::Alpha,
+                            }
+                        };
+                        push(FilterPrimitive::DisplacementMap(
+                            scale,
+                            channel("xChannelSelector"),
+                            channel("yChannelSelector"),
+                        ));
                     },
                     "feImage" => {
                         // feImage can reference an element via fragment or load an external URL.
@@ -230,7 +384,7 @@ impl DefinitionParser for FilterParser {
                             // so the filter isn't discarded.
                             FeImageKind::FragmentRef(String::new())
                         };
-                        primitives.push(FilterPrimitive::Image(img_kind));
+                        push(FilterPrimitive::Image(img_kind));
                     },
                     _ => {},
                 }

@@ -13,9 +13,10 @@
 use webrender_api::units::LayoutPoint;
 use webrender_api::{ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId};
 
-use crate::model::document::{ClipPathUnits, Defs};
+use crate::model::document::{ClipPathUnits, Defs, MaskContentUnits};
 use crate::model::element::SvgNode;
-use crate::render::geometry::{ClipGeometry, ComplexClip};
+use crate::render::effects::filter::node_local_bounds;
+use crate::render::geometry::{ClipGeometry, ClipSpace, ComplexClip};
 use crate::render::renderer::clip_chain_option;
 
 // ======================= Clip Path Resolution =======================
@@ -52,10 +53,19 @@ pub(crate) fn resolve_node_clip_path(
         return (parent_clip_chain, Vec::new());
     };
 
+    // `objectBoundingBox` clip coordinates are fractions of the *clipped
+    // element's* bounding box, so resolve that bbox once and scale every clip
+    // shape against it (falling back to identity → an empty clip).
+    let space = ClipSpace::new(
+        *svg_origin,
+        clip_def.clip_path_units,
+        Some(node_local_bounds(node)),
+    );
+
     let mut current_chain = parent_clip_chain;
     let mut complex = Vec::new();
     clip_def.root.for_each_shape_leaf(&mut |shape, _style| {
-        let Some(geometry) = shape.clip_info(svg_origin, clip_def.clip_path_units) else {
+        let Some(geometry) = shape.clip_info(space) else {
             return;
         };
 
@@ -118,9 +128,17 @@ pub(crate) fn build_mask_clips(
         .as_ref()
         .and_then(|m| m.resolve(&defs.masks))?;
 
+    // Honour `maskContentUnits` for the geometric-clip fallback (reached only
+    // when mask content cannot be CPU-rasterized).
+    let units = match mask_def.content_units {
+        MaskContentUnits::ObjectBoundingBox => ClipPathUnits::ObjectBoundingBox,
+        MaskContentUnits::UserSpaceOnUse => ClipPathUnits::UserSpaceOnUse,
+    };
+    let space = ClipSpace::new(*svg_origin, units, Some(node_local_bounds(node)));
+
     let mut masks = Vec::new();
     mask_def.root.for_each_shape_leaf(&mut |shape, _style| {
-        let Some(geometry) = shape.clip_info(svg_origin, ClipPathUnits::UserSpaceOnUse) else {
+        let Some(geometry) = shape.clip_info(space) else {
             return;
         };
 

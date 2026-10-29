@@ -23,7 +23,7 @@ use crate::model::document::*;
 use crate::model::element::*;
 use crate::model::units::Opacity;
 use crate::render::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
-use crate::render::effects::filter::get_filter_ops;
+use crate::render::effects::filter::{get_filter_ops, node_local_bounds, FilterOps};
 use crate::render::effects::mask::{MaskRaster, rasterize_mask};
 use crate::render::geometry::ComplexClip;
 use crate::render::renderer::path::rasterize_bez;
@@ -174,7 +174,7 @@ fn push_viewbox_frame(
 struct EffectParams<'a> {
     mask: &'a Option<ResolvedMask>,
     complex_clips: &'a [ComplexClip],
-    filter_ops: &'a Option<Vec<webrender_api::FilterOp>>,
+    filter_ops: &'a Option<FilterOps>,
 }
 
 /// A resolved mask: either a CPU-rasterized luminance/alpha pixmap (real mask
@@ -389,7 +389,7 @@ struct ResolvedEffects {
     clip_chain: ClipChainId,
     mask: Option<ResolvedMask>,
     complex_clips: Vec<ComplexClip>,
-    filter_ops: Option<Vec<webrender_api::FilterOp>>,
+    filter_ops: Option<FilterOps>,
 }
 
 /// Resolve clip-path, mask, and filter effects for a node.
@@ -466,21 +466,24 @@ fn resolve_node_mask(
         return inherited_mask.cloned();
     };
 
-    if mask_def.content_units == MaskContentUnits::UserSpaceOnUse {
-        if let Some(raster) = rasterize_mask(
-            mask_def,
-            &raster_offset,
-            node_xform,
-            viewbox_scale,
-            device_scale,
-            defs,
-        ) {
-            return Some(ResolvedMask::Raster(Rc::new(raster)));
-        }
+    // Real luminance/alpha masking works for both unit systems: the masked
+    // element's bounding box is resolved once and passed to the rasterizer so
+    // `objectBoundingBox` content is scaled correctly.
+    let element_bbox = node_local_bounds(node);
+    if let Some(raster) = rasterize_mask(
+        mask_def,
+        &raster_offset,
+        node_xform,
+        viewbox_scale,
+        device_scale,
+        element_bbox,
+        defs,
+    ) {
+        return Some(ResolvedMask::Raster(Rc::new(raster)));
     }
 
-    // Fall back to geometric clips (objectBoundingBox masks and non-rasterizable
-    // mask content).
+    // Fall back to geometric clips only for non-rasterizable mask content (e.g.
+    // a text-only mask, which has no shape leaves to rasterize).
     build_mask_clips(node, cur_origin, cur_spatial_id, parent_clip_chain, wr, defs)
         .map(ResolvedMask::Clips)
 }
@@ -1217,7 +1220,7 @@ fn rotation_matrix(angle_deg: f32) -> Transform2D<f32, (), ()> {
 
 /// Push a filter stacking context. Returns `true` if one was pushed (caller must pop).
 fn push_filter_context(
-    filter_ops: &Option<Vec<webrender_api::FilterOp>>,
+    filter_ops: &Option<FilterOps>,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
@@ -1229,8 +1232,8 @@ fn push_filter_context(
         clip_chain_option(clip_chain_id),
         TransformStyle::Flat,
         MixBlendMode::Normal,
-        ops,
-        &[],
+        &ops.ops,
+        &ops.datas,
         RasterSpace::Screen,
         StackingContextFlags::empty(),
         None,

@@ -785,9 +785,24 @@ fn mask_def_with_shapes_and_styles() {
 #[test]
 fn filter_def_all_primitive_variants() {
     let primitives = vec![
-        FilterPrimitive::GaussianBlur(2.0, 2.0),
-        FilterPrimitive::DropShadow(5.0, 5.0, 3.0, 0.0, 0.0, 0.0, 0.5),
-        FilterPrimitive::ColorMatrix([1.0; 20]),
+        FilterPrimitiveNode {
+            op: FilterPrimitive::GaussianBlur(2.0, 2.0),
+            in1: None,
+            in2: None,
+            result: None,
+        },
+        FilterPrimitiveNode {
+            op: FilterPrimitive::DropShadow(5.0, 5.0, 3.0, 0.0, 0.0, 0.0, 0.5),
+            in1: Some("SourceAlpha".to_owned()),
+            in2: None,
+            result: Some("shadow".to_owned()),
+        },
+        FilterPrimitiveNode {
+            op: FilterPrimitive::ColorMatrix([1.0; 20]),
+            in1: None,
+            in2: None,
+            result: None,
+        },
     ];
     let def = FilterDef {
         primitives,
@@ -798,14 +813,16 @@ fn filter_def_all_primitive_variants() {
     };
     assert_eq!(def.primitives.len(), 3);
     assert!(matches!(
-        def.primitives[0],
+        def.primitives[0].op,
         FilterPrimitive::GaussianBlur(2.0, 2.0)
     ));
+    assert_eq!(def.primitives[1].in1.as_deref(), Some("SourceAlpha"));
+    assert_eq!(def.primitives[1].result.as_deref(), Some("shadow"));
     assert!(matches!(
-        def.primitives[1],
+        def.primitives[1].op,
         FilterPrimitive::DropShadow(_, _, _, _, _, _, _)
     ));
-    assert!(matches!(def.primitives[2], FilterPrimitive::ColorMatrix(_)));
+    assert!(matches!(def.primitives[2].op, FilterPrimitive::ColorMatrix(_)));
 }
 
 // ============================================================

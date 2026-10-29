@@ -31,7 +31,10 @@ mod mask;
 mod pattern;
 
 pub use self::clip_path::{ClipPathDef, ClipPathUnits};
-pub use self::filter::{FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive};
+pub use self::filter::{
+    BlendMode, ColorChannel, ComponentTransfer, ComponentTransferFunc, FeCompositeKind,
+    FeImageKind, FilterDef, FilterPrimitive, FilterPrimitiveNode, MorphologyOperator,
+};
 pub use self::gradient::{
     GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,
     RadialGradient, SpreadMethod,

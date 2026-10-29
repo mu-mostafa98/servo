@@ -18,8 +18,60 @@ use crate::model::element::shape::{Circle, Ellipse, Path, Polygon, Polyline, Rec
 use crate::model::geometry::{PathCommand, PathData, Point};
 use crate::model::style::FillRule;
 
-/// Scale factor for objectBoundingBox clip-path coordinates (0..1 → 0..100).
-pub(crate) const OBJECT_BBOX_REF_SIZE: f32 = 100.0;
+/// How clip/mask geometry maps from its local coordinates into the clipped
+/// element's coordinate space.
+///
+/// `objectBoundingBox` coordinates are fractions (0..1) of the clipped
+/// element's bounding box: each axis is scaled by that bbox's width/height and
+/// offset by its origin (in the current spatial node's space, i.e. after the
+/// `svg_origin` translation). `userSpaceOnUse` coordinates are used as-is.
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct ClipSpace {
+    pub sx: f32,
+    pub sy: f32,
+    pub ox: f32,
+    pub oy: f32,
+}
+
+impl ClipSpace {
+    /// Resolve the clip coordinate transform.
+    ///
+    /// `bbox` is the clipped/masked element's local-space bounding box, used to
+    /// scale `objectBoundingBox` fractions. `None` (or a degenerate bbox) falls
+    /// back to identity scale, which matches the SVG spec's "no geometry"
+    /// behaviour: the clip is empty and the element is clipped away.
+    pub(crate) fn new(
+        svg_origin: LayoutPoint,
+        units: ClipPathUnits,
+        bbox: Option<LayoutRect>,
+    ) -> Self {
+        if units == ClipPathUnits::ObjectBoundingBox {
+            if let Some(b) = bbox {
+                if b.size().width > 0.0 && b.size().height > 0.0 {
+                    return Self {
+                        sx: b.size().width,
+                        sy: b.size().height,
+                        ox: svg_origin.x + b.min.x,
+                        oy: svg_origin.y + b.min.y,
+                    };
+                }
+            }
+        }
+        Self {
+            sx: 1.0,
+            sy: 1.0,
+            ox: svg_origin.x,
+            oy: svg_origin.y,
+        }
+    }
+
+    /// The uniform scale for a length that cannot be resolved per-axis — the
+    /// radius of a `<circle>` under `objectBoundingBox`, per the SVG 1.1 note:
+    /// normalized to the length of the bbox diagonal (√((w²+h²)/2)).
+    pub(crate) fn uniform_scale(self) -> f32 {
+        ((self.sx * self.sx + self.sy * self.sy) / 2.0).sqrt()
+    }
+}
 
 /// Clip geometry result — the resolved shape a clip-path/mask applies.
 ///
@@ -66,18 +118,14 @@ impl Shape {
     ///
     /// Returns `None` for shapes that cannot participate in clip paths
     /// (line only — has no area).
-    pub(crate) fn clip_info(
-        &self,
-        svg_origin: &LayoutPoint,
-        units: ClipPathUnits,
-    ) -> Option<ClipGeometry> {
+    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
         match self {
-            Shape::Rect(r) => r.clip_info(svg_origin, units),
-            Shape::Circle(c) => c.clip_info(svg_origin, units),
-            Shape::Ellipse(e) => e.clip_info(svg_origin, units),
-            Shape::Polygon(p) => p.clip_info(svg_origin, units),
-            Shape::Polyline(p) => p.clip_info(svg_origin, units),
-            Shape::Path(p) => p.clip_info(svg_origin, units),
+            Shape::Rect(r) => r.clip_info(space),
+            Shape::Circle(c) => c.clip_info(space),
+            Shape::Ellipse(e) => e.clip_info(space),
+            Shape::Polygon(p) => p.clip_info(space),
+            Shape::Polyline(p) => p.clip_info(space),
+            Shape::Path(p) => p.clip_info(space),
             Shape::Line(_) => None,
         }
     }
@@ -153,22 +201,12 @@ impl Shape {
 
 impl Circle {
     /// Clip geometry for this circle.
-    pub(crate) fn clip_info(
-        &self,
-        svg_origin: &LayoutPoint,
-        units: ClipPathUnits,
-    ) -> Option<ClipGeometry> {
-        let (cx, cy, r) = if units == ClipPathUnits::ObjectBoundingBox {
-            (
-                self.cx.get() * OBJECT_BBOX_REF_SIZE,
-                self.cy.get() * OBJECT_BBOX_REF_SIZE,
-                self.r.get() * OBJECT_BBOX_REF_SIZE,
-            )
-        } else {
-            (self.cx.get(), self.cy.get(), self.r.get())
-        };
+    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
+        let cx = self.cx.get() * space.sx + space.ox;
+        let cy = self.cy.get() * space.sy + space.oy;
+        let r = self.r.get() * space.uniform_scale();
         let bounds = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(svg_origin.x + cx - r, svg_origin.y + cy - r),
+            LayoutPoint::new(cx - r, cy - r),
             LayoutSize::new(r * 2.0, r * 2.0),
         );
         Some(ClipGeometry::RoundedRect {
@@ -180,41 +218,26 @@ impl Circle {
 
 impl Rectangle {
     /// Clip geometry for this rectangle.
-    pub(crate) fn clip_info(
-        &self,
-        svg_origin: &LayoutPoint,
-        units: ClipPathUnits,
-    ) -> Option<ClipGeometry> {
-        let (x, y, w, h) = if units == ClipPathUnits::ObjectBoundingBox {
-            (
-                self.x.get() * OBJECT_BBOX_REF_SIZE,
-                self.y.get() * OBJECT_BBOX_REF_SIZE,
-                self.width.get() * OBJECT_BBOX_REF_SIZE,
-                self.height.get() * OBJECT_BBOX_REF_SIZE,
-            )
-        } else {
-            (
-                self.x.get(),
-                self.y.get(),
-                self.width.get(),
-                self.height.get(),
-            )
-        };
+    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
+        let x = self.x.get() * space.sx + space.ox;
+        let y = self.y.get() * space.sy + space.oy;
+        let w = self.width.get() * space.sx;
+        let h = self.height.get() * space.sy;
         let bounds = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(svg_origin.x + x, svg_origin.y + y),
+            LayoutPoint::new(x, y),
             LayoutSize::new(w, h),
         );
         let radii = match (self.rx, self.ry) {
             (Some(rx), _) if rx.get() > 0.0 => {
                 let ry = self.ry.unwrap_or(rx);
                 Some(all_equal_radius(
-                    rx.get().clamp(0.0, w / 2.0),
-                    ry.get().clamp(0.0, h / 2.0),
+                    (rx.get() * space.sx).clamp(0.0, w / 2.0),
+                    (ry.get() * space.sy).clamp(0.0, h / 2.0),
                 ))
             },
             (_, Some(ry)) if ry.get() > 0.0 => Some(all_equal_radius(
-                ry.get().clamp(0.0, h / 2.0),
-                ry.get().clamp(0.0, h / 2.0),
+                (ry.get() * space.sy).clamp(0.0, h / 2.0),
+                (ry.get() * space.sy).clamp(0.0, h / 2.0),
             )),
             _ => None,
         };
@@ -227,24 +250,14 @@ impl Rectangle {
 
 impl Ellipse {
     /// Clip geometry for this ellipse.
-    pub(crate) fn clip_info(
-        &self,
-        svg_origin: &LayoutPoint,
-        units: ClipPathUnits,
-    ) -> Option<ClipGeometry> {
+    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
         let (rx_len, ry_len) = self.resolved_radii()?;
-        let (cx, cy, rx, ry) = if units == ClipPathUnits::ObjectBoundingBox {
-            (
-                self.cx.get() * OBJECT_BBOX_REF_SIZE,
-                self.cy.get() * OBJECT_BBOX_REF_SIZE,
-                rx_len.get() * OBJECT_BBOX_REF_SIZE,
-                ry_len.get() * OBJECT_BBOX_REF_SIZE,
-            )
-        } else {
-            (self.cx.get(), self.cy.get(), rx_len.get(), ry_len.get())
-        };
+        let cx = self.cx.get() * space.sx + space.ox;
+        let cy = self.cy.get() * space.sy + space.oy;
+        let rx = rx_len.get() * space.sx;
+        let ry = ry_len.get() * space.sy;
         let bounds = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(svg_origin.x + cx - rx, svg_origin.y + cy - ry),
+            LayoutPoint::new(cx - rx, cy - ry),
             LayoutSize::new(rx * 2.0, ry * 2.0),
         );
         Some(ClipGeometry::RoundedRect {
@@ -256,56 +269,32 @@ impl Ellipse {
 
 impl Polygon {
     /// Clip geometry for this polygon (closed fill path around all points).
-    pub(crate) fn clip_info(
-        &self,
-        svg_origin: &LayoutPoint,
-        units: ClipPathUnits,
-    ) -> Option<ClipGeometry> {
+    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
         if self.points.len() < 3 {
             return None;
         }
-        Some(clip_path_geometry(
-            &points_to_bez(&self.points, true),
-            svg_origin,
-            units,
-        ))
+        Some(clip_path_geometry(&points_to_bez(&self.points, true), space))
     }
 }
 
 impl Polyline {
     /// Clip geometry for this polyline. A clip path fills the polyline as if
     /// it were closed (per SVG 2), so the mask path is closed for filling.
-    pub(crate) fn clip_info(
-        &self,
-        svg_origin: &LayoutPoint,
-        units: ClipPathUnits,
-    ) -> Option<ClipGeometry> {
+    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
         if self.points.len() < 3 {
             return None;
         }
-        Some(clip_path_geometry(
-            &points_to_bez(&self.points, true),
-            svg_origin,
-            units,
-        ))
+        Some(clip_path_geometry(&points_to_bez(&self.points, true), space))
     }
 }
 
 impl Path {
     /// Clip geometry for this path (the exact path outline, curves preserved).
-    pub(crate) fn clip_info(
-        &self,
-        svg_origin: &LayoutPoint,
-        units: ClipPathUnits,
-    ) -> Option<ClipGeometry> {
+    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
         if self.path.commands.is_empty() {
             return None;
         }
-        Some(clip_path_geometry(
-            &path_data_to_bez(&self.path),
-            svg_origin,
-            units,
-        ))
+        Some(clip_path_geometry(&path_data_to_bez(&self.path), space))
     }
 }
 
@@ -353,21 +342,18 @@ pub(crate) fn path_data_to_bez(path: &PathData) -> kurbo::BezPath {
     bez
 }
 
-/// Translate a local-space [`kurbo::BezPath`] into clip space: scale by the
-/// objectBoundingBox reference size when `units == ObjectBoundingBox`, then
-/// translate by the shape's origin in the current coordinate system.
-pub(crate) fn transform_clip_path(
-    path: &kurbo::BezPath,
-    svg_origin: &LayoutPoint,
-    units: ClipPathUnits,
-) -> kurbo::BezPath {
+/// Translate a local-space [`kurbo::BezPath`] into clip space via [`ClipSpace`]:
+/// per-axis scale (objectBoundingBox fractions, or identity) then translate by
+/// the shape's origin in the current coordinate system.
+pub(crate) fn transform_clip_path(path: &kurbo::BezPath, space: ClipSpace) -> kurbo::BezPath {
     let mut transformed = path.clone();
-    if units == ClipPathUnits::ObjectBoundingBox {
-        transformed.apply_affine(kurbo::Affine::scale(OBJECT_BBOX_REF_SIZE as f64));
-    }
+    transformed.apply_affine(kurbo::Affine::scale_non_uniform(
+        space.sx as f64,
+        space.sy as f64,
+    ));
     transformed.apply_affine(kurbo::Affine::translate((
-        svg_origin.x as f64,
-        svg_origin.y as f64,
+        space.ox as f64,
+        space.oy as f64,
     )));
     transformed
 }
@@ -375,12 +361,8 @@ pub(crate) fn transform_clip_path(
 /// Build a [`ClipGeometry::Path`] from a local-space [`kurbo::BezPath`]:
 /// transform it into clip space, derive its bounding box, and tag it with the
 /// default (non-zero) fill rule.
-pub(crate) fn clip_path_geometry(
-    path: &kurbo::BezPath,
-    svg_origin: &LayoutPoint,
-    units: ClipPathUnits,
-) -> ClipGeometry {
-    let transformed = transform_clip_path(path, svg_origin, units);
+pub(crate) fn clip_path_geometry(path: &kurbo::BezPath, space: ClipSpace) -> ClipGeometry {
+    let transformed = transform_clip_path(path, space);
     let bbox = transformed.bounding_box();
     let bounds = LayoutRect::from_origin_and_size(
         LayoutPoint::new(bbox.x0 as f32, bbox.y0 as f32),

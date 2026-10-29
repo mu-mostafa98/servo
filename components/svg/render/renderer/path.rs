@@ -118,7 +118,7 @@ impl Render for Path {
 }
 
 /// Map an SVG [`LineCap`] to kurbo's [`Cap`].
-fn line_cap_to_kurbo(cap: LineCap) -> vello_cpu::kurbo::Cap {
+pub(crate) fn line_cap_to_kurbo(cap: LineCap) -> vello_cpu::kurbo::Cap {
     match cap {
         LineCap::Butt => vello_cpu::kurbo::Cap::Butt,
         LineCap::Round => vello_cpu::kurbo::Cap::Round,
@@ -128,7 +128,7 @@ fn line_cap_to_kurbo(cap: LineCap) -> vello_cpu::kurbo::Cap {
 
 /// Map an SVG [`LineJoin`] to kurbo's [`Join`]. `miter-clip` and `arcs` have no
 /// direct kurbo equivalent; approximate them as miter and round respectively.
-fn line_join_to_kurbo(join: LineJoin) -> vello_cpu::kurbo::Join {
+pub(crate) fn line_join_to_kurbo(join: LineJoin) -> vello_cpu::kurbo::Join {
     match join {
         LineJoin::Miter | LineJoin::MiterClip => vello_cpu::kurbo::Join::Miter,
         LineJoin::Round | LineJoin::Arcs => vello_cpu::kurbo::Join::Round,
@@ -527,7 +527,7 @@ pub(crate) fn resolve_fill_paint(
 }
 
 /// Resolve a stroke to a concrete paint (solid color or gradient).
-fn resolve_stroke_paint(
+pub(crate) fn resolve_stroke_paint(
     stroke: &StrokeParams,
     w: f32,
     h: f32,
