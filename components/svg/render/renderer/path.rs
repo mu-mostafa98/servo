@@ -424,6 +424,13 @@ pub(crate) fn rasterize_bez(
                     let myi = my as usize;
                     mask.data[((myi * mask_w + mxi) * 4) + 3] as f32 / 255.0
                 };
+                // `rgba` is premultiplied (vello_cpu produces premultiplied
+                // pixels, and the raster is uploaded as PremultipliedAlpha), so
+                // scaling the mask into the alpha must scale RGB by the same
+                // factor to keep the unpremultiplied color unchanged.
+                rgba[idx + 0] = (rgba[idx + 0] as f32 * mask_alpha).round() as u8;
+                rgba[idx + 1] = (rgba[idx + 1] as f32 * mask_alpha).round() as u8;
+                rgba[idx + 2] = (rgba[idx + 2] as f32 * mask_alpha).round() as u8;
                 rgba[idx + 3] = (rgba[idx + 3] as f32 * mask_alpha).round() as u8;
             }
         }

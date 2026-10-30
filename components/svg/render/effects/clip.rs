@@ -10,16 +10,47 @@
 //! produce the clip chains and [`ComplexClip`] geometry needed for rendering.
 //! No tree walking, no display list management beyond clip definition.
 
-use webrender_api::units::LayoutPoint;
+use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId};
 
 use crate::model::document::{ClipPathUnits, Defs, MaskContentUnits};
 use crate::model::element::SvgNode;
+use crate::render::EffectLeaf;
 use crate::render::effects::filter::node_local_bounds;
-use crate::render::geometry::{ClipGeometry, ClipSpace, ComplexClip};
+use crate::render::geometry::{
+    ClipGeometry, ClipSpace, ComplexClip, clip_path_geometry, text_to_bez_path,
+};
 use crate::render::renderer::clip_chain_option;
 
 // ======================= Clip Path Resolution =======================
+
+/// Resolve a clip/mask leaf (shape, text run, or image) to clip geometry.
+///
+/// Shapes go through their native [`ClipGeometry`] path; a text run contributes
+/// the fill outline of its shaped glyphs; an image contributes its viewport
+/// rectangle.
+fn leaf_clip_geometry(leaf: EffectLeaf<'_>, space: ClipSpace) -> Option<ClipGeometry> {
+    match leaf {
+        EffectLeaf::Shape(shape) => shape.clip_info(space),
+        EffectLeaf::Text(span) => {
+            let path = text_to_bez_path(span)?;
+            Some(clip_path_geometry(&path, space))
+        },
+        EffectLeaf::Image(img) => {
+            if img.width <= 0.0 || img.height <= 0.0 {
+                return None;
+            }
+            let bounds = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(
+                    img.x * space.sx + space.ox,
+                    img.y * space.sy + space.oy,
+                ),
+                LayoutSize::new(img.width * space.sx, img.height * space.sy),
+            );
+            Some(ClipGeometry::Rect { bounds })
+        },
+    }
+}
 
 /// A single mask shape resolved to either a WebRender clip chain (rect /
 /// rounded-rect) or a [`ComplexClip`] applied during rasterization.
@@ -64,8 +95,8 @@ pub(crate) fn resolve_node_clip_path(
 
     let mut current_chain = parent_clip_chain;
     let mut complex = Vec::new();
-    clip_def.root.for_each_shape_leaf(&mut |shape, _style| {
-        let Some(geometry) = shape.clip_info(space) else {
+    clip_def.root.for_each_effect_leaf(&mut |leaf, _style| {
+        let Some(geometry) = leaf_clip_geometry(leaf, space) else {
             return;
         };
 
@@ -137,8 +168,8 @@ pub(crate) fn build_mask_clips(
     let space = ClipSpace::new(*svg_origin, units, Some(node_local_bounds(node)));
 
     let mut masks = Vec::new();
-    mask_def.root.for_each_shape_leaf(&mut |shape, _style| {
-        let Some(geometry) = shape.clip_info(space) else {
+    mask_def.root.for_each_effect_leaf(&mut |leaf, _style| {
+        let Some(geometry) = leaf_clip_geometry(leaf, space) else {
             return;
         };
 

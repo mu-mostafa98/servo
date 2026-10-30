@@ -8,8 +8,10 @@ use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
 use servo_svg::document::{
-    BlendMode, ColorChannel, ComponentTransfer, ComponentTransferFunc, FeCompositeKind,
-    FeImageKind, FilterDef, FilterPrimitive, FilterPrimitiveNode, MorphologyOperator,
+    BlendMode, ColorChannel, ComponentTransfer, ComponentTransferFunc, ConvolveMatrix,
+    DiffuseLighting, EdgeMode, FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive,
+    FilterPrimitiveNode, LightSource, MorphologyOperator, PrimitiveUnits, RegionValue,
+    SpecularLighting, Turbulence, TurbulenceType,
 };
 use web_atoms::ns;
 
@@ -56,6 +58,14 @@ impl DefinitionParser for FilterParser {
         let y = get_region("y", -0.1);
         let width = get_region("width", 1.2);
         let height = get_region("height", 1.2);
+        // `primitiveUnits` controls how a *bare number* in a primitive's
+        // x/y/width/height is interpreted (user units vs bbox fraction). The
+        // default is `userSpaceOnUse`; percentages are resolved against the
+        // filter region at render time regardless of this value.
+        let primitive_units = match get("primitiveUnits").as_deref() {
+            Some("objectBoundingBox") => PrimitiveUnits::ObjectBoundingBox,
+            _ => PrimitiveUnits::UserSpaceOnUse,
+        };
 
         let mut primitives: Vec<FilterPrimitiveNode> = Vec::new();
         for prim_child in node.dom_children() {
@@ -66,15 +76,36 @@ impl DefinitionParser for FilterParser {
                         .attribute_as_str(&ns!(), &LocalName::from(attr))
                         .map(|s| s.to_string())
                 };
+                // Parse a primitive subregion component (`x`/`y`/`width`/
+                // `height`), each a `<number-or-percentage>`. A `%` suffix
+                // becomes a fraction; a bare number is kept as a length (its
+                // meaning is decided later by `primitiveUnits`).
+                let prim_get_region_value = |attr: &str| -> Option<RegionValue> {
+                    prim_get(attr).and_then(|v| {
+                        let v = v.trim();
+                        match v.strip_suffix('%') {
+                            Some(p) => p
+                                .trim()
+                                .parse::<f32>()
+                                .ok()
+                                .map(|p| RegionValue::Percent(p / 100.0)),
+                            None => v.parse::<f32>().ok().map(RegionValue::Number),
+                        }
+                    })
+                };
                 // Wrap a parsed primitive together with its `in`/`in2`/`result`
-                // wiring (all optional; a missing `in` defaults to the previous
-                // result at render time).
+                // wiring and optional subregion (all optional; a missing `in`
+                // defaults to the previous result at render time).
                 let mut push = |op: FilterPrimitive| {
                     primitives.push(FilterPrimitiveNode {
                         op,
                         in1: prim_get("in"),
                         in2: prim_get("in2"),
                         result: prim_get("result"),
+                        x: prim_get_region_value("x"),
+                        y: prim_get_region_value("y"),
+                        width: prim_get_region_value("width"),
+                        height: prim_get_region_value("height"),
                     });
                 };
                 let prim_get_float = |attr: &str, default: f32| -> f32 {
@@ -103,6 +134,54 @@ impl DefinitionParser for FilterParser {
                             (x, y)
                         })
                         .unwrap_or((default, default))
+                };
+                // Parse the `feDistantLight`/`fePointLight`/`feSpotLight` child of a
+                // lighting primitive, defaulting to a straight-on distant light.
+                let parse_light_source = |prim_child: ServoLayoutNode<'dom>| -> LightSource {
+                    for light_child in prim_child.dom_children() {
+                        if let Some(le) = light_child.as_element() {
+                            let lget = |attr: &str| {
+                                le.attribute_as_str(&ns!(), &LocalName::from(attr))
+                                    .map(|s| s.to_string())
+                            };
+                            let lget_float = |attr: &str, default: f32| -> f32 {
+                                lget(attr)
+                                    .and_then(|v| v.trim().parse::<f32>().ok())
+                                    .unwrap_or(default)
+                            };
+                            match le.local_name().to_string().as_str() {
+                                "feDistantLight" => {
+                                    return LightSource::Distant {
+                                        azimuth: lget_float("azimuth", 0.0),
+                                        elevation: lget_float("elevation", 0.0),
+                                    };
+                                },
+                                "fePointLight" => {
+                                    return LightSource::Point {
+                                        x: lget_float("x", 0.0),
+                                        y: lget_float("y", 0.0),
+                                        z: lget_float("z", 0.0),
+                                    };
+                                },
+                                "feSpotLight" => {
+                                    return LightSource::Spot {
+                                        x: lget_float("x", 0.0),
+                                        y: lget_float("y", 0.0),
+                                        z: lget_float("z", 0.0),
+                                        points_at_x: lget_float("pointsAtX", 0.0),
+                                        points_at_y: lget_float("pointsAtY", 0.0),
+                                        points_at_z: lget_float("pointsAtZ", 0.0),
+                                        // feSpotLight's `specularExponent` is the spot
+                                        // cone exponent (a.k.a. cone_exponent).
+                                        cone_exponent: lget_float("specularExponent", 1.0),
+                                        limiting_cone_angle: lget_float("limitingConeAngle", 90.0),
+                                    };
+                                },
+                                _ => {},
+                            }
+                        }
+                    }
+                    LightSource::Distant { azimuth: 0.0, elevation: 0.0 }
                 };
                 match pname.as_str() {
                     "feGaussianBlur" => {
@@ -386,6 +465,136 @@ impl DefinitionParser for FilterParser {
                         };
                         push(FilterPrimitive::Image(img_kind));
                     },
+                    "feConvolveMatrix" => {
+                        // order is "N" or "N M" (default 3 3), clamped to the
+                        // fixed 5×5 kernel slot.
+                        let (order_x, order_y) = {
+                            let order_str = prim_get("order").unwrap_or_else(|| "3".to_owned());
+                            let mut vals = order_str
+                                .split(|c: char| c == ',' || c.is_ascii_whitespace())
+                                .filter_map(|s| {
+                                    let t = s.trim();
+                                    if t.is_empty() {
+                                        None
+                                    } else {
+                                        t.parse::<i32>().ok()
+                                    }
+                                });
+                            let ox = vals.next().unwrap_or(3).clamp(1, 5);
+                            let oy = vals.next().unwrap_or(ox).clamp(1, 5);
+                            (ox, oy)
+                        };
+                        // kernelMatrix is row-major and zero-padded to the fixed
+                        // 5×5 slot.
+                        let mut kernel = [0.0f32; 25];
+                        let kernel_vals: Vec<f32> = prim_get("kernelMatrix")
+                            .unwrap_or_default()
+                            .split(|c: char| c == ',' || c.is_ascii_whitespace())
+                            .filter_map(|s| {
+                                let t = s.trim();
+                                if t.is_empty() {
+                                    None
+                                } else {
+                                    t.parse::<f32>().ok()
+                                }
+                            })
+                            .collect();
+                        for (i, v) in kernel_vals.iter().take(25).enumerate() {
+                            kernel[i] = *v;
+                        }
+                        let kernel_sum: f32 = kernel.iter().sum();
+                        // divisor defaults to the kernel sum (1 if that sum is zero).
+                        let divisor = prim_get_float(
+                            "divisor",
+                            if kernel_sum == 0.0 { 1.0 } else { kernel_sum },
+                        );
+                        let bias = prim_get_float("bias", 0.0);
+                        // targetX/targetY default to the kernel center.
+                        let target_x = prim_get("targetX")
+                            .and_then(|v| v.trim().parse::<i32>().ok())
+                            .unwrap_or(order_x / 2);
+                        let target_y = prim_get("targetY")
+                            .and_then(|v| v.trim().parse::<i32>().ok())
+                            .unwrap_or(order_y / 2);
+                        let edge_mode = match prim_get("edgeMode").as_deref() {
+                            Some("wrap") => EdgeMode::Wrap,
+                            Some("none") => EdgeMode::None_,
+                            _ => EdgeMode::Duplicate,
+                        };
+                        let (ku_x, ku_y) = prim_get_float_pair("kernelUnitLength", 1.0);
+                        let preserve_alpha = prim_get("preserveAlpha").as_deref() == Some("true");
+                        push(FilterPrimitive::ConvolveMatrix(ConvolveMatrix {
+                            order_x,
+                            order_y,
+                            kernel,
+                            divisor,
+                            bias,
+                            target_x,
+                            target_y,
+                            edge_mode,
+                            kernel_unit_length_x: ku_x,
+                            kernel_unit_length_y: ku_y,
+                            preserve_alpha,
+                        }));
+                    },
+                    "feTurbulence" => {
+                        let type_ = match prim_get("type").as_deref() {
+                            Some("fractalNoise") => TurbulenceType::FractalNoise,
+                            _ => TurbulenceType::Turbulence,
+                        };
+                        let (bf_x, bf_y) = prim_get_float_pair("baseFrequency", 0.0);
+                        let num_octaves = prim_get("numOctaves")
+                            .and_then(|v| v.trim().parse::<u32>().ok())
+                            .unwrap_or(1);
+                        let seed = prim_get("seed")
+                            .and_then(|v| v.trim().parse::<u32>().ok())
+                            .unwrap_or(0);
+                        let stitch_tiles = prim_get("stitchTiles").as_deref() == Some("stitch");
+                        push(FilterPrimitive::Turbulence(Turbulence {
+                            type_,
+                            base_frequency_x: bf_x,
+                            base_frequency_y: bf_y,
+                            num_octaves,
+                            seed,
+                            stitch_tiles,
+                        }));
+                    },
+                    "feDiffuseLighting" => {
+                        let surface_scale = prim_get_float("surfaceScale", 1.0);
+                        let diffuse_constant = prim_get_float("diffuseConstant", 1.0);
+                        let (ku_x, ku_y) = prim_get_float_pair("kernelUnitLength", 1.0);
+                        let lighting_color_str =
+                            prim_get("lighting-color").unwrap_or_else(|| "white".to_owned());
+                        let (lr, lg, lb, la) = parse_color_rgba(&lighting_color_str);
+                        let light_source = parse_light_source(prim_child);
+                        push(FilterPrimitive::DiffuseLighting(DiffuseLighting {
+                            surface_scale,
+                            diffuse_constant,
+                            kernel_unit_length_x: ku_x,
+                            kernel_unit_length_y: ku_y,
+                            lighting_color: [lr, lg, lb, la],
+                            light_source,
+                        }));
+                    },
+                    "feSpecularLighting" => {
+                        let surface_scale = prim_get_float("surfaceScale", 1.0);
+                        let specular_constant = prim_get_float("specularConstant", 1.0);
+                        let specular_exponent = prim_get_float("specularExponent", 1.0);
+                        let (ku_x, ku_y) = prim_get_float_pair("kernelUnitLength", 1.0);
+                        let lighting_color_str =
+                            prim_get("lighting-color").unwrap_or_else(|| "white".to_owned());
+                        let (lr, lg, lb, la) = parse_color_rgba(&lighting_color_str);
+                        let light_source = parse_light_source(prim_child);
+                        push(FilterPrimitive::SpecularLighting(SpecularLighting {
+                            surface_scale,
+                            specular_constant,
+                            specular_exponent,
+                            kernel_unit_length_x: ku_x,
+                            kernel_unit_length_y: ku_y,
+                            lighting_color: [lr, lg, lb, la],
+                            light_source,
+                        }));
+                    },
                     _ => {},
                 }
             }
@@ -399,6 +608,7 @@ impl DefinitionParser for FilterParser {
                     y,
                     width,
                     height,
+                    primitive_units,
                 },
             ))
         } else {

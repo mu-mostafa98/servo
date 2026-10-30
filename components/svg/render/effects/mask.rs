@@ -21,11 +21,15 @@ use webrender_api::units::{LayoutPoint, LayoutRect};
 use crate::model::document::{Defs, MaskContentUnits, MaskDef, MaskType};
 use crate::model::style::{ColorInterpolation, FillRule};
 use crate::model::style::paint::{FillParams, LineCap, LineJoin, StrokeParams};
+use crate::model::style::paint_servers::PaintServer;
+use crate::model::units::Opacity;
+use crate::render::EffectLeaf;
 use crate::render::renderer::color_interpolation_of_style;
 use crate::render::renderer::path::{
     apply_paint, line_cap_to_kurbo, line_join_to_kurbo, resolve_fill_paint, resolve_stroke_paint,
     scale_paint, transform_to_affine,
 };
+use crate::render::geometry::text_to_bez_path;
 
 /// A CPU-rasterized mask: grayscale pixels whose alpha channel holds the mask
 /// value (luminance or alpha of the mask content). Positioned in the same
@@ -108,17 +112,56 @@ pub(crate) fn rasterize_mask(
     // same layout space the content rasters use.
     let mut shapes: Vec<MaskShape> = Vec::new();
     let mut union: Option<Rect> = None;
-    mask.root.for_each_shape_leaf(&mut |shape, style| {
+    mask.root.for_each_effect_leaf(&mut |leaf, style| {
         if !style.is_visible() {
             return;
         }
-        let fill = style.fill.clone();
-        let stroke = style.stroke.clone();
-        if fill.is_none() && stroke.is_none() {
-            return;
-        }
-        let Some(bez) = shape.to_bez_path() else {
-            return;
+        // Resolve the leaf's fill path and paints. Shapes and text use their own
+        // fill/stroke; an image contributes its viewport rectangle as opaque
+        // white (fully visible), approximating a fully opaque image's mask
+        // contribution (raw image pixels are not available on the CPU path).
+        let (bez, fill, stroke) = match leaf {
+            EffectLeaf::Shape(shape) => {
+                let fill = style.fill.clone();
+                let stroke = style.stroke.clone();
+                if fill.is_none() && stroke.is_none() {
+                    return;
+                }
+                let Some(bez) = shape.to_bez_path() else {
+                    return;
+                };
+                (bez, fill, stroke)
+            },
+            EffectLeaf::Text(span) => {
+                let fill = style.fill.clone();
+                let stroke = style.stroke.clone();
+                if fill.is_none() && stroke.is_none() {
+                    return;
+                }
+                let Some(bez) = text_to_bez_path(span) else {
+                    return;
+                };
+                (bez, fill, stroke)
+            },
+            EffectLeaf::Image(img) => {
+                if img.width <= 0.0 || img.height <= 0.0 {
+                    return;
+                }
+                let mut bez = kurbo::BezPath::new();
+                bez.move_to((img.x as f64, img.y as f64));
+                bez.line_to(((img.x + img.width) as f64, img.y as f64));
+                bez.line_to(((img.x + img.width) as f64, (img.y + img.height) as f64));
+                bez.line_to((img.x as f64, (img.y + img.height) as f64));
+                bez.close_path();
+                let fill = Some(FillParams {
+                    paint_server: Some(PaintServer::Solid(svgtypes::Color::new_rgb(
+                        255, 255, 255,
+                    ))),
+                    opacity: Opacity::new(1.0),
+                    fill_rule: FillRule::NonZero,
+                });
+                (bez, fill, None)
+            },
         };
         let mut bez_scaled = bez.clone();
         // objectBoundingBox content: scale/offset into the element's local

@@ -32,8 +32,10 @@ mod pattern;
 
 pub use self::clip_path::{ClipPathDef, ClipPathUnits};
 pub use self::filter::{
-    BlendMode, ColorChannel, ComponentTransfer, ComponentTransferFunc, FeCompositeKind,
-    FeImageKind, FilterDef, FilterPrimitive, FilterPrimitiveNode, MorphologyOperator,
+    BlendMode, ColorChannel, ComponentTransfer, ComponentTransferFunc, ConvolveMatrix,
+    DiffuseLighting, EdgeMode, FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive,
+    FilterPrimitiveNode, LightSource, MorphologyOperator, PrimitiveUnits, RegionValue,
+    SpecularLighting, Turbulence, TurbulenceType,
 };
 pub use self::gradient::{
     GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,

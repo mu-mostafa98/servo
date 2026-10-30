@@ -15,9 +15,19 @@ pub(crate) mod tessellator;
 pub(crate) mod traversal;
 
 use crate::model::element::shape::Shape;
-use crate::model::element::{Container, SvgNode, SvgTag};
+use crate::model::element::{Container, SvgImage, SvgNode, SvgTag, TextSpan};
 use crate::model::resource::ResourceKey;
 use crate::model::style::NodeStyle;
+
+/// A renderable leaf of a clip/mask definition subtree: a shape, a text run,
+/// or an image. Used by clip/mask collection so that text glyphs and images
+/// are included alongside shapes (unlike [`SvgNode::for_each_shape_leaf`],
+/// which skips them).
+pub(crate) enum EffectLeaf<'a> {
+    Shape(&'a Shape),
+    Text(&'a TextSpan),
+    Image(&'a SvgImage),
+}
 
 impl SvgNode {
     /// Flatten container groups and invoke `f(shape, style)` for every shape
@@ -37,6 +47,28 @@ impl SvgNode {
             _ => {
                 for child in &self.children {
                     child.for_each_shape_leaf(f);
+                }
+            },
+        }
+    }
+
+    /// Flatten container groups and invoke `f(leaf, style)` for every renderable
+    /// leaf (shape, text run, image) under this node. `<defs>` is skipped.
+    ///
+    /// Unlike [`SvgNode::for_each_shape_leaf`], this also visits text and image
+    /// leaves so clip-path/mask content can include glyphs and images.
+    pub(crate) fn for_each_effect_leaf<F>(&self, f: &mut F)
+    where
+        F: for<'a> FnMut(EffectLeaf<'a>, &'a NodeStyle),
+    {
+        match &self.tag {
+            SvgTag::Shape(shape) => f(EffectLeaf::Shape(shape), &self.style),
+            SvgTag::Text(span) => f(EffectLeaf::Text(span), &self.style),
+            SvgTag::Image(img) => f(EffectLeaf::Image(img), &self.style),
+            SvgTag::Container(Container::Defs) => {},
+            _ => {
+                for child in &self.children {
+                    child.for_each_effect_leaf(f);
                 }
             },
         }

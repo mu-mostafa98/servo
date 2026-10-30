@@ -790,18 +790,30 @@ fn filter_def_all_primitive_variants() {
             in1: None,
             in2: None,
             result: None,
+            x: None,
+            y: None,
+            width: None,
+            height: None,
         },
         FilterPrimitiveNode {
             op: FilterPrimitive::DropShadow(5.0, 5.0, 3.0, 0.0, 0.0, 0.0, 0.5),
             in1: Some("SourceAlpha".to_owned()),
             in2: None,
             result: Some("shadow".to_owned()),
+            x: None,
+            y: None,
+            width: None,
+            height: None,
         },
         FilterPrimitiveNode {
             op: FilterPrimitive::ColorMatrix([1.0; 20]),
             in1: None,
             in2: None,
             result: None,
+            x: None,
+            y: None,
+            width: None,
+            height: None,
         },
     ];
     let def = FilterDef {
@@ -810,6 +822,7 @@ fn filter_def_all_primitive_variants() {
         y: -0.1,
         width: 1.2,
         height: 1.2,
+        primitive_units: PrimitiveUnits::UserSpaceOnUse,
     };
     assert_eq!(def.primitives.len(), 3);
     assert!(matches!(

@@ -127,6 +127,11 @@ The relevant files:
 | feComponentTransfer (table/discrete/linear/gamma) | done, verified (fork `filterdata.rs`) |
 | feMorphology (dilate/erode) | done, **verified pixel-exact** |
 | feDisplacementMap | **all 4 layers written, `servo-svg` compiles, but NOT render-verified yet** |
+| feConvolveMatrix | all 4 layers done (kernel-packing bug fixed; see §7) |
+| feTurbulence | all 4 layers done (stitching variants currently no-stitch; see shader note) |
+| feDiffuseLighting / feSpecularLighting | all 4 layers done (CPU packing in render_task.rs) |
+| feTile | done — fragment shader `rect_repeat` is implemented (vertex `// TODO` is stale) |
+| feImage | shader (`result = Rs`) + node emitted; **actual image loading not wired** (Task E) |
 
 The `feDisplacementMap` code is in the tree and is a valid template. Before
 using it as a reference, it is worth verifying it renders (see §6) so you know
@@ -146,9 +151,9 @@ All variants are defined in
 | Convolve | `SVGFEConvolveMatrixEdgeMode{Duplicate\|None\|Wrap}` | **DONE** (~line 755) — see caveat |
 | Displacement | `SVGFEDisplacementMap` | DONE (~line 773) |
 | Morphology | `SVGFEMorphologyDilate` / `Erode` | DONE (redundant; shader uses `input_2_content_scale_and_offset`) |
-| DiffuseLighting | 3 variants | **NOT DONE** (empty `{}`) |
-| SpecularLighting | 3 variants | **NOT DONE** (empty `{}`) |
-| Turbulence | 4 variants | **NOT DONE** (empty `{}`) |
+| DiffuseLighting | 3 variants | **DONE** (~line 771) |
+| SpecularLighting | 3 variants | **DONE** (~line 816) |
+| Turbulence | 4 variants | **DONE** (~line 841) |
 | Image | `SVGFEImage` | n/a (needs real image loading, not gpu params) |
 
 Exact `FilterOp` field lists (copy verbatim):
@@ -211,6 +216,12 @@ paths are currently never taken — see §7.
 
 Do them in this order (roughly increasing difficulty). Each task lists the
 specific work per layer.
+
+**Status (2026-10-30):** Tasks A, B, C, D, F, G are **done and compile**
+(`servo-svg` + `servo-layout` both build). Only **Task E (feImage image
+loading)** remains. feTile (the shader `// TODO` below is stale) is already
+implemented. `primitiveUnits` + per-primitive subregions (Task F) and
+clipPath/mask text+image (Task G) are the most recent additions.
 
 ### Task A — Verify feDisplacementMap (5 min)
 
@@ -477,8 +488,8 @@ python /d/tmp/px.py /d/tmp/out.png x,y [x,y ...]
   simplification, not a regression. Leave it unless you are specifically fixing
   color-interpolation correctness (that is a separate, larger change and is NOT
   part of "complete the gaps").
-- **Convolve kernel packing bug** (Task B): `render_task.rs` writes only
-  `kernel[0..=20]`. Fix it when implementing feConvolveMatrix.
+- **Convolve kernel packing bug** (Task B): **fixed.** `render_task.rs` now
+  writes all 9 blocks (25 kernel values + `preserve_alpha`).
 - **Channel selector values** (feDisplacementMap): R=1, G=2, B=3, A=4 (SVG IDL
   constants); default A. Already modeled as `ColorChannel` with `to_u32()`.
 - **New enums must be re-exported in both `mod.rs` files** (see Layer 1), or the

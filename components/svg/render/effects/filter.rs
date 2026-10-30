@@ -20,8 +20,9 @@ use webrender_api::{
 };
 
 use crate::model::document::{
-    BlendMode, ComponentTransfer, ComponentTransferFunc, Defs, FeCompositeKind, FilterPrimitive,
-    MorphologyOperator,
+    BlendMode, ComponentTransfer, ComponentTransferFunc, Defs, EdgeMode, FeCompositeKind,
+    FilterDef, FilterPrimitive, FilterPrimitiveNode, LightSource, MorphologyOperator,
+    PrimitiveUnits, RegionValue, TurbulenceType,
 };
 use crate::model::element::{SvgNode, SvgTag};
 
@@ -74,6 +75,20 @@ fn no_input_node(subregion: LayoutRect) -> FilterOpGraphNode {
         },
         subregion,
     }
+}
+
+/// Convert an SVG `<feColorMatrix>` matrix from its spec row-major layout
+/// (4 output rows × 5 input columns, the `a0..a19` order) into WebRender's
+/// 5×4 transposed layout (`matrix[input*4 + output]`), which is what
+/// [`FilterOp::SVGFEColorMatrix`] expects.
+fn transpose_color_matrix(m: &[f32; 20]) -> [f32; 20] {
+    let mut t = [0.0f32; 20];
+    for row in 0..4 {
+        for col in 0..5 {
+            t[col * 4 + row] = m[row * 5 + col];
+        }
+    }
+    t
 }
 
 /// Resolve an `in`/`in2` filter input name to a buffer index in the op list.
@@ -175,6 +190,73 @@ pub(crate) fn node_local_bounds(node: &SvgNode) -> LayoutRect {
     }
 }
 
+/// Compute a single primitive's subregion in the spatial space the filter ops
+/// live in (the node's local space translated by `origin`).
+///
+/// Per spec (Filter Effects §Filter primitive subregion), a `<percentage>` on
+/// a primitive coordinate is resolved against the filter region, while a bare
+/// `<number>` consults `primitiveUnits`: user units under `userSpaceOnUse`, a
+/// bounding-box fraction under `objectBoundingBox`. `None` means the filter
+/// region's own edge/size (the default `0% 0% 100% 100%` subregion).
+fn primitive_subregion(
+    node: &FilterPrimitiveNode,
+    filter_def: &FilterDef,
+    bbox: LayoutRect,
+    region: LayoutRect,
+    origin: LayoutPoint,
+) -> LayoutRect {
+    // Resolve a start coordinate (x/y): `None` → the filter region edge, a
+    // percentage → a fraction of the filter region, a number → user units
+    // from the filter region edge, or a bbox fraction under objectBoundingBox.
+    let start = |value: Option<RegionValue>, region_min: f32, region_size: f32, bbox_min: f32, bbox_size: f32| {
+        match value {
+            None => region_min,
+            Some(RegionValue::Percent(p)) => region_min + p * region_size,
+            Some(RegionValue::Number(n)) => match filter_def.primitive_units {
+                PrimitiveUnits::UserSpaceOnUse => region_min + n,
+                PrimitiveUnits::ObjectBoundingBox => bbox_min + n * bbox_size,
+            },
+        }
+    };
+    // Resolve a size (width/height): `None` → the filter region size, a
+    // percentage → a fraction of the filter region, a number → user units or
+    // a bbox fraction.
+    let size = |value: Option<RegionValue>, region_size: f32, bbox_size: f32| {
+        match value {
+            None => region_size,
+            Some(RegionValue::Percent(p)) => p * region_size,
+            Some(RegionValue::Number(n)) => match filter_def.primitive_units {
+                PrimitiveUnits::UserSpaceOnUse => n,
+                PrimitiveUnits::ObjectBoundingBox => n * bbox_size,
+            },
+        }
+    };
+    LayoutRect::from_origin_and_size(
+        LayoutPoint::new(
+            origin.x
+                + start(
+                    node.x,
+                    region.min.x,
+                    region.size().width,
+                    bbox.min.x,
+                    bbox.size().width,
+                ),
+            origin.y
+                + start(
+                    node.y,
+                    region.min.y,
+                    region.size().height,
+                    bbox.min.y,
+                    bbox.size().height,
+                ),
+        ),
+        LayoutSize::new(
+            size(node.width, region.size().width, bbox.size().width),
+            size(node.height, region.size().height, bbox.size().height),
+        ),
+    )
+}
+
 /// If the node references a filter, return the resolved WebRender SVG filter
 /// graph (ops + component-transfer data). Returns `None` when no filter is
 /// present, the referenced filter definition is missing, or the filter resolves
@@ -200,25 +282,34 @@ pub(crate) fn get_filter_ops(
     }
 
     let bbox = node_local_bounds(node);
-    // Filter region: the object bbox expanded by the `<filter>` x/y/width/height
-    // (`objectBoundingBox` units — the default `filterUnits`), translated into
-    // the current spatial space. A degenerate bbox (empty geometry) falls back
-    // to a unit region so WebRender does not drop the graph.
-    let region = LayoutRect::from_origin_and_size(
+    // Filter region in the node's local space: the object bbox expanded by the
+    // `<filter>` x/y/width/height (`objectBoundingBox` units — the default
+    // `filterUnits`). A degenerate bbox (empty geometry) falls back to a unit
+    // region so WebRender does not drop the graph.
+    let region_local = LayoutRect::from_origin_and_size(
         LayoutPoint::new(
-            origin.x + bbox.min.x + filter_def.x * bbox.size().width,
-            origin.y + bbox.min.y + filter_def.y * bbox.size().height,
+            bbox.min.x + filter_def.x * bbox.size().width,
+            bbox.min.y + filter_def.y * bbox.size().height,
         ),
         LayoutSize::new(
             filter_def.width * bbox.size().width,
             filter_def.height * bbox.size().height,
         ),
     );
-    let region = if region.size().width > 0.0 && region.size().height > 0.0 {
-        region
+    let region_local = if region_local.size().width > 0.0 && region_local.size().height > 0.0 {
+        region_local
     } else {
-        LayoutRect::from_origin_and_size(origin, LayoutSize::new(1.0, 1.0))
+        LayoutRect::from_origin_and_size(LayoutPoint::zero(), LayoutSize::new(1.0, 1.0))
     };
+    // The same region translated into the current spatial space, where the
+    // SourceGraphic/SourceAlpha nodes live.
+    let region = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(
+            origin.x + region_local.min.x,
+            origin.y + region_local.min.y,
+        ),
+        region_local.size(),
+    );
 
     let mut ops = Vec::with_capacity(filter_def.primitives.len() + 2);
     let mut datas: Vec<FilterData> = Vec::new();
@@ -238,6 +329,10 @@ pub(crate) fn get_filter_ops(
     let mut result_map: HashMap<String, i16> = HashMap::new();
     let mut last_buffer: i16 = 0; // SourceGraphic is the implicit first input.
     for prim in &filter_def.primitives {
+        // Each primitive's subregion (defaults to the filter region; the
+        // primitive's own x/y/width/height may narrow it). Shadowed over the
+        // filter region so every arm below uses the per-primitive value.
+        let region = primitive_subregion(prim, filter_def, bbox, region_local, origin);
         // feMerge is special-cased: it expands to a chain of `feComposite over`
         // (one op per input after the first) rather than exactly one node.
         if let FilterPrimitive::Merge(inputs) = &prim.op {
@@ -281,37 +376,38 @@ pub(crate) fn get_filter_ops(
             },
             FilterPrimitive::ColorMatrix(matrix) => FilterOp::SVGFEColorMatrix {
                 node: single_input_node(input, region),
-                values: *matrix,
+                values: transpose_color_matrix(matrix),
             },
             FilterPrimitive::Saturate(s) => {
                 let s = s.clamp(0.0, 10.0);
                 let lum_r = 0.213;
                 let lum_g = 0.715;
                 let lum_b = 0.072;
+                let matrix = [
+                    lum_r + (1.0 - lum_r) * s,
+                    lum_g * (1.0 - s),
+                    lum_b * (1.0 - s),
+                    0.0,
+                    0.0,
+                    lum_r * (1.0 - s),
+                    lum_g + (1.0 - lum_g) * s,
+                    lum_b * (1.0 - s),
+                    0.0,
+                    0.0,
+                    lum_r * (1.0 - s),
+                    lum_g * (1.0 - s),
+                    lum_b + (1.0 - lum_b) * s,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                ];
                 FilterOp::SVGFEColorMatrix {
                     node: single_input_node(input, region),
-                    values: [
-                        lum_r + (1.0 - lum_r) * s,
-                        lum_g * (1.0 - s),
-                        lum_b * (1.0 - s),
-                        0.0,
-                        0.0,
-                        lum_r * (1.0 - s),
-                        lum_g + (1.0 - lum_g) * s,
-                        lum_b * (1.0 - s),
-                        0.0,
-                        0.0,
-                        lum_r * (1.0 - s),
-                        lum_g * (1.0 - s),
-                        lum_b + (1.0 - lum_b) * s,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                    ],
+                    values: transpose_color_matrix(&matrix),
                 }
             },
             FilterPrimitive::LuminanceToAlpha => FilterOp::SVGFEToAlpha {
@@ -428,6 +524,231 @@ pub(crate) fn get_filter_ops(
                 datas.push(component_transfer_data(ct));
                 FilterOp::SVGFEComponentTransfer {
                     node: single_input_node(input, region),
+                }
+            },
+            FilterPrimitive::ConvolveMatrix(c) => {
+                let node = single_input_node(input, region);
+                let preserve_alpha = i32::from(c.preserve_alpha);
+                match c.edge_mode {
+                    EdgeMode::Duplicate => FilterOp::SVGFEConvolveMatrixEdgeModeDuplicate {
+                        node,
+                        order_x: c.order_x,
+                        order_y: c.order_y,
+                        kernel: c.kernel,
+                        divisor: c.divisor,
+                        bias: c.bias,
+                        target_x: c.target_x,
+                        target_y: c.target_y,
+                        kernel_unit_length_x: c.kernel_unit_length_x,
+                        kernel_unit_length_y: c.kernel_unit_length_y,
+                        preserve_alpha,
+                    },
+                    EdgeMode::None_ => FilterOp::SVGFEConvolveMatrixEdgeModeNone {
+                        node,
+                        order_x: c.order_x,
+                        order_y: c.order_y,
+                        kernel: c.kernel,
+                        divisor: c.divisor,
+                        bias: c.bias,
+                        target_x: c.target_x,
+                        target_y: c.target_y,
+                        kernel_unit_length_x: c.kernel_unit_length_x,
+                        kernel_unit_length_y: c.kernel_unit_length_y,
+                        preserve_alpha,
+                    },
+                    EdgeMode::Wrap => FilterOp::SVGFEConvolveMatrixEdgeModeWrap {
+                        node,
+                        order_x: c.order_x,
+                        order_y: c.order_y,
+                        kernel: c.kernel,
+                        divisor: c.divisor,
+                        bias: c.bias,
+                        target_x: c.target_x,
+                        target_y: c.target_y,
+                        kernel_unit_length_x: c.kernel_unit_length_x,
+                        kernel_unit_length_y: c.kernel_unit_length_y,
+                        preserve_alpha,
+                    },
+                }
+            },
+            FilterPrimitive::Turbulence(t) => {
+                let node = no_input_node(region);
+                match (&t.type_, t.stitch_tiles) {
+                    (TurbulenceType::FractalNoise, false) => {
+                        FilterOp::SVGFETurbulenceWithFractalNoiseWithNoStitching {
+                            node,
+                            base_frequency_x: t.base_frequency_x,
+                            base_frequency_y: t.base_frequency_y,
+                            num_octaves: t.num_octaves,
+                            seed: t.seed,
+                        }
+                    },
+                    (TurbulenceType::FractalNoise, true) => {
+                        FilterOp::SVGFETurbulenceWithFractalNoiseWithStitching {
+                            node,
+                            base_frequency_x: t.base_frequency_x,
+                            base_frequency_y: t.base_frequency_y,
+                            num_octaves: t.num_octaves,
+                            seed: t.seed,
+                        }
+                    },
+                    (TurbulenceType::Turbulence, false) => {
+                        FilterOp::SVGFETurbulenceWithTurbulenceNoiseWithNoStitching {
+                            node,
+                            base_frequency_x: t.base_frequency_x,
+                            base_frequency_y: t.base_frequency_y,
+                            num_octaves: t.num_octaves,
+                            seed: t.seed,
+                        }
+                    },
+                    (TurbulenceType::Turbulence, true) => {
+                        FilterOp::SVGFETurbulenceWithTurbulenceNoiseWithStitching {
+                            node,
+                            base_frequency_x: t.base_frequency_x,
+                            base_frequency_y: t.base_frequency_y,
+                            num_octaves: t.num_octaves,
+                            seed: t.seed,
+                        }
+                    },
+                }
+            },
+            FilterPrimitive::DiffuseLighting(d) => {
+                let node = single_input_node(input, region);
+                match &d.light_source {
+                    LightSource::Distant { azimuth, elevation } => {
+                        FilterOp::SVGFEDiffuseLightingDistant {
+                            node,
+                            surface_scale: d.surface_scale,
+                            diffuse_constant: d.diffuse_constant,
+                            kernel_unit_length_x: d.kernel_unit_length_x,
+                            kernel_unit_length_y: d.kernel_unit_length_y,
+                            azimuth: *azimuth,
+                            elevation: *elevation,
+                            lighting_color: ColorF::new(
+                                d.lighting_color[0],
+                                d.lighting_color[1],
+                                d.lighting_color[2],
+                                d.lighting_color[3],
+                            ),
+                        }
+                    },
+                    LightSource::Point { x, y, z } => FilterOp::SVGFEDiffuseLightingPoint {
+                        node,
+                        surface_scale: d.surface_scale,
+                        diffuse_constant: d.diffuse_constant,
+                        kernel_unit_length_x: d.kernel_unit_length_x,
+                        kernel_unit_length_y: d.kernel_unit_length_y,
+                        x: *x,
+                        y: *y,
+                        z: *z,
+                        lighting_color: ColorF::new(
+                            d.lighting_color[0],
+                            d.lighting_color[1],
+                            d.lighting_color[2],
+                            d.lighting_color[3],
+                        ),
+                    },
+                    LightSource::Spot {
+                        x,
+                        y,
+                        z,
+                        points_at_x,
+                        points_at_y,
+                        points_at_z,
+                        cone_exponent,
+                        limiting_cone_angle,
+                    } => FilterOp::SVGFEDiffuseLightingSpot {
+                        node,
+                        surface_scale: d.surface_scale,
+                        diffuse_constant: d.diffuse_constant,
+                        kernel_unit_length_x: d.kernel_unit_length_x,
+                        kernel_unit_length_y: d.kernel_unit_length_y,
+                        x: *x,
+                        y: *y,
+                        z: *z,
+                        points_at_x: *points_at_x,
+                        points_at_y: *points_at_y,
+                        points_at_z: *points_at_z,
+                        cone_exponent: *cone_exponent,
+                        limiting_cone_angle: *limiting_cone_angle,
+                        lighting_color: ColorF::new(
+                            d.lighting_color[0],
+                            d.lighting_color[1],
+                            d.lighting_color[2],
+                            d.lighting_color[3],
+                        ),
+                    },
+                }
+            },
+            FilterPrimitive::SpecularLighting(s) => {
+                let node = single_input_node(input, region);
+                match &s.light_source {
+                    LightSource::Distant { azimuth, elevation } => {
+                        FilterOp::SVGFESpecularLightingDistant {
+                            node,
+                            surface_scale: s.surface_scale,
+                            specular_constant: s.specular_constant,
+                            specular_exponent: s.specular_exponent,
+                            kernel_unit_length_x: s.kernel_unit_length_x,
+                            kernel_unit_length_y: s.kernel_unit_length_y,
+                            azimuth: *azimuth,
+                            elevation: *elevation,
+                            lighting_color: ColorF::new(
+                                s.lighting_color[0],
+                                s.lighting_color[1],
+                                s.lighting_color[2],
+                                s.lighting_color[3],
+                            ),
+                        }
+                    },
+                    LightSource::Point { x, y, z } => FilterOp::SVGFESpecularLightingPoint {
+                        node,
+                        surface_scale: s.surface_scale,
+                        specular_constant: s.specular_constant,
+                        specular_exponent: s.specular_exponent,
+                        kernel_unit_length_x: s.kernel_unit_length_x,
+                        kernel_unit_length_y: s.kernel_unit_length_y,
+                        x: *x,
+                        y: *y,
+                        z: *z,
+                        lighting_color: ColorF::new(
+                            s.lighting_color[0],
+                            s.lighting_color[1],
+                            s.lighting_color[2],
+                            s.lighting_color[3],
+                        ),
+                    },
+                    LightSource::Spot {
+                        x,
+                        y,
+                        z,
+                        points_at_x,
+                        points_at_y,
+                        points_at_z,
+                        cone_exponent,
+                        limiting_cone_angle,
+                    } => FilterOp::SVGFESpecularLightingSpot {
+                        node,
+                        surface_scale: s.surface_scale,
+                        specular_constant: s.specular_constant,
+                        specular_exponent: s.specular_exponent,
+                        kernel_unit_length_x: s.kernel_unit_length_x,
+                        kernel_unit_length_y: s.kernel_unit_length_y,
+                        x: *x,
+                        y: *y,
+                        z: *z,
+                        points_at_x: *points_at_x,
+                        points_at_y: *points_at_y,
+                        points_at_z: *points_at_z,
+                        cone_exponent: *cone_exponent,
+                        limiting_cone_angle: *limiting_cone_angle,
+                        lighting_color: ColorF::new(
+                            s.lighting_color[0],
+                            s.lighting_color[1],
+                            s.lighting_color[2],
+                            s.lighting_color[3],
+                        ),
+                    },
                 }
             },
             FilterPrimitive::Merge(_) => unreachable!("feMerge handled above"),

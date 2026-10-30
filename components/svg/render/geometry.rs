@@ -15,6 +15,7 @@ use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
 use crate::model::document::ClipPathUnits;
 use crate::model::element::shape::{Circle, Ellipse, Path, Polygon, Polyline, Rectangle, Shape};
+use crate::model::element::text::TextSpan;
 use crate::model::geometry::{PathCommand, PathData, Point};
 use crate::model::style::FillRule;
 
@@ -316,6 +317,45 @@ pub(crate) fn points_to_bez(points: &[Point], close: bool) -> kurbo::BezPath {
         bez.close_path();
     }
     bez
+}
+
+/// Build a combined fill path for a text span from its shaped glyph outlines,
+/// in the span's local user space. Returns `None` when no glyph has an outline
+/// (spaces, bitmap glyphs, or a platform that provides none).
+///
+/// The glyph outlines are already positioned relative to the span's baseline
+/// origin, so the path is built at `origin + advance/alignment offset + glyph
+/// position + contour point`, mirroring the text renderer's glyph placement.
+pub(crate) fn text_to_bez_path(span: &TextSpan) -> Option<kurbo::BezPath> {
+    let offset = span.text_anchor.alignment_offset();
+    let anchor_offset = (if span.rtl { -1.0 - offset } else { offset }) * span.total_advance();
+    let base_x = span.origin_x() + span.advance_offset + anchor_offset;
+    let base_y = span.origin_y();
+
+    let mut path = kurbo::BezPath::new();
+    let mut any = false;
+    for g in &span.glyphs {
+        let Some(outline) = g.outline.as_ref() else {
+            continue;
+        };
+        for contour in outline {
+            if contour.len() < 2 {
+                continue;
+            }
+            for (i, &(cx, cy)) in contour.iter().enumerate() {
+                let x = (base_x + g.x + cx) as f64;
+                let y = (base_y + g.y + cy) as f64;
+                if i == 0 {
+                    path.move_to((x, y));
+                } else {
+                    path.line_to((x, y));
+                }
+            }
+            path.close_path();
+            any = true;
+        }
+    }
+    any.then_some(path)
 }
 
 /// Convert a model [`PathData`] back into a [`kurbo::BezPath`] for

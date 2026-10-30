@@ -359,7 +359,15 @@ fn render_node(
         defs,
     );
 
-    // Step 5 — Recurse into children.
+    // Step 5 — Recurse into children. A container's filter applies to the whole
+    // rendered subtree, so wrap the recursion in a filter stacking context
+    // (shapes and leaves push their own filter around `emit_element` above).
+    let container_filter_pushed = if matches!(node.tag, SvgTag::Container(_)) {
+        push_filter_context(&resolved.filter_ops, cur_spatial_id, resolved.clip_chain, wr)
+    } else {
+        false
+    };
+
     recurse_children(
         node,
         &cur_origin,
@@ -377,6 +385,10 @@ fn render_node(
         resolved.mask,
         defs,
     );
+
+    if container_filter_pushed {
+        wr.pop_stacking_context();
+    }
 
     // Step 6 — Pop transform reference frames.
     for _ in 0..pushed_count {
