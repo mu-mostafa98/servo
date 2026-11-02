@@ -80,6 +80,7 @@ pub fn render_svg_tree(
         Transform2D::<f32, (), ()>::identity(),
         sink,
         None,
+        &[],
         defs,
     );
 
@@ -212,6 +213,7 @@ fn render_node(
     mut node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
     inherited_mask: Option<ResolvedMask>,
+    inherited_complex_clips: &[ComplexClip],
     defs: Defs<'_>,
 ) {
     if !node.style.is_displayed() {
@@ -313,7 +315,12 @@ fn render_node(
     }
 
     // Step 3 — Resolve effects (clip-path, mask, filter).
-    let resolved = resolve_node_effects(
+    let ResolvedEffects {
+        clip_chain,
+        mask,
+        complex_clips: own_complex_clips,
+        filter_ops,
+    } = resolve_node_effects(
         node,
         &cur_origin,
         cur_spatial_id,
@@ -327,6 +334,14 @@ fn render_node(
         defs,
     );
 
+    // Combine ancestor clip-path geometry (from enclosing groups) with this
+    // node's own. Native shapes get the equivalent through the accumulated
+    // `clip_chain`; `complex_clips` is the vello-raster fallback for shapes
+    // that bypass the native clip chain (paths/polygons/polylines), so it must
+    // be threaded to every descendant.
+    let mut complex_clips = inherited_complex_clips.to_vec();
+    complex_clips.extend(own_complex_clips);
+
     // Group opacity accumulates multiplicatively down the tree: each element's
     // own `opacity` composes with every ancestor group's. Leaves bake the
     // combined value into their paint alpha (vello rasters carry it into their
@@ -337,15 +352,15 @@ fn render_node(
 
     // Step 4 — Render the element.
     let shape_params = EffectParams {
-        mask: &resolved.mask,
-        complex_clips: &resolved.complex_clips,
-        filter_ops: &resolved.filter_ops,
+        mask: &mask,
+        complex_clips: &complex_clips,
+        filter_ops: &filter_ops,
     };
     emit_element(
         node,
         &cur_origin,
         cur_spatial_id,
-        resolved.clip_chain,
+        clip_chain,
         accumulated_scale,
         effective_opacity,
         wr,
@@ -363,7 +378,7 @@ fn render_node(
     // rendered subtree, so wrap the recursion in a filter stacking context
     // (shapes and leaves push their own filter around `emit_element` above).
     let container_filter_pushed = if matches!(node.tag, SvgTag::Container(_)) {
-        push_filter_context(&resolved.filter_ops, cur_spatial_id, resolved.clip_chain, wr)
+        push_filter_context(&filter_ops, cur_spatial_id, clip_chain, wr)
     } else {
         false
     };
@@ -372,7 +387,7 @@ fn render_node(
         node,
         &cur_origin,
         cur_spatial_id,
-        resolved.clip_chain,
+        clip_chain,
         accumulated_scale,
         effective_opacity,
         wr,
@@ -382,7 +397,8 @@ fn render_node(
         clip_rect,
         node_xform,
         sink,
-        resolved.mask,
+        mask,
+        &complex_clips,
         defs,
     );
 
@@ -720,8 +736,13 @@ fn draw_shape(
     // which tiles the pattern via `fill_rect_with_pattern`.
     let has_pattern = style_has_pattern(style, defs);
     // A raster mask must be multiplied into the content's alpha at raster time,
-    // so it forces the vello path (WebRender can't express it as a clip).
-    let force_raster = alpha_mask.is_some();
+    // so it forces the vello path (WebRender can't express it as a clip). A
+    // non-native clip (polygon/path, whose only native form is a bounding-rect
+    // approximation) also forces rasterization so vello can apply the exact
+    // clip. Native-expressible clips (circle/rect/rounded-rect) do NOT force
+    // rasterization: native shapes keep using their exact clip chain, and only
+    // rasterized shapes apply the matching `ComplexClip`.
+    let force_raster = alpha_mask.is_some() || complex_clips.iter().any(|clip| !clip.native);
 
     // Convert the shape to a bez path once and reuse it between the raster pass
     // and marker placement (both would otherwise re-derive it from `Shape`).
@@ -737,12 +758,12 @@ fn draw_shape(
         // the remainder — paths, polygons, polylines, dashed rect borders, and
         // gradients the native renderer can't express — is rasterized by vello.
         //
-        // Polygon/path clip-paths (and complex mask shapes) can't be expressed
-        // as WebRender clip items (image-mask clips panic WebRender's quad
-        // path), so shapes carrying complex clips always rasterize and clip via
-        // vello `push_clip_path`.
+        // Non-native (polygon/path) clips already forced rasterization above, so
+        // reaching the native path means every present clip is native-expressible
+        // and already reflected in `clip_chain_id`; rasterized shapes still carry
+        // the matching `ComplexClip` for vello, while native shapes use the chain.
         let mut handled = false;
-        if !force_raster && complex_clips.is_empty() {
+        if !force_raster {
             handled = emit_native_gradients(
                 shape,
                 style,
@@ -1327,6 +1348,7 @@ fn recurse_children(
     node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
     inherited_mask: Option<ResolvedMask>,
+    inherited_complex_clips: &[ComplexClip],
     defs: Defs<'_>,
 ) {
     // <defs> and <symbol> children are only rendered when referenced
@@ -1353,6 +1375,7 @@ fn recurse_children(
             node_xform,
             sink,
             inherited_mask.clone(),
+            inherited_complex_clips,
             defs,
         );
     }

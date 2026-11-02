@@ -17,7 +17,8 @@ use crate::model::document::ClipPathUnits;
 use crate::model::element::shape::{Circle, Ellipse, Path, Polygon, Polyline, Rectangle, Shape};
 use crate::model::element::text::TextSpan;
 use crate::model::geometry::{PathCommand, PathData, Point};
-use crate::model::style::FillRule;
+use crate::model::style::{BasicShapeClip, FillRule, ShapeRadius};
+use crate::model::units::LengthOrPercent;
 
 /// How clip/mask geometry maps from its local coordinates into the clipped
 /// element's coordinate space.
@@ -96,7 +97,7 @@ pub(crate) enum ClipGeometry {
     },
 }
 
-/// A polygon/path clip that must be applied during vello_cpu rasterization.
+/// A clip that must be applied during vello_cpu rasterization.
 ///
 /// WebRender 0.70's "quad" rendering path (used for `Rectangle`, `Image`, and
 /// gradient primitives) panics when a clip chain contains an image-mask clip
@@ -110,6 +111,84 @@ pub(crate) struct ComplexClip {
     /// `cur_origin`/`svg_origin`).
     pub path: kurbo::BezPath,
     pub fill_rule: FillRule,
+    /// True when this clip also has an exact WebRender clip-chain equivalent
+    /// (circle/rect/rounded-rect), so native shapes can keep using the chain
+    /// instead of falling back to rasterization. False for polygon/path clips,
+    /// whose only native form is a bounding-rect approximation.
+    pub native: bool,
+}
+
+/// Convert resolved clip geometry into a [`ComplexClip`] for CPU-rasterized
+/// shapes. Every clip geometry can be rasterized this way; `native` records
+/// whether the same geometry is also expressible as a native WebRender clip
+/// chain (rect/rounded-rect), which lets native shapes stay on the fast path.
+pub(crate) fn clip_geometry_to_complex_clip(geometry: &ClipGeometry) -> Option<ComplexClip> {
+    use kurbo::{Ellipse, Rect, RoundedRect, Vec2};
+
+    let (path, native) = match geometry {
+        ClipGeometry::RoundedRect { bounds, radii } => {
+            // This codebase builds rounded-rect radii with `all_equal_radius`,
+            // so all four corners share one (rx, ry).
+            let rx = radii.top_left.width as f64;
+            let ry = radii.top_left.height as f64;
+            let w = bounds.size().width as f64;
+            let h = bounds.size().height as f64;
+            if (rx - w / 2.0).abs() < 0.001 && (ry - h / 2.0).abs() < 0.001 {
+                // Full circle/ellipse: the radii fill the bounding box.
+                (
+                    Ellipse::new(
+                        (bounds.min.x as f64 + w / 2.0, bounds.min.y as f64 + h / 2.0),
+                        Vec2::new(rx, ry),
+                        0.0,
+                    )
+                    .to_path(0.1),
+                    true,
+                )
+            } else {
+                // Circular-corner rounded rect (or a circular approximation for
+                // the rare elliptical-corner case, which kurbo can't express).
+                let r = if (rx - ry).abs() < 0.001 {
+                    rx
+                } else {
+                    (rx + ry) / 2.0
+                };
+                (
+                    RoundedRect::new(
+                        bounds.min.x as f64,
+                        bounds.min.y as f64,
+                        bounds.max.x as f64,
+                        bounds.max.y as f64,
+                        r,
+                    )
+                    .to_path(0.1),
+                    true,
+                )
+            }
+        },
+        ClipGeometry::Rect { bounds } => (
+            Rect::new(
+                bounds.min.x as f64,
+                bounds.min.y as f64,
+                bounds.max.x as f64,
+                bounds.max.y as f64,
+            )
+            .to_path(0.1),
+            true,
+        ),
+        ClipGeometry::Path { path, fill_rule, .. } => {
+            return Some(ComplexClip {
+                path: path.clone(),
+                fill_rule: *fill_rule,
+                native: false,
+            });
+        },
+    };
+
+    Some(ComplexClip {
+        path,
+        fill_rule: FillRule::NonZero,
+        native,
+    })
 }
 
 // ======================= Shape → clip geometry / bez path =======================
@@ -119,14 +198,19 @@ impl Shape {
     ///
     /// Returns `None` for shapes that cannot participate in clip paths
     /// (line only — has no area).
-    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
+    ///
+    /// `clip_rule` selects how self-intersecting / multi-subpath shapes are
+    /// filled; it only affects polygon/polyline/path clip geometry (a
+    /// rect/circle/ellipse has a single non-self-intersecting outline, so the
+    /// fill rule makes no difference for them).
+    pub(crate) fn clip_info(&self, space: ClipSpace, clip_rule: FillRule) -> Option<ClipGeometry> {
         match self {
             Shape::Rect(r) => r.clip_info(space),
             Shape::Circle(c) => c.clip_info(space),
             Shape::Ellipse(e) => e.clip_info(space),
-            Shape::Polygon(p) => p.clip_info(space),
-            Shape::Polyline(p) => p.clip_info(space),
-            Shape::Path(p) => p.clip_info(space),
+            Shape::Polygon(p) => p.clip_info(space, clip_rule),
+            Shape::Polyline(p) => p.clip_info(space, clip_rule),
+            Shape::Path(p) => p.clip_info(space, clip_rule),
             Shape::Line(_) => None,
         }
     }
@@ -270,32 +354,44 @@ impl Ellipse {
 
 impl Polygon {
     /// Clip geometry for this polygon (closed fill path around all points).
-    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
+    pub(crate) fn clip_info(&self, space: ClipSpace, clip_rule: FillRule) -> Option<ClipGeometry> {
         if self.points.len() < 3 {
             return None;
         }
-        Some(clip_path_geometry(&points_to_bez(&self.points, true), space))
+        Some(clip_path_geometry(
+            &points_to_bez(&self.points, true),
+            space,
+            clip_rule,
+        ))
     }
 }
 
 impl Polyline {
     /// Clip geometry for this polyline. A clip path fills the polyline as if
     /// it were closed (per SVG 2), so the mask path is closed for filling.
-    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
+    pub(crate) fn clip_info(&self, space: ClipSpace, clip_rule: FillRule) -> Option<ClipGeometry> {
         if self.points.len() < 3 {
             return None;
         }
-        Some(clip_path_geometry(&points_to_bez(&self.points, true), space))
+        Some(clip_path_geometry(
+            &points_to_bez(&self.points, true),
+            space,
+            clip_rule,
+        ))
     }
 }
 
 impl Path {
     /// Clip geometry for this path (the exact path outline, curves preserved).
-    pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
+    pub(crate) fn clip_info(&self, space: ClipSpace, clip_rule: FillRule) -> Option<ClipGeometry> {
         if self.path.commands.is_empty() {
             return None;
         }
-        Some(clip_path_geometry(&path_data_to_bez(&self.path), space))
+        Some(clip_path_geometry(
+            &path_data_to_bez(&self.path),
+            space,
+            clip_rule,
+        ))
     }
 }
 
@@ -400,8 +496,12 @@ pub(crate) fn transform_clip_path(path: &kurbo::BezPath, space: ClipSpace) -> ku
 
 /// Build a [`ClipGeometry::Path`] from a local-space [`kurbo::BezPath`]:
 /// transform it into clip space, derive its bounding box, and tag it with the
-/// default (non-zero) fill rule.
-pub(crate) fn clip_path_geometry(path: &kurbo::BezPath, space: ClipSpace) -> ClipGeometry {
+/// given fill rule.
+pub(crate) fn clip_path_geometry(
+    path: &kurbo::BezPath,
+    space: ClipSpace,
+    fill_rule: FillRule,
+) -> ClipGeometry {
     let transformed = transform_clip_path(path, space);
     let bbox = transformed.bounding_box();
     let bounds = LayoutRect::from_origin_and_size(
@@ -414,8 +514,196 @@ pub(crate) fn clip_path_geometry(path: &kurbo::BezPath, space: ClipSpace) -> Cli
     ClipGeometry::Path {
         bounds,
         path: transformed,
-        fill_rule: FillRule::NonZero,
+        fill_rule,
     }
+}
+
+/// Resolve a circle/ellipse radius against the reference box.
+///
+/// An explicit `<length-percentage>` radius resolves its percentage against the
+/// box diagonal (`uniform_scale`, per CSS Shapes); the keyword radii resolve
+/// against the box side lengths. The corner keywords coincide for a centered
+/// shape and resolve to the box center-to-corner distance.
+fn resolve_shape_radius(r: &ShapeRadius, w: f32, h: f32, space: ClipSpace) -> f32 {
+    match r {
+        ShapeRadius::Value(lop) => match lop {
+            LengthOrPercent::Length(l) => l.get(),
+            LengthOrPercent::Percent(p) => p * space.uniform_scale(),
+        },
+        ShapeRadius::ClosestSide => w.min(h) / 2.0,
+        ShapeRadius::FarthestSide => w.max(h) / 2.0,
+        ShapeRadius::Corner => ((w / 2.0).powi(2) + (h / 2.0).powi(2)).sqrt(),
+    }
+}
+
+/// Resolve an inline CSS basic-shape clip against the element's fill bounding
+/// box (the reference box) into native clip geometry.
+///
+/// Percentages resolve against the box dimensions; lengths are measured from
+/// the box origin — exactly [`ClipSpace`]'s `objectBoundingBox` mapping. The
+/// box origin is `svg_origin + bbox.min`, so the resulting geometry lives in
+/// the same space as a `url(#clipPath)` with `objectBoundingBox` units.
+pub(crate) fn basic_shape_clip_geometry(
+    shape: &BasicShapeClip,
+    svg_origin: LayoutPoint,
+    bbox: Option<LayoutRect>,
+) -> Option<ClipGeometry> {
+    let bbox = bbox?;
+    let space = ClipSpace::new(svg_origin, ClipPathUnits::ObjectBoundingBox, Some(bbox));
+    let w = space.sx;
+    let h = space.sy;
+
+    // Resolve a horizontal coordinate: a length is measured from the box
+    // origin, a percentage is a fraction of the box width plus the origin.
+    let cx = |lop: LengthOrPercent| match lop {
+        LengthOrPercent::Length(l) => space.ox + l.get(),
+        LengthOrPercent::Percent(p) => space.ox + p * w,
+    };
+    let cy = |lop: LengthOrPercent| match lop {
+        LengthOrPercent::Length(l) => space.oy + l.get(),
+        LengthOrPercent::Percent(p) => space.oy + p * h,
+    };
+
+    match shape {
+        BasicShapeClip::Circle { cx: ccx, cy: ccy, r } => {
+            let radius = resolve_shape_radius(r, w, h, space);
+            if radius <= 0.0 {
+                return None;
+            }
+            let (px, py) = (cx(*ccx), cy(*ccy));
+            let bounds = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(px - radius, py - radius),
+                LayoutSize::new(radius * 2.0, radius * 2.0),
+            );
+            Some(ClipGeometry::RoundedRect {
+                bounds,
+                radii: all_equal_radius(radius, radius),
+            })
+        },
+        BasicShapeClip::Ellipse { cx: ccx, cy: ccy, rx, ry } => {
+            let rx_len = resolve_shape_radius(rx, w, h, space);
+            let ry_len = resolve_shape_radius(ry, w, h, space);
+            if rx_len <= 0.0 || ry_len <= 0.0 {
+                return None;
+            }
+            let (px, py) = (cx(*ccx), cy(*ccy));
+            let bounds = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(px - rx_len, py - ry_len),
+                LayoutSize::new(rx_len * 2.0, ry_len * 2.0),
+            );
+            Some(ClipGeometry::RoundedRect {
+                bounds,
+                radii: all_equal_radius(rx_len, ry_len),
+            })
+        },
+        BasicShapeClip::Inset {
+            top,
+            right,
+            bottom,
+            left,
+            rx,
+            ry,
+        } => {
+            let top_len = top.resolve(h);
+            let bottom_len = bottom.resolve(h);
+            let left_len = left.resolve(w);
+            let right_len = right.resolve(w);
+            let inner_w = w - left_len - right_len;
+            let inner_h = h - top_len - bottom_len;
+            if inner_w <= 0.0 || inner_h <= 0.0 {
+                return None;
+            }
+            let bounds = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(space.ox + left_len, space.oy + top_len),
+                LayoutSize::new(inner_w, inner_h),
+            );
+            let rx_len = rx.resolve(w).clamp(0.0, inner_w / 2.0);
+            let ry_len = ry.resolve(h).clamp(0.0, inner_h / 2.0);
+            if rx_len <= 0.0 || ry_len <= 0.0 {
+                Some(ClipGeometry::Rect { bounds })
+            } else {
+                Some(ClipGeometry::RoundedRect {
+                    bounds,
+                    radii: all_equal_radius(rx_len, ry_len),
+                })
+            }
+        },
+        BasicShapeClip::Polygon { points, fill_rule } => {
+            if points.len() < 3 {
+                return None;
+            }
+            let mut bez = kurbo::BezPath::new();
+            for (i, p) in points.iter().enumerate() {
+                let (px, py) = (cx(p.x) as f64, cy(p.y) as f64);
+                if i == 0 {
+                    bez.move_to((px, py));
+                } else {
+                    bez.line_to((px, py));
+                }
+            }
+            bez.close_path();
+            Some(clip_path_geometry(&bez, ClipSpace { sx: 1.0, sy: 1.0, ox: 0.0, oy: 0.0 }, *fill_rule))
+        },
+        BasicShapeClip::Path { path, fill_rule } => {
+            let bez = path_data_to_bez(path);
+            if bez.elements().is_empty() {
+                return None;
+            }
+            // The path coordinates are already in user units and are re-anchored
+            // to the reference-box origin (no percentage scaling).
+            let no_scale = ClipSpace {
+                sx: 1.0,
+                sy: 1.0,
+                ox: space.ox,
+                oy: space.oy,
+            };
+            Some(clip_path_geometry(&bez, no_scale, *fill_rule))
+        },
+    }
+}
+
+/// Merge multiple clip geometries into a single union clip path.
+///
+/// WebRender clip chains intersect (AND), but an SVG `<clipPath>` with several
+/// child shapes clips to their *union*. Appending every shape outline into one
+/// path and filling it with the non-zero rule yields that union: kurbo shapes
+/// are all wound clockwise in y-down space, so overlapping contours add winding
+/// instead of cancelling. A union has no native clip-chain equivalent, so the
+/// result is a [`ClipGeometry::Path`] that forces vello rasterization.
+pub(crate) fn union_clip_geometry(geometries: &[ClipGeometry]) -> Option<ClipGeometry> {
+    let mut merged = kurbo::BezPath::new();
+    let mut any = false;
+    for geometry in geometries {
+        let Some(clip) = clip_geometry_to_complex_clip(geometry) else {
+            continue;
+        };
+        for el in clip.path.elements() {
+            match el {
+                kurbo::PathEl::MoveTo(p) => merged.move_to(*p),
+                kurbo::PathEl::LineTo(p) => merged.line_to(*p),
+                kurbo::PathEl::QuadTo(c, p) => merged.quad_to(*c, *p),
+                kurbo::PathEl::CurveTo(c1, c2, p) => merged.curve_to(*c1, *c2, *p),
+                kurbo::PathEl::ClosePath => merged.close_path(),
+            }
+        }
+        any = true;
+    }
+    if !any {
+        return None;
+    }
+    let bbox = merged.bounding_box();
+    let bounds = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(bbox.x0 as f32, bbox.y0 as f32),
+        LayoutSize::new(
+            (bbox.width() as f32).max(1.0),
+            (bbox.height() as f32).max(1.0),
+        ),
+    );
+    Some(ClipGeometry::Path {
+        bounds,
+        path: merged,
+        fill_rule: FillRule::NonZero,
+    })
 }
 
 /// Build a BorderRadius with the same (rx, ry) on all four corners.

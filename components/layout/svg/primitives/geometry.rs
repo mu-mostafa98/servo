@@ -262,7 +262,7 @@ fn parse_path(
 /// kurbo's SVG parser does that flattening for us (arc → cubic, smooth-curve
 /// control reflection, `H`/`V` → `L`). `SVGPathData::normalize()` would still
 /// leave non-degenerate arcs as arcs, so it is not a drop-in replacement.
-fn path_data_to_string(data: &style::values::specified::SVGPathData) -> Option<String> {
+pub(crate) fn path_data_to_string(data: &style::values::specified::SVGPathData) -> Option<String> {
     let mut out = String::new();
     {
         let mut writer = style_traits::CssWriter::new(&mut out);
@@ -277,7 +277,7 @@ fn path_data_to_string(data: &style::values::specified::SVGPathData) -> Option<S
 /// the DOM → model boundary: `kurbo::BezPath::from_svg` parses the `d`
 /// attribute, and here we copy the flattened command list (coordinates as f32)
 /// into the model representation.
-fn bez_to_path_data(bez: &kurbo::BezPath) -> PathData {
+pub(crate) fn bez_to_path_data(bez: &kurbo::BezPath) -> PathData {
     let commands = bez
         .elements()
         .iter()

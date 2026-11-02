@@ -100,3 +100,40 @@ impl Default for Length {
         Length::ZERO
     }
 }
+
+/// A length that is either an absolute user-space length or a fraction (0..1)
+/// of a reference-box dimension, resolved at render time against the clipped /
+/// masked element's bounding box.
+///
+/// Used by CSS `clip-path` basic shapes (`circle()`, `inset()`, `polygon()`,
+/// …), whose percentages resolve against the element's fill box — which is only
+/// known once the render tree has a bounding box, so the value is kept
+/// unresolved across the layout → model boundary.
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
+pub enum LengthOrPercent {
+    /// An absolute user-space length.
+    Length(Length),
+    /// A fraction (0..1) of a reference-box dimension.
+    Percent(f32),
+}
+
+impl LengthOrPercent {
+    /// An absolute length from a raw `f32` user-space value.
+    pub fn px(value: f32) -> LengthOrPercent {
+        LengthOrPercent::Length(Length::new(value))
+    }
+
+    /// A percentage fraction from a raw 0..1 value.
+    pub fn percent(fraction: f32) -> LengthOrPercent {
+        LengthOrPercent::Percent(fraction)
+    }
+
+    /// Resolve against a basis length (the reference-box dimension this value
+    /// is a fraction of). Absolute lengths ignore the basis.
+    pub fn resolve(self, basis: f32) -> f32 {
+        match self {
+            LengthOrPercent::Length(l) => l.get(),
+            LengthOrPercent::Percent(p) => basis * p,
+        }
+    }
+}

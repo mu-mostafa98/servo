@@ -750,6 +750,8 @@ fn clip_path_def_non_empty_shapes() {
     let def = ClipPathDef {
         root,
         clip_path_units: ClipPathUnits::UserSpaceOnUse,
+        clip_path: None,
+        clip_rule: FillRule::NonZero,
     };
     assert!(matches!(def.root.tag, SvgTag::Shape(_)));
 }
