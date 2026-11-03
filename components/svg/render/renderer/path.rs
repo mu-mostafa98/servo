@@ -9,7 +9,7 @@ use std::hash::{Hash, Hasher};
 use euclid::Transform2D;
 use kurbo::{BezPath, PathEl, Point as KurboPoint, Shape};
 use vello_cpu::color::{AlphaColor, ColorSpaceTag, DynamicColor, Srgb};
-use vello_cpu::peniko::{ColorStop, ColorStops, Extend, Gradient};
+use vello_cpu::peniko::{ColorStop, ColorStops, Extend, Gradient, InterpolationAlphaSpace};
 use webrender_api::DisplayListBuilder;
 use webrender_api::units::{LayoutPoint, LayoutRect};
 
@@ -574,8 +574,12 @@ fn resolve_paint(
     let resolved = paint_server.as_ref().and_then(|p| defs.resolve_paint_server(p));
     match &resolved {
         Some(PaintServer::Gradient(def)) => {
-            let (gradient, transform) =
+            let (mut gradient, transform) =
                 gradient_def_to_peniko(def.as_ref(), w, h, viewbox_scale, bbox, shape_ci);
+            // Gradients carry their alpha in the stop colors, so `fill-opacity`/
+            // `stroke-opacity`/`opacity` must be folded in by scaling every
+            // stop's premultiplied components (mirrors the solid-paint branch).
+            scale_gradient_opacity(&mut gradient, paint_opacity * node_opacity);
             Some(ResolvedPaint::Gradient(gradient, transform))
         },
         Some(PaintServer::Solid(color)) => Some(ResolvedPaint::Solid(vello_color(
@@ -637,6 +641,13 @@ fn linear_to_peniko(
     g.extend = spread_to_extend(lg.spread_method);
     g.stops = stops_to_colorstops(&lg.stops);
     g.interpolation_cs = gradient_ci_to_tag(resolve_gradient_ci(lg.color_interpolation, shape_ci));
+    // SVG gradients interpolate stop colors in *unpremultiplied* (straight)
+    // alpha space, unlike CSS `linear-gradient()` which premultiplies. With
+    // premultiplied interpolation a `white@1 → black@0` ramp fades a constant
+    // white, but SVG (and Chrome/Skia) fades through gray, so the stop color
+    // itself darkens as the alpha falls. This is the "transparent == transparent
+    // black" behavior documented for SVG `stop-color`.
+    g.interpolation_alpha_space = InterpolationAlphaSpace::Unpremultiplied;
     g
 }
 
@@ -710,6 +721,9 @@ fn radial_to_peniko(
     g.extend = spread_to_extend(rg.spread_method);
     g.stops = stops_to_colorstops(&rg.stops);
     g.interpolation_cs = gradient_ci_to_tag(resolve_gradient_ci(rg.color_interpolation, shape_ci));
+    // Same as `linear_to_peniko`: SVG radial gradients interpolate stop colors
+    // in unpremultiplied (straight) alpha space, matching Chrome/Skia.
+    g.interpolation_alpha_space = InterpolationAlphaSpace::Unpremultiplied;
     (g, paint_transform)
 }
 
@@ -756,6 +770,22 @@ fn spread_to_extend(spread: SpreadMethod) -> Extend {
         SpreadMethod::Pad => Extend::Pad,
         SpreadMethod::Reflect => Extend::Reflect,
         SpreadMethod::Repeat => Extend::Repeat,
+    }
+}
+
+/// Scale a peniko gradient's opacity by `opacity`.
+///
+/// Stop colors are stored as [`DynamicColor`] with *unpremultiplied* (straight)
+/// RGB components and separate alpha (the fourth component). Fading a gradient
+/// must scale only the alpha, keeping the unpremultiplied stop color unchanged —
+/// mirroring the solid-paint branch, which scales only alpha. Scaling all four
+/// components would also darken the color (e.g. white → gray).
+fn scale_gradient_opacity(gradient: &mut Gradient, opacity: f32) {
+    if (opacity - 1.0).abs() < f32::EPSILON {
+        return;
+    }
+    for stop in gradient.stops.iter_mut() {
+        stop.color.components[3] *= opacity;
     }
 }
 

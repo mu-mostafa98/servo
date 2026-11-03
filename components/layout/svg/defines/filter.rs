@@ -10,7 +10,7 @@ use script::layout_dom::ServoLayoutNode;
 use servo_svg::document::{
     BlendMode, ColorChannel, ComponentTransfer, ComponentTransferFunc, ConvolveMatrix,
     DiffuseLighting, EdgeMode, FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive,
-    FilterPrimitiveNode, LightSource, MorphologyOperator, PrimitiveUnits, RegionValue,
+    FilterPrimitiveNode, FilterUnits, LightSource, MorphologyOperator, PrimitiveUnits, RegionValue,
     SpecularLighting, Turbulence, TurbulenceType,
 };
 use web_atoms::ns;
@@ -39,25 +39,37 @@ impl DefinitionParser for FilterParser {
                 .attribute_as_str(&ns!(), &LocalName::from(attr))
                 .map(|s| s.to_string())
         };
-        // The filter region attributes are `<number-or-percentage>`; under the
-        // default `filterUnits="objectBoundingBox"` a bare number is already a
-        // fraction, so a trailing `%` is divided by 100 to match (e.g.
-        // `x="-10%"` and `x="-0.1"` are equivalent).
-        let get_region = |attr: &str, default: f32| -> f32 {
+        // The filter region attributes are `<number-or-percentage>`. A `%`
+        // suffix becomes a fraction; a bare number is kept as a length whose
+        // meaning is decided later by `filterUnits` (a bounding-box fraction
+        // under the default `objectBoundingBox`, user units otherwise).
+        let get_region = |attr: &str, default: RegionValue| -> RegionValue {
             get(attr)
                 .and_then(|v| {
                     let v = v.trim();
                     match v.strip_suffix('%') {
-                        Some(p) => p.trim().parse::<f32>().ok().map(|p| p / 100.0),
-                        None => v.parse::<f32>().ok(),
+                        Some(p) => p
+                            .trim()
+                            .parse::<f32>()
+                            .ok()
+                            .map(|p| RegionValue::Percent(p / 100.0)),
+                        None => v.parse::<f32>().ok().map(RegionValue::Number),
                     }
                 })
                 .unwrap_or(default)
         };
-        let x = get_region("x", -0.1);
-        let y = get_region("y", -0.1);
-        let width = get_region("width", 1.2);
-        let height = get_region("height", 1.2);
+        let x = get_region("x", RegionValue::Percent(-0.1));
+        let y = get_region("y", RegionValue::Percent(-0.1));
+        let width = get_region("width", RegionValue::Percent(1.2));
+        let height = get_region("height", RegionValue::Percent(1.2));
+        // `filterUnits` controls how a *bare number* in the filter region
+        // x/y/width/height is interpreted (user units vs bbox fraction); a
+        // `%` suffix is always a bounding-box fraction regardless of this
+        // value. Defaults to `objectBoundingBox`.
+        let filter_units = match get("filterUnits").as_deref() {
+            Some("userSpaceOnUse") => FilterUnits::UserSpaceOnUse,
+            _ => FilterUnits::ObjectBoundingBox,
+        };
         // `primitiveUnits` controls how a *bare number* in a primitive's
         // x/y/width/height is interpreted (user units vs bbox fraction). The
         // default is `userSpaceOnUse`; percentages are resolved against the
@@ -608,6 +620,7 @@ impl DefinitionParser for FilterParser {
                     y,
                     width,
                     height,
+                    filter_units,
                     primitive_units,
                 },
             ))

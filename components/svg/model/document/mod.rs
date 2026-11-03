@@ -16,11 +16,12 @@ use std::sync::Arc;
 pub use self::defs::{
     BlendMode, ClipPathDef, ClipPathUnits, ColorChannel, ComponentTransfer,
     ComponentTransferFunc, ConvolveMatrix, DefRef, DiffuseLighting, EdgeMode, FeCompositeKind,
-    FeImageKind, FilterDef, FilterPrimitive, FilterPrimitiveNode, GradientDef, GradientExplicit,
-    GradientLength, GradientStop, GradientUnits, LightSource, LinearGradient, MarkerDef,
-    MarkerOrient, MarkerUnits, MaskContentUnits, MaskDef, MaskType, MorphologyOperator,
-    PatternContentUnits, PatternDef, PatternLength, PatternUnits, PrimitiveUnits, RadialGradient,
-    RegionValue, SpecularLighting, SpreadMethod, Turbulence, TurbulenceType,
+    FeImageKind, FilterDef, FilterPrimitive, FilterPrimitiveNode, FilterUnits, GradientDef,
+    GradientExplicit, GradientLength, GradientStop, GradientUnits, LightSource, LinearGradient,
+    MarkerDef, MarkerOrient, MarkerUnits, MaskContentUnits, MaskDef, MaskType, MaskUnits,
+    MorphologyOperator, PatternContentUnits, PatternDef, PatternLength, PatternUnits,
+    PrimitiveUnits, RadialGradient, RegionValue, SpecularLighting, SpreadMethod, Turbulence,
+    TurbulenceType,
 };
 pub use self::viewport::{
     AspectAlign, AspectRatio, MeetOrSlice, SvgViewport, ViewBox, ViewportInfo,

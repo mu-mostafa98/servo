@@ -142,6 +142,17 @@ pub enum PrimitiveUnits {
     ObjectBoundingBox,
 }
 
+/// The coordinate system for the `<filter>` element's own region attributes
+/// (`x`/`y`/`width`/`height`), from `filterUnits`.
+#[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
+pub enum FilterUnits {
+    /// Region values are in the current user coordinate system.
+    UserSpaceOnUse,
+    /// Region values are fractions/percentages of the referencing element's
+    /// object bounding box (the default).
+    ObjectBoundingBox,
+}
+
 /// One component of a filter primitive subregion, parsed from a
 /// `<number-or-percentage>` attribute. A percentage is stored as a 0..1
 /// fraction so the render layer can resolve it against the filter region,
@@ -329,11 +340,15 @@ pub struct SpecularLighting {
 pub struct FilterDef {
     /// Filter primitives in order (applied left-to-right), with input wiring.
     pub primitives: Vec<FilterPrimitiveNode>,
-    /// Filter bounds (x, y, width, height) - may be negative for drop-shadows.
-    pub x: f32,
-    pub y: f32,
-    pub width: f32,
-    pub height: f32,
+    /// Filter bounds (x, y, width, height) — `<number-or-percentage>` values
+    /// resolved against the referencing element's bounding box at render time.
+    /// May be negative for drop-shadows.
+    pub x: RegionValue,
+    pub y: RegionValue,
+    pub width: RegionValue,
+    pub height: RegionValue,
+    /// Coordinate system for the filter region (`filterUnits`).
+    pub filter_units: FilterUnits,
     /// Coordinate system for primitive subregions (`primitiveUnits`).
     pub primitive_units: PrimitiveUnits,
 }

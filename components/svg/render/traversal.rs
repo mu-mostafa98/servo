@@ -24,8 +24,9 @@ use crate::model::element::*;
 use crate::model::units::Opacity;
 use crate::render::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::render::effects::filter::{get_filter_ops, node_local_bounds, FilterOps};
+use crate::render::effects::group::rasterize_masked_group;
 use crate::render::effects::mask::{MaskRaster, rasterize_mask};
-use crate::render::geometry::ComplexClip;
+use crate::render::geometry::{ComplexClip, text_to_bez_path};
 use crate::render::renderer::path::rasterize_bez;
 use crate::render::renderer::{
     Render, RenderContext, clip_chain_option, color_interpolation_of_style, transform,
@@ -351,59 +352,95 @@ fn render_node(
     let effective_opacity = group_opacity * node.style.opacity.get();
 
     // Step 4 — Render the element.
-    let shape_params = EffectParams {
-        mask: &mask,
-        complex_clips: &complex_clips,
-        filter_ops: &filter_ops,
+    //
+    // A container that owns a raster mask is composited as a group: its subtree
+    // is rendered into one offscreen pixmap and masked once, so overlapping
+    // children are not double-masked (masking each leaf independently and then
+    // source-over compositing them lets the background bleed through). This only
+    // applies when the subtree is flat (no nested viewports/effects; child
+    // transforms are composed per-leaf), the group itself has no filter or
+    // clip-path, and every leaf paint is solid/gradient — otherwise we fall back
+    // to the per-leaf masking path.
+    let group_composited = match &mask {
+        Some(ResolvedMask::Raster(raster))
+            if matches!(node.tag, SvgTag::Container(_))
+                && node.style.mask.is_some()
+                && filter_ops.is_none()
+                && complex_clips.is_empty() =>
+        {
+            rasterize_masked_group(
+                node,
+                raster.as_ref(),
+                &raster_offset,
+                node_xform,
+                cur_viewbox_scale,
+                device_scale,
+                effective_opacity,
+                clip_rect,
+                defs,
+                wr,
+                sink,
+            )
+        },
+        _ => false,
     };
-    emit_element(
-        node,
-        &cur_origin,
-        cur_spatial_id,
-        clip_chain,
-        accumulated_scale,
-        effective_opacity,
-        wr,
-        &shape_params,
-        cur_viewbox_scale,
-        device_scale,
-        raster_offset,
-        clip_rect,
-        node_xform,
-        sink,
-        defs,
-    );
 
-    // Step 5 — Recurse into children. A container's filter applies to the whole
-    // rendered subtree, so wrap the recursion in a filter stacking context
-    // (shapes and leaves push their own filter around `emit_element` above).
-    let container_filter_pushed = if matches!(node.tag, SvgTag::Container(_)) {
-        push_filter_context(&filter_ops, cur_spatial_id, clip_chain, wr)
-    } else {
-        false
-    };
+    if !group_composited {
+        let shape_params = EffectParams {
+            mask: &mask,
+            complex_clips: &complex_clips,
+            filter_ops: &filter_ops,
+        };
+        emit_element(
+            node,
+            &cur_origin,
+            cur_spatial_id,
+            clip_chain,
+            accumulated_scale,
+            effective_opacity,
+            wr,
+            &shape_params,
+            cur_viewbox_scale,
+            device_scale,
+            raster_offset,
+            clip_rect,
+            node_xform,
+            sink,
+            defs,
+        );
 
-    recurse_children(
-        node,
-        &cur_origin,
-        cur_spatial_id,
-        clip_chain,
-        accumulated_scale,
-        effective_opacity,
-        wr,
-        cur_viewbox_scale,
-        device_scale,
-        raster_offset,
-        clip_rect,
-        node_xform,
-        sink,
-        mask,
-        &complex_clips,
-        defs,
-    );
+        // Step 5 — Recurse into children. A container's filter applies to the
+        // whole rendered subtree, so wrap the recursion in a filter stacking
+        // context (shapes and leaves push their own filter around `emit_element`
+        // above).
+        let container_filter_pushed = if matches!(node.tag, SvgTag::Container(_)) {
+            push_filter_context(&filter_ops, cur_spatial_id, clip_chain, wr)
+        } else {
+            false
+        };
 
-    if container_filter_pushed {
-        wr.pop_stacking_context();
+        recurse_children(
+            node,
+            &cur_origin,
+            cur_spatial_id,
+            clip_chain,
+            accumulated_scale,
+            effective_opacity,
+            wr,
+            cur_viewbox_scale,
+            device_scale,
+            raster_offset,
+            clip_rect,
+            node_xform,
+            sink,
+            mask,
+            &complex_clips,
+            defs,
+        );
+
+        if container_filter_pushed {
+            wr.pop_stacking_context();
+        }
     }
 
     // Step 6 — Pop transform reference frames.
@@ -596,6 +633,8 @@ fn emit_element(
             viewbox_scale,
             device_scale,
             raster_offset,
+            clip_rect,
+            node_xform,
             sink,
             defs,
         ),
@@ -611,6 +650,8 @@ fn emit_element(
             viewbox_scale,
             device_scale,
             raster_offset,
+            clip_rect,
+            node_xform,
             sink,
             defs,
         ),
@@ -1289,6 +1330,8 @@ fn emit_leaf<T: crate::render::renderer::Render>(
     viewbox_scale: (f32, f32),
     device_scale: f32,
     raster_offset: LayoutPoint,
+    clip_rect: Option<LayoutRect>,
+    node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
     defs: Defs<'_>,
 ) {
@@ -1298,6 +1341,41 @@ fn emit_leaf<T: crate::render::renderer::Render>(
 
     // Apply filter stacking context if filter ops are present.
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, clip_chain_id, wr);
+
+    // A raster (luminance/alpha) mask must be multiplied into the content's
+    // alpha at raster time, the same way `emit_shape` does it via
+    // `rasterize_bez`. Text does that here by rasterizing its glyph outlines
+    // into a bez path. Images have no CPU-side pixels (they live only as a
+    // WebRender `ImageKey`), so a raster mask on an image cannot be applied and
+    // falls through to unmasked native rendering below.
+    if let (Some(ResolvedMask::Raster(raster)), SvgTag::Text(span)) = (&params.mask, &node.tag) {
+        if let Some(bez) = text_to_bez_path(span) {
+            let mut style = node.style.clone();
+            style.opacity = Opacity::new(opacity);
+            rasterize_bez(
+                &bez,
+                style.fill.as_ref(),
+                style.stroke.as_ref(),
+                style.opacity.get(),
+                &raster_offset,
+                viewbox_scale,
+                device_scale,
+                node_xform,
+                clip_rect,
+                params.complex_clips,
+                wr,
+                sink,
+                Some(raster.as_ref()),
+                None,
+                defs,
+                color_interpolation_of_style(&style),
+            );
+            if pushed_filter {
+                wr.pop_stacking_context();
+            }
+            return;
+        }
+    }
 
     let effective_clip = match &params.mask {
         Some(ResolvedMask::Clips(clips)) => clips.first().map(|m| m.chain).unwrap_or(clip_chain_id),

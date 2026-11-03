@@ -23,6 +23,7 @@ use crate::model::style::NodeStyle;
 /// or an image. Used by clip/mask collection so that text glyphs and images
 /// are included alongside shapes (unlike [`SvgNode::for_each_shape_leaf`],
 /// which skips them).
+#[derive(Clone, Copy)]
 pub(crate) enum EffectLeaf<'a> {
     Shape(&'a Shape),
     Text(&'a TextSpan),

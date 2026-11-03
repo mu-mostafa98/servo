@@ -780,8 +780,81 @@ fn mask_def_with_shapes_and_styles() {
         root,
         mask_type: MaskType::Luminance,
         content_units: MaskContentUnits::UserSpaceOnUse,
+        x: RegionValue::Percent(-0.1),
+        y: RegionValue::Percent(-0.1),
+        width: RegionValue::Percent(1.2),
+        height: RegionValue::Percent(1.2),
+        mask_units: MaskUnits::ObjectBoundingBox,
     };
     assert!(matches!(def.root.tag, SvgTag::Shape(_)));
+}
+
+#[test]
+fn mask_type_luminance_and_alpha() {
+    assert!(matches!(MaskType::Luminance, MaskType::Luminance));
+    assert!(matches!(MaskType::Alpha, MaskType::Alpha));
+    assert_ne!(MaskType::Luminance, MaskType::Alpha);
+}
+
+#[test]
+fn mask_content_units_both_variants() {
+    assert!(matches!(
+        MaskContentUnits::ObjectBoundingBox,
+        MaskContentUnits::ObjectBoundingBox
+    ));
+    assert!(matches!(
+        MaskContentUnits::UserSpaceOnUse,
+        MaskContentUnits::UserSpaceOnUse
+    ));
+}
+
+#[test]
+fn mask_units_both_variants() {
+    assert!(matches!(
+        MaskUnits::ObjectBoundingBox,
+        MaskUnits::ObjectBoundingBox
+    ));
+    assert!(matches!(
+        MaskUnits::UserSpaceOnUse,
+        MaskUnits::UserSpaceOnUse
+    ));
+}
+
+#[test]
+fn mask_region_value_number_and_percent() {
+    assert!(matches!(RegionValue::Number(5.0), RegionValue::Number(5.0)));
+    assert!(matches!(RegionValue::Percent(0.5), RegionValue::Percent(0.5)));
+}
+
+#[test]
+fn mask_def_resolves_against_tree() {
+    let mut masks: HashMap<String, Arc<MaskDef>> = HashMap::new();
+    masks.insert("m".to_owned(), Arc::new(make_mask_def(MaskType::Luminance)));
+    let reference = DefRef::<MaskDef>::Ref(Id::new("m"));
+    assert!(reference.resolve(&masks).is_some());
+    assert!(DefRef::<MaskDef>::Ref(Id::new("missing"))
+        .resolve(&masks)
+        .is_none());
+}
+
+#[test]
+fn nested_mask_reference_resolves() {
+    // A `<mask>`'s content can itself carry a `mask` reference (nested mask);
+    // the render layer resolves it recursively against the same definition map.
+    let mut masks: HashMap<String, Arc<MaskDef>> = HashMap::new();
+    masks.insert("inner".to_owned(), Arc::new(make_mask_def(MaskType::Alpha)));
+
+    let mut outer = make_mask_def(MaskType::Luminance);
+    outer.root.style.mask = Some(DefRef::Ref(Id::new("inner")));
+
+    let resolved = outer
+        .root
+        .style
+        .mask
+        .as_ref()
+        .and_then(|m| m.resolve(&masks));
+    assert!(resolved.is_some());
+    assert_eq!(resolved.unwrap().mask_type, MaskType::Alpha);
 }
 
 #[test]
@@ -820,10 +893,11 @@ fn filter_def_all_primitive_variants() {
     ];
     let def = FilterDef {
         primitives,
-        x: -0.1,
-        y: -0.1,
-        width: 1.2,
-        height: 1.2,
+        x: RegionValue::Percent(-0.1),
+        y: RegionValue::Percent(-0.1),
+        width: RegionValue::Percent(1.2),
+        height: RegionValue::Percent(1.2),
+        filter_units: FilterUnits::ObjectBoundingBox,
         primitive_units: PrimitiveUnits::UserSpaceOnUse,
     };
     assert_eq!(def.primitives.len(), 3);
@@ -1463,5 +1537,36 @@ fn make_empty_tree() -> SvgTree {
         masks: HashMap::new(),
         filters: HashMap::new(),
         markers: HashMap::new(),
+    }
+}
+
+fn make_mask_def(mask_type: MaskType) -> MaskDef {
+    let rect = Shape::Rect(Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(10.0),
+        height: Length::new(10.0),
+        rx: None,
+        ry: None,
+        path_length: None,
+    });
+    let root = SvgNode {
+        id: None,
+        tag: SvgTag::Shape(rect),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+        source_node: None,
+    };
+    MaskDef {
+        root,
+        mask_type,
+        content_units: MaskContentUnits::UserSpaceOnUse,
+        x: RegionValue::Percent(-0.1),
+        y: RegionValue::Percent(-0.1),
+        width: RegionValue::Percent(1.2),
+        height: RegionValue::Percent(1.2),
+        mask_units: MaskUnits::ObjectBoundingBox,
     }
 }

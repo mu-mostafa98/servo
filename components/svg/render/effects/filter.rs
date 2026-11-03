@@ -21,7 +21,7 @@ use webrender_api::{
 
 use crate::model::document::{
     BlendMode, ComponentTransfer, ComponentTransferFunc, Defs, EdgeMode, FeCompositeKind,
-    FilterDef, FilterPrimitive, FilterPrimitiveNode, LightSource, MorphologyOperator,
+    FilterDef, FilterPrimitive, FilterPrimitiveNode, FilterUnits, LightSource, MorphologyOperator,
     PrimitiveUnits, RegionValue, TurbulenceType,
 };
 use crate::model::element::{SvgNode, SvgTag};
@@ -257,6 +257,46 @@ fn primitive_subregion(
     )
 }
 
+/// Resolve the `<filter>` region (`x`/`y`/`width`/`height`) against the
+/// referencing element's bounding box into a local-space rect.
+///
+/// A `<percentage>` is always a fraction of the bounding box. A bare
+/// `<number>` consults `filterUnits`: a bounding-box fraction under
+/// `objectBoundingBox` (the default), or a user-unit coordinate under
+/// `userSpaceOnUse`.
+fn filter_region_rect(filter_def: &FilterDef, bbox: LayoutRect) -> LayoutRect {
+    // Resolve a start coordinate (x/y).
+    let start = |value: RegionValue, bbox_min: f32, bbox_size: f32| -> f32 {
+        match value {
+            RegionValue::Percent(p) => bbox_min + p * bbox_size,
+            RegionValue::Number(n) => match filter_def.filter_units {
+                FilterUnits::UserSpaceOnUse => n,
+                FilterUnits::ObjectBoundingBox => bbox_min + n * bbox_size,
+            },
+        }
+    };
+    // Resolve a size (width/height).
+    let size = |value: RegionValue, bbox_size: f32| -> f32 {
+        match value {
+            RegionValue::Percent(p) => p * bbox_size,
+            RegionValue::Number(n) => match filter_def.filter_units {
+                FilterUnits::UserSpaceOnUse => n,
+                FilterUnits::ObjectBoundingBox => n * bbox_size,
+            },
+        }
+    };
+    LayoutRect::from_origin_and_size(
+        LayoutPoint::new(
+            start(filter_def.x, bbox.min.x, bbox.size().width),
+            start(filter_def.y, bbox.min.y, bbox.size().height),
+        ),
+        LayoutSize::new(
+            size(filter_def.width, bbox.size().width),
+            size(filter_def.height, bbox.size().height),
+        ),
+    )
+}
+
 /// If the node references a filter, return the resolved WebRender SVG filter
 /// graph (ops + component-transfer data). Returns `None` when no filter is
 /// present, the referenced filter definition is missing, or the filter resolves
@@ -283,19 +323,10 @@ pub(crate) fn get_filter_ops(
 
     let bbox = node_local_bounds(node);
     // Filter region in the node's local space: the object bbox expanded by the
-    // `<filter>` x/y/width/height (`objectBoundingBox` units — the default
-    // `filterUnits`). A degenerate bbox (empty geometry) falls back to a unit
-    // region so WebRender does not drop the graph.
-    let region_local = LayoutRect::from_origin_and_size(
-        LayoutPoint::new(
-            bbox.min.x + filter_def.x * bbox.size().width,
-            bbox.min.y + filter_def.y * bbox.size().height,
-        ),
-        LayoutSize::new(
-            filter_def.width * bbox.size().width,
-            filter_def.height * bbox.size().height,
-        ),
-    );
+    // `<filter>` x/y/width/height (fractions under the default `filterUnits`).
+    // A degenerate bbox (empty geometry) falls back to a unit region so
+    // WebRender does not drop the graph.
+    let region_local = filter_region_rect(filter_def, bbox);
     let region_local = if region_local.size().width > 0.0 && region_local.size().height > 0.0 {
         region_local
     } else {
