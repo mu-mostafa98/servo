@@ -30,7 +30,7 @@ impl DefinitionParser for FilterParser {
 
     fn parse<'dom, 'a>(
         node: ServoLayoutNode<'dom>,
-        _builder: &SvgTreeBuilder<'dom, 'a>,
+        builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element_id(&element)?;
@@ -462,14 +462,28 @@ impl DefinitionParser for FilterParser {
                         ));
                     },
                     "feImage" => {
-                        // feImage can reference an element via fragment or load an external URL.
+                        // feImage references another element via fragment, or
+                        // loads an external image URL. External images — raster,
+                        // or vector rasterized at their natural size — are
+                        // resolved to a WebRender image key here; the render
+                        // layer feeds that key as the primitive's single input.
+                        // A fragment reference has no raster key yet and
+                        // degrades to a transparent placeholder.
                         let href = prim_get("href")
                             .or_else(|| prim_get("xlink:href"))
                             .unwrap_or_default();
                         let img_kind = if let Some(frag) = href.strip_prefix('#') {
                             FeImageKind::FragmentRef(frag.to_owned())
                         } else if !href.is_empty() {
-                            FeImageKind::ExternalUrl(href)
+                            let (image_key, natural_width, natural_height) = builder
+                                .resolve_raster_image_key(node, &href)
+                                .unwrap_or((None, None, None));
+                            FeImageKind::ExternalUrl {
+                                href,
+                                image_key,
+                                natural_width,
+                                natural_height,
+                            }
                         } else {
                             // No valid source, but still include the primitive
                             // so the filter isn't discarded.

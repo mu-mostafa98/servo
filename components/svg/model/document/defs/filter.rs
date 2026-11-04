@@ -6,6 +6,8 @@
 
 use malloc_size_of_derive::MallocSizeOf;
 
+use crate::model::resource::ResourceKey;
+
 /// A single SVG filter primitive operation.
 #[derive(Debug, MallocSizeOf)]
 pub enum FilterPrimitive {
@@ -108,8 +110,18 @@ pub enum FeCompositeKind {
 pub enum FeImageKind {
     /// Reference to another element via URL fragment (e.g., `#myElement`).
     FragmentRef(String),
-    /// External image URL.
-    ExternalUrl(String),
+    /// External image URL, resolved by the layout layer during build.
+    ExternalUrl {
+        /// The raw `href`/`xlink:href` value.
+        href: String,
+        /// The decoded raster image key; `None` when the image has not loaded
+        /// yet (a reflow re-resolves it once loaded) or when decoding failed.
+        image_key: Option<ResourceKey>,
+        /// Intrinsic pixel width of the loaded image, if known.
+        natural_width: Option<u32>,
+        /// Intrinsic pixel height of the loaded image, if known.
+        natural_height: Option<u32>,
+    },
 }
 
 /// The blend mode for `feBlend`.

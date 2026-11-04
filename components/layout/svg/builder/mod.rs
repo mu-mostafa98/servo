@@ -517,6 +517,16 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         let computed = node.style(&self.context.style_context);
         crate::svg::style::absolute_to_svg_color(&computed.clone_color())
     }
+
+    /// Resolve an external image URL to a raster image key + natural pixel
+    /// dimensions (used by `feImage`). See [`image::resolve_raster_image_key`].
+    pub(crate) fn resolve_raster_image_key(
+        &self,
+        node: ServoLayoutNode<'dom>,
+        href: &str,
+    ) -> Option<(Option<ResourceKey>, Option<u32>, Option<u32>)> {
+        image::resolve_raster_image_key(node, self.context, href)
+    }
 }
 
 // ======================= Definitions =======================

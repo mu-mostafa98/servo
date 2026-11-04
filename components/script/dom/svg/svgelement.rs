@@ -38,6 +38,8 @@ use crate::dom::svg::svgimageelement::SVGImageElement;
 use crate::dom::svg::svgpathelement::SVGPathElement;
 use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
+use crate::dom::svg::svgtextelement::SVGTextElement;
+use crate::dom::svg::svgtspanelement::SVGTSpanElement;
 use crate::dom::window::scrolling_box::{ScrollAxisState, ScrollRequirement};
 
 #[dom_struct]
@@ -508,6 +510,16 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
                 push,
             );
         }
+        // <text>/<tspan>: x/y attributes are per-character lists, but the CSS
+        // x/y longhand is single-valued. Fold only the first value so
+        // CSS/WAAPI can animate the line origin; the remaining list positions
+        // are read directly by the SVG text builder.
+        if element.downcast::<SVGTextElement>().is_some() ||
+            element.downcast::<SVGTSpanElement>().is_some()
+        {
+            self.parse_svg_attribute_first(&parser_context, "x", longhands::x::parse_declared, push);
+            self.parse_svg_attribute_first(&parser_context, "y", longhands::y::parse_declared, push);
+        }
         // <path>: https://svgwg.org/svg2-draft/paths.html#PathElement
         if element.downcast::<SVGPathElement>().is_some() {
             // The d CSS property only accepts `none` or `path(<string>)`,
@@ -552,6 +564,30 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             if let Ok(property) =
                 parser.parse_entirely(|parse_input| parse(parser_context, parse_input))
             {
+                push(property);
+            }
+        }
+    }
+
+    /// Like [`Self::parse_svg_attribute`], but parses only the first component
+    /// of the attribute value and drops any trailing tokens. Used for list
+    /// attributes (`x`/`y` on text) whose CSS longhand is single-valued.
+    fn parse_svg_attribute_first<F>(
+        self,
+        parser_context: &ParserContext,
+        attr_name: &str,
+        parse: F,
+        push: &mut impl FnMut(PropertyDeclaration),
+    ) where
+        F: for<'i, 't> FnOnce(
+            &ParserContext,
+            &mut cssparser::Parser<'i>,
+        ) -> Result<PropertyDeclaration, style_traits::ParseError>,
+    {
+        let element = self.upcast::<Element>();
+        if let Some(value) = element.get_attr_val_for_layout(&ns!(), &LocalName::from(attr_name)) {
+            let mut parser = cssparser::Parser::new(value);
+            if let Ok(property) = parse(parser_context, &mut parser) {
                 push(property);
             }
         }

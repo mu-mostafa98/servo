@@ -21,10 +21,11 @@ use webrender_api::{
 
 use crate::model::document::{
     BlendMode, ComponentTransfer, ComponentTransferFunc, Defs, EdgeMode, FeCompositeKind,
-    FilterDef, FilterPrimitive, FilterPrimitiveNode, FilterUnits, LightSource, MorphologyOperator,
-    PrimitiveUnits, RegionValue, TurbulenceType,
+    FeImageKind, FilterDef, FilterPrimitive, FilterPrimitiveNode, FilterUnits, LightSource,
+    MorphologyOperator, PrimitiveUnits, RegionValue, TurbulenceType,
 };
 use crate::model::element::{SvgNode, SvgTag};
+use crate::render::to_wr_image_key;
 
 /// A resolved filter: the WebRender graph ops plus the parallel `FilterData`
 /// list consumed by `SVGFEComponentTransfer` nodes (one entry per component
@@ -69,6 +70,22 @@ fn no_input_node(subregion: LayoutRect) -> FilterOpGraphNode {
         linear: false,
         input: FilterOpGraphPictureReference {
             buffer_id: FilterOpGraphPictureBufferId::None,
+        },
+        input2: FilterOpGraphPictureReference {
+            buffer_id: FilterOpGraphPictureBufferId::None,
+        },
+        subregion,
+    }
+}
+
+/// A graph node whose single input is an external image (feImage): the image
+/// key is fed through [`FilterOpGraphPictureBufferId::Image`], and the image
+/// task stretches the source to fill the node's subregion.
+fn image_input_node(image_key: webrender_api::ImageKey, subregion: LayoutRect) -> FilterOpGraphNode {
+    FilterOpGraphNode {
+        linear: false,
+        input: FilterOpGraphPictureReference {
+            buffer_id: FilterOpGraphPictureBufferId::Image(image_key),
         },
         input2: FilterOpGraphPictureReference {
             buffer_id: FilterOpGraphPictureBufferId::None,
@@ -532,20 +549,25 @@ pub(crate) fn get_filter_ops(
                 }
             },
             FilterPrimitive::Image(img_kind) => {
-                // feImage renders an external image (or referenced element) as a
-                // filter input. The image itself is not yet uploaded to
-                // WebRender by the filter path, so the node renders empty until
-                // filter image loading is wired up; the op is still emitted as a
-                // real graph node rather than a no-op passthrough.
-                log::debug!(
-                    "feImage ({:?}) emitted as SVGFEImage; image loading not yet wired",
-                    img_kind
-                );
-                // Identity 2x3 affine (scale=1, translate=0).
-                FilterOp::SVGFEImage {
-                    node: no_input_node(region),
-                    sampling_filter: 0,
-                    matrix: [1.0, 0.0, 0.0, 1.0, 0.0, 0.0],
+                match img_kind {
+                    FeImageKind::ExternalUrl { image_key: Some(key), .. } => {
+                        // Identity 2x3 affine (scale=1, translate=0): the image
+                        // task stretches the source to fill the primitive
+                        // subregion.
+                        FilterOp::SVGFEImage {
+                            node: image_input_node(to_wr_image_key(*key), region),
+                            sampling_filter: 0,
+                            matrix: [1.0, 0.0, 0.0, 1.0, 0.0, 0.0],
+                        }
+                    },
+                    // Not yet loaded, a fragment reference that can't be
+                    // rasterized yet, or an unresolvable source: degrade to a
+                    // fully transparent flood so the primitive is a no-op
+                    // rather than a missing image.
+                    _ => FilterOp::SVGFEFlood {
+                        node: no_input_node(region),
+                        color: ColorF::new(0.0, 0.0, 0.0, 0.0),
+                    },
                 }
             },
             FilterPrimitive::ComponentTransfer(ct) => {

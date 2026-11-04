@@ -18,7 +18,7 @@ use web_atoms::ns;
 use super::{CrossRef, extract_id, font_key_to_resource};
 use crate::context::LayoutContext;
 use crate::svg::primitives::attrs::{extract_url_fragment, get_attr, parse_length_token};
-use crate::svg::primitives::text::{build_text, build_text_run, parse_length_list};
+use crate::svg::primitives::text::{build_text, build_text_run, merge_origin, parse_length_list};
 use crate::svg::style::build_style;
 
 /// A `<textPath>`'s resolved placement: the reference path, the resolved
@@ -64,7 +64,7 @@ pub(crate) fn build_text_node<'dom>(
     let get = |name: &str| get_attr(&element, name);
 
     // Collect the ordered inline runs of this element.
-    let runs = collect_text_runs(node, fs, element_ids);
+    let runs = collect_text_runs(node, fs, element_ids, context, view_width, view_height);
     let has_text_path = runs
         .iter()
         .any(|(_, _, placement)| placement.is_some());
@@ -73,7 +73,7 @@ pub(crate) fn build_text_node<'dom>(
     // a <text> with no element children). Fall back to the legacy single-span
     // path so existing simple <text> usage keeps working.
     if runs.is_empty() {
-        let mut span = build_text(node, &get, fs)?;
+        let mut span = build_text(node, &get, fs, css_line_origin(node, context, view_width, view_height))?;
         shape_text_span(&mut span, node, context);
         let (style, transforms, _color) = build_style(node, context, css_rules, None, None, view_width, view_height);
         let id = extract_id(&element);
@@ -240,21 +240,32 @@ fn collect_text_runs<'dom>(
     node: ServoLayoutNode<'dom>,
     fs: f32,
     element_ids: &HashMap<String, ServoLayoutNode<'dom>>,
+    context: &LayoutContext,
+    vw: f32,
+    vh: f32,
 ) -> Vec<RunWithNode<'dom>> {
     let parent_elem = node.as_element().unwrap();
     // The <text>'s x/y is the line origin. Every run inherits it as the base
     // position; a <tspan> may override x/y explicitly. Horizontal flow between
     // runs is handled separately by advance_offset (cumulative advance +
     // anchor shift), so all runs share the same x/y base.
-    let parent_x = parse_length_list("x", &|n: &str| get_attr(&parent_elem, n), fs);
-    let parent_y = parse_length_list("y", &|n: &str| get_attr(&parent_elem, n), fs);
+    let mut parent_x = parse_length_list("x", &|n: &str| get_attr(&parent_elem, n), fs);
+    let mut parent_y = parse_length_list("y", &|n: &str| get_attr(&parent_elem, n), fs);
+    // Override the <text>'s line origin with the computed-style x/y longhand
+    // (folded from the first attribute value) so CSS/WAAPI animation of x/y
+    // moves the whole run; every run inherits this merged origin.
+    let css_origin = css_line_origin(node, context, vw, vh);
+    if let Some((css_x, css_y)) = css_origin {
+        merge_origin(css_x, &mut parent_x);
+        merge_origin(css_y, &mut parent_y);
+    }
     let children: Vec<_> = node.dom_children().collect();
     let mut runs = Vec::new();
     for (i, child) in children.iter().enumerate() {
         if let Some(child_elem) = child.as_element() {
             if child_elem.local_name() == &local_name!("tspan") {
                 let get = |n: &str| get_attr(&child_elem, n);
-                if let Some(mut span) = build_text(*child, &get, fs) {
+                if let Some(mut span) = build_text(*child, &get, fs, None) {
                     // Inherit the <text>'s baseline/origin for any axis the
                     // <tspan> does not set explicitly.
                     if get_attr(&child_elem, "x").is_none() {
@@ -271,7 +282,7 @@ fn collect_text_runs<'dom>(
                 // target, unparseable `d`), the placement is `None` and the run
                 // falls back to a normal horizontal run.
                 let get = |n: &str| get_attr(&child_elem, n);
-                if let Some(mut span) = build_text(*child, &get, fs) {
+                if let Some(mut span) = build_text(*child, &get, fs, None) {
                     // The text is written on its own line with surrounding
                     // indentation/newlines; trim leading/trailing whitespace so
                     // it neither advances the pen nor shapes into `.notdef`
@@ -330,12 +341,33 @@ fn collect_text_runs<'dom>(
             };
             // Bare-text runs always use the <text>'s x/y (no own attributes).
             let get = |n: &str| get_attr(&parent_elem, n);
-            if let Some(span) = build_text_run(text, &get, fs) {
+            if let Some(span) = build_text_run(text, &get, fs, css_origin) {
                 runs.push((span, node, None));
             }
         }
     }
     runs
+}
+
+/// Resolve a `<text>`/`<tspan>` node's computed-style `x`/`y` longhand to a
+/// pixel line origin. Percentages resolve against the viewport width/height.
+/// Returns `None` when the node has no computed style.
+fn css_line_origin(
+    node: ServoLayoutNode,
+    context: &LayoutContext,
+    vw: f32,
+    vh: f32,
+) -> Option<(f32, f32)> {
+    use style::values::computed::Length as CssLength;
+    let element = node.as_element()?;
+    if element.style_data().is_none() {
+        return None;
+    }
+    let computed = node.style(&context.style_context);
+    let svg = computed.get_svg();
+    let x = svg.clone_x().resolve(CssLength::new(vw)).px();
+    let y = svg.clone_y().resolve(CssLength::new(vh)).px();
+    Some((x, y))
 }
 
 /// Resolve a `<textPath>`'s referenced `<path>` into a placement. Returns
