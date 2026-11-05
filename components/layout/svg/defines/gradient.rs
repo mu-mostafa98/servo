@@ -15,6 +15,7 @@ use servo_svg::document::{
     RadialGradient, SpreadMethod,
 };
 use servo_svg::error::{SvgEngineError, SvgResult};
+use servo_svg::style::ColorInterpolation;
 use svgtypes::{Color as SvgColor, Length as SvgLength};
 use web_atoms::ns;
 
@@ -164,11 +165,18 @@ pub(crate) fn parse_gradient_element(
     let transform_explicit = get_attr("gradientTransform").is_some();
     let transform = parse_transform_str(&get_attr("gradientTransform").unwrap_or_default());
 
+    let color_interpolation_explicit = get_attr("color-interpolation").is_some();
+    let color_interpolation = get_attr("color-interpolation")
+        .as_deref()
+        .and_then(parse_color_interpolation)
+        .unwrap_or(ColorInterpolation::Auto);
+
     let common_explicit = GradientExplicit {
         units: units_explicit,
         spread_method: spread_explicit,
         transform: transform_explicit,
         stops: has_own_stops,
+        color_interpolation: color_interpolation_explicit,
         ..Default::default()
     };
 
@@ -192,6 +200,7 @@ pub(crate) fn parse_gradient_element(
                 stops,
                 transform,
                 spread_method,
+                color_interpolation,
                 explicit: GradientExplicit {
                     x1: x1.is_some(),
                     y1: y1.is_some(),
@@ -223,6 +232,7 @@ pub(crate) fn parse_gradient_element(
                 stops,
                 transform,
                 spread_method,
+                color_interpolation,
                 explicit: GradientExplicit {
                     cx: cx_opt.is_some(),
                     cy: cy_opt.is_some(),
@@ -308,6 +318,14 @@ fn resolve_gradient(
                     .map(GradientDef::spread_method)
                     .unwrap_or(SpreadMethod::Pad)
             };
+            let color_interpolation = if lg.explicit.color_interpolation {
+                lg.color_interpolation
+            } else {
+                inherited
+                    .as_ref()
+                    .map(GradientDef::color_interpolation)
+                    .unwrap_or(ColorInterpolation::Auto)
+            };
             let transform = if lg.explicit.transform {
                 lg.transform.clone()
             } else {
@@ -372,6 +390,7 @@ fn resolve_gradient(
                 stops,
                 transform,
                 spread_method,
+                color_interpolation,
                 explicit: lg.explicit,
             })
         },
@@ -391,6 +410,14 @@ fn resolve_gradient(
                     .as_ref()
                     .map(GradientDef::spread_method)
                     .unwrap_or(SpreadMethod::Pad)
+            };
+            let color_interpolation = if rg.explicit.color_interpolation {
+                rg.color_interpolation
+            } else {
+                inherited
+                    .as_ref()
+                    .map(GradientDef::color_interpolation)
+                    .unwrap_or(ColorInterpolation::Auto)
             };
             let transform = if rg.explicit.transform {
                 rg.transform.clone()
@@ -472,6 +499,7 @@ fn resolve_gradient(
                 stops,
                 transform,
                 spread_method,
+                color_interpolation,
                 explicit: rg.explicit,
             })
         },
@@ -559,6 +587,16 @@ fn parse_spread_method(val: &str) -> Option<SpreadMethod> {
         "pad" => Some(SpreadMethod::Pad),
         "reflect" => Some(SpreadMethod::Reflect),
         "repeat" => Some(SpreadMethod::Repeat),
+        _ => None,
+    }
+}
+
+fn parse_color_interpolation(val: &str) -> Option<ColorInterpolation> {
+    match val.trim() {
+        "linearRGB" => Some(ColorInterpolation::LinearRGB),
+        "sRGB" => Some(ColorInterpolation::Srgb),
+        // "auto" (the default) and any invalid value defer to the referencing
+        // shape's `color-interpolation` property.
         _ => None,
     }
 }

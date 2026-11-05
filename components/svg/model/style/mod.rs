@@ -14,7 +14,9 @@
 
 pub mod paint;
 pub mod paint_servers;
+mod basic_shape;
 
+pub use self::basic_shape::{BasicShapeClip, BasicShapePoint, ShapeRadius};
 pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, MarkerRefs, StrokeParams};
 pub use self::paint_servers::PaintServer;
 use crate::model::document::{ClipPathDef, DefRef, FilterDef, MaskDef};
@@ -167,12 +169,18 @@ pub struct NodeStyle {
     pub display: Display,
     pub fill: Option<FillParams>,
     pub stroke: Option<StrokeParams>,
+    /// Fill rule for clip paths (`clip-rule`): how self-intersecting or
+    /// overlapping clip shapes are filled. Defaults to `nonzero`.
+    pub clip_rule: FillRule,
     pub render_hints: Option<RenderHints>,
     /// Node effects — clip-path, mask, filter. Each is a [`DefRef`]: a raw
     /// `#id` string during tree building, rewritten to a typed `Arc` handle
     /// during the post-build resolve pass.
     pub clip_path: Option<DefRef<ClipPathDef>>,
     pub mask: Option<DefRef<MaskDef>>,
+    /// Inline CSS `clip-path` basic shape (`circle()`, `inset()`, `polygon()`,
+    /// `path()`), when the element's `clip-path` is not a `url(#…)` reference.
+    pub basic_shape_clip: Option<BasicShapeClip>,
     /// Reference to a `<filter>` element (e.g., `url(#myBlur)`).
     pub filter: Option<DefRef<FilterDef>>,
     /// Element-level opacity (the CSS `opacity` property).
@@ -192,9 +200,11 @@ impl Default for NodeStyle {
             display: Display::Inline,
             fill: None,
             stroke: None,
+            clip_rule: FillRule::NonZero,
             render_hints: None,
             clip_path: None,
             mask: None,
+            basic_shape_clip: None,
             filter: None,
             opacity: Opacity::ONE,
             markers: None,

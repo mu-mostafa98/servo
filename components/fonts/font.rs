@@ -170,6 +170,24 @@ pub trait PlatformFontMethods: Sized {
     fn table_for_tag(&self, _: Tag) -> Option<FontTable>;
     fn typographic_bounds(&self, _: GlyphId) -> Rect<f32>;
 
+    /// Return the flattened outline of a glyph as a list of closed contours.
+    ///
+    /// Each contour is a list of points in font-size-scaled pixels, in SVG
+    /// user-space orientation (y-down), relative to the glyph's baseline
+    /// origin (`x = 0` at the pen position, `y = 0` on the baseline): points
+    /// above the baseline have negative `y`. Contours are closed, i.e. the
+    /// first point is repeated as the last point.
+    ///
+    /// Returns `None` when the platform cannot provide outlines (or the glyph
+    /// has no outline, e.g. spaces, bitmap/color glyphs).
+    fn glyph_outline(
+        &self,
+        _glyph_id: GlyphId,
+        _font_size_px: f32,
+    ) -> Option<Vec<Vec<(f32, f32)>>> {
+        None
+    }
+
     /// Get the necessary [`FontInstanceFlags`] for this font.
     fn webrender_font_instance_flags(&self) -> FontInstanceFlags;
 
@@ -428,6 +446,17 @@ impl Font {
             .write()
             .entry(painter_id)
             .or_insert_with(|| font_context.create_font_instance_key(self, painter_id))
+    }
+
+    /// Return the flattened outline of a glyph, scaled to `font_size_px` CSS
+    /// pixels, in SVG user-space orientation. See
+    /// [`PlatformFontMethods::glyph_outline`] for the coordinate convention.
+    pub fn glyph_outline(
+        &self,
+        glyph_id: GlyphId,
+        font_size_px: f32,
+    ) -> Option<Vec<Vec<(f32, f32)>>> {
+        self.handle.glyph_outline(glyph_id, font_size_px)
     }
 
     /// Return the data for this `Font`. Note that this is currently highly inefficient for system

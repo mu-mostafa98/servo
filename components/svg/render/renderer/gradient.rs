@@ -268,8 +268,9 @@ struct RadialStrategy<'a> {
     stops: &'a [GradientStop],
     fx: f32,
     fy: f32,
-    /// Outer radius (absolute) of the end circle.
-    r: f32,
+    /// Outer ellipse radii (absolute) of the end ellipse.
+    rx: f32,
+    ry: f32,
     /// Focal radius (`fr`): points within this distance of the focal point
     /// render the first stop color as a solid disk (§13.2.2).
     fr: f32,
@@ -292,14 +293,19 @@ impl GradientStrategy for RadialStrategy<'_> {
     fn compute_t(&self, x: f32, y: f32, _bw: f32, _bh: f32) -> f32 {
         let dx = (x + self.offset_x) - self.fx;
         let dy = (y + self.offset_y) - self.fy;
-        let d = (dx * dx + dy * dy).sqrt();
-        let denom = self.r - self.fr;
-        if d <= self.fr {
+        // Normalized elliptical distance: `1.0` on the outer ellipse, so the
+        // non-uniform bounding-box scale of the conceptually-circular rings is
+        // respected (§13.2.2).
+        let d = ((dx / self.rx).powi(2) + (dy / self.ry).powi(2)).sqrt();
+        // `fr` is a scalar radius; normalize it against the smaller axis (exact
+        // for a circle, a close approximation for a non-square ellipse).
+        let fr_norm = self.fr / self.rx.min(self.ry);
+        if d <= fr_norm {
             0.0
-        } else if denom <= 0.0 {
+        } else if fr_norm >= 1.0 {
             1.0
         } else {
-            ((d - self.fr) / denom).min(1.0)
+            ((d - fr_norm) / (1.0 - fr_norm)).min(1.0)
         }
     }
 }
@@ -369,6 +375,19 @@ pub(crate) fn fill_rect_with_gradient(
                 render_radial(rg, bounds, ctx, opacity);
             }
         },
+    }
+}
+
+/// The effective `color-interpolation` for a gradient: the value authored on the
+/// gradient element wins; `auto` (the default) defers to the referencing shape's
+/// `color-interpolation` property, read from `ctx.style`.
+pub(crate) fn resolve_color_interpolation(
+    gradient_ci: ColorInterpolation,
+    ctx: &RenderContext,
+) -> ColorInterpolation {
+    match gradient_ci {
+        ColorInterpolation::Auto => color_interpolation(ctx),
+        other => other,
     }
 }
 
@@ -480,11 +499,12 @@ fn resolve_radial_center_radius(
     let by = bounds.min.y;
 
     // Center and radius in the gradient's own coordinate space, after applying
-    // gradientTransform (which may turn the circle into an ellipse).
+    // gradientTransform (which may further turn the ellipse into another ellipse).
     let m = gradient_transform_matrix(&rg.transform);
-    // `r` is a radial distance, so its percentage resolves against the
-    // normalized diagonal (a circle), unlike `cx`/`cy` which are positional
-    // (x against width, y against height).
+    // `r` is a fraction of the object bounding box in "object bounding box
+    // space" (a unit square). The non-uniform scaling of that space to the
+    // actual bounding box turns the conceptually-circular rings into ellipses
+    // (§13.2.2): horizontal radii scale by `bw`, vertical radii by `bh`.
     let nd = normalized_diagonal(bw, bh);
     let (cx, cy, r) = match rg.units {
         GradientUnits::ObjectBoundingBox => (
@@ -504,7 +524,7 @@ fn resolve_radial_center_radius(
 
     let (cx_abs, cy_abs, rx_abs, ry_abs) = match rg.units {
         GradientUnits::ObjectBoundingBox => {
-            (bx + center.x * bw, by + center.y * bh, rx * nd, ry * nd)
+            (bx + center.x * bw, by + center.y * bh, rx * bw, ry * bh)
         },
         GradientUnits::UserSpaceOnUse => (
             ctx.svg_origin.x + center.x,
@@ -558,7 +578,7 @@ pub(crate) fn resolve_gradient(
     ctx: &RenderContext,
     opacity: f32,
 ) -> Option<crate::GradientKind> {
-    let color_interpolation = color_interpolation(ctx);
+    let color_interpolation = resolve_color_interpolation(def.color_interpolation(), ctx);
     match def {
         GradientDef::Linear(lg) => {
             let extend_mode = spread_to_extend(lg.spread_method)?;
@@ -604,7 +624,11 @@ fn push_linear_native(
     let Some(extend_mode) = spread_to_extend(lg.spread_method) else {
         return false;
     };
-    let Some(stops) = stops_to_webrender(&lg.stops, color_interpolation(ctx), opacity) else {
+    let Some(stops) = stops_to_webrender(
+        &lg.stops,
+        resolve_color_interpolation(lg.color_interpolation, ctx),
+        opacity,
+    ) else {
         return false;
     };
     let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
@@ -650,7 +674,11 @@ fn push_radial_native(
     let Some(extend_mode) = spread_to_extend(rg.spread_method) else {
         return false;
     };
-    let Some(stops) = stops_to_webrender(&rg.stops, color_interpolation(ctx), opacity) else {
+    let Some(stops) = stops_to_webrender(
+        &rg.stops,
+        resolve_color_interpolation(rg.color_interpolation, ctx),
+        opacity,
+    ) else {
         return false;
     };
     let Some((center, radius)) = resolve_radial_center_radius(rg, bounds, ctx) else {
@@ -706,7 +734,7 @@ fn render_linear(
         ctx,
         opacity,
         &strategy,
-        color_interpolation(ctx),
+        resolve_color_interpolation(lg.color_interpolation, ctx),
         lg.spread_method,
     );
 }
@@ -726,14 +754,10 @@ fn render_radial(
     // only when the gradient is concentric.
     let focal = resolve_radial_focal(rg, bounds, ctx);
 
-    // The software cell-banding renderer only supports a concentric circle, so
-    // collapse an elliptical radius to its larger axis.
-    let r = radius.width.max(radius.height);
-
     // Resolve the focal radius (`fr`) to the same absolute space as `r`. It is
     // a radial distance, so its percentage resolves against the normalized
-    // diagonal. (gradientTransform scaling of `fr` is not modelled here; it is
-    // kept as a scalar, matching the circle-collapse approximation above.)
+    // diagonal (kept scalar; the focal disk is approximated as a circle, which
+    // is exact for the common `fr=0` case).
     let nd = normalized_diagonal(bounds.size().width, bounds.size().height);
     let fr = match rg.units {
         GradientUnits::ObjectBoundingBox => rg.fr.to_object_bbox().max(0.0) * nd,
@@ -744,7 +768,8 @@ fn render_radial(
         stops: &rg.stops,
         fx: focal.x,
         fy: focal.y,
-        r,
+        rx: radius.width,
+        ry: radius.height,
         fr,
         offset_x: bounds.min.x,
         offset_y: bounds.min.y,
@@ -754,7 +779,7 @@ fn render_radial(
         ctx,
         opacity,
         &strategy,
-        color_interpolation(ctx),
+        resolve_color_interpolation(rg.color_interpolation, ctx),
         rg.spread_method,
     );
 }

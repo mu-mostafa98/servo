@@ -11,7 +11,7 @@ use webrender_api::units::LayoutPoint;
 use crate::model::element::shape::Polygon;
 use crate::render::renderer::path::rasterize_bez;
 use crate::render::renderer::polyline::points_to_bez;
-use crate::render::renderer::{Render, RenderContext};
+use crate::render::renderer::{Render, RenderContext, color_interpolation};
 
 /// Renders an SVG `<polygon>` as a closed path.
 ///
@@ -63,6 +63,7 @@ impl Render for Polygon {
             None,
             self.path_length,
             ctx.defs,
+            color_interpolation(ctx),
         );
     }
 }

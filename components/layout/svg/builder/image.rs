@@ -122,6 +122,77 @@ pub(super) fn build_image_tag(
     })
 }
 
+/// Resolve an external image URL to a raster image key + natural pixel
+/// dimensions. Used by `feImage`, whose primitive has no laid-out size at parse
+/// time.
+///
+/// Raster images are returned as-is. Vector (`Image::Vector`) sources are
+/// rasterized at their natural dimensions — falling back to the SVG 300×150
+/// default when they carry no intrinsic size — scaled to device pixels; the
+/// feImage image task then stretches the raster to fill the primitive subregion.
+/// A still-pending rasterization yields `None` and the caller degrades to a
+/// transparent placeholder until a reflow re-resolves it once loaded.
+pub(super) fn resolve_raster_image_key(
+    node: ServoLayoutNode,
+    context: &LayoutContext,
+    href: &str,
+) -> Option<(Option<ResourceKey>, Option<u32>, Option<u32>)> {
+    let base = node.base_url();
+    let resolved = base.join(href.trim()).ok()?;
+    let image = context
+        .image_resolver
+        .get_cached_image_for_url(
+            node.opaque(),
+            resolved,
+            LayoutImageDestination::BoxTreeConstruction,
+            InternalRequest::No,
+        )
+        .ok()?;
+    match image {
+        Image::Raster(raster) => Some((
+            raster.id.map(image_key_to_resource),
+            Some(raster.metadata.width),
+            Some(raster.metadata.height),
+        )),
+        Image::Vector(vector_image) => {
+            // feImage has no laid-out size at parse time, so rasterize the SVG
+            // at its intrinsic dimensions (the SVG 300×150 default when it has
+            // none), like a raster feImage. The image task stretches the raster
+            // to the primitive subregion at render time.
+            let natural = if vector_image.metadata.width > 0 &&
+                vector_image.metadata.height > 0
+            {
+                (
+                    vector_image.metadata.width as f32,
+                    vector_image.metadata.height as f32,
+                )
+            } else {
+                (300.0, 150.0)
+            };
+            let scale = context.style_context.device_pixel_ratio();
+            let raster_size = webrender_api::units::DeviceIntSize::new(
+                (natural.0 * scale.0).round().max(1.0) as i32,
+                (natural.1 * scale.0).round().max(1.0) as i32,
+            );
+            context
+                .image_resolver
+                .rasterize_vector_image(
+                    vector_image.id,
+                    raster_size,
+                    node.opaque(),
+                    vector_image.svg_id,
+                )
+                .map(|raster| {
+                    (
+                        raster.id.map(image_key_to_resource),
+                        Some(raster.metadata.width),
+                        Some(raster.metadata.height),
+                    )
+                })
+        },
+    }
+}
+
 /// Convert a WebRender image key into the opaque model resource key.
 fn image_key_to_resource(key: webrender_api::ImageKey) -> ResourceKey {
     ResourceKey {

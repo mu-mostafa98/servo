@@ -33,11 +33,13 @@ use crate::svg::primitives::css::{CssClassRules, apply_css_class_rules};
 use crate::svg::primitives::paint::{parse_css_color_or_current, parse_paint_order};
 use crate::svg::primitives::transforms::{css_transform_from_computed, parse_transform_str};
 
+mod basic_shape;
 mod fill;
 mod filter;
 mod marker;
 mod stroke;
 
+use self::basic_shape::basic_shape_clip_from_computed;
 use self::fill::apply_fill_presentation_attrs;
 use self::filter::apply_filter_attribute;
 use self::marker::apply_marker_presentation_attrs;
@@ -158,6 +160,7 @@ impl FromComputedValues for NodeStyle {
             });
         let clip_path = clip_path_ref.map(|id| DefRef::Ref(Id::new(id)));
         let mask = mask_ref.map(|id| DefRef::Ref(Id::new(id)));
+        let basic_shape_clip = basic_shape_clip_from_computed(&values.get_svg().clip_path);
         let sr = values.get_inherited_svg().shape_rendering;
         let shape_rendering_hint = match sr {
             style::computed_values::shape_rendering::T::Optimizespeed => {
@@ -177,6 +180,9 @@ impl FromComputedValues for NodeStyle {
             display: svg_display,
             fill: FillParams::from_computed_values(values),
             stroke: StrokeParams::from_computed_values(values),
+            // `clip-rule` is Gecko-only in Stylo, so it is never populated here;
+            // `apply_clip_rule_attr` layers the raw attribute on afterwards.
+            clip_rule: FillRule::NonZero,
             render_hints: Some(RenderHints {
                 vector_effect: vector_effect_hint,
                 shape_rendering: shape_rendering_hint,
@@ -188,6 +194,7 @@ impl FromComputedValues for NodeStyle {
             }),
             clip_path,
             mask,
+            basic_shape_clip,
             filter: None,
             opacity: Opacity::new(values.get_effects().opacity),
             markers: None,
@@ -225,6 +232,25 @@ fn apply_render_hints_from_attrs(element: &ServoLayoutElement, style: &mut NodeS
     }
     if let Some(val) = get_attr(element, "paint-order") {
         hints.paint_order = parse_paint_order(val.trim());
+    }
+}
+
+/// Read the `clip-rule` presentation attribute (`nonzero` / `evenodd`) and
+/// store it on the style. `clip-rule` is a Gecko-only longhand in Stylo, so it
+/// is never present in the computed values on Servo — read the raw attribute /
+/// inline style directly (inline style wins, matching the cascade).
+fn apply_clip_rule_attr(element: &ServoLayoutElement, style: &mut NodeStyle) {
+    let style_attr = get_attr(element, "style");
+    let value = get_attr(element, "clip-rule").or_else(|| {
+        style_attr
+            .as_ref()
+            .and_then(|s| parse_inline_style_prop(s, "clip-rule"))
+    });
+    if let Some(v) = value {
+        style.clip_rule = match v.trim() {
+            "evenodd" | "even-odd" => FillRule::EvenOdd,
+            _ => FillRule::NonZero,
+        };
     }
 }
 
@@ -281,6 +307,7 @@ pub(crate) fn build_style(
     apply_css_class_rules(&element, css_rules, &mut style, &current_color);
     apply_presentation_attrs(&element, &mut style, &current_color, stylo_resolved);
     apply_render_hints_from_attrs(&element, &mut style);
+    apply_clip_rule_attr(&element, &mut style);
     if let Some(inherited) = inherited {
         apply_use_inheritance(&element, &mut style, inherited);
     }
@@ -360,10 +387,12 @@ fn apply_use_inheritance(
         }
     }
 
-    // Element-level opacity.
-    if !has_presentation_attr(element, "opacity") {
-        style.opacity = inherited.opacity;
-    }
+    // Element-level `opacity` is deliberately NOT inherited here. Unlike
+    // `fill`/`stroke`/`visibility`, CSS `opacity` is a non-inherited property
+    // whose effect on a `<use>` is group compositing over the expanded shadow
+    // content — not a per-leaf value. The render traversal threads the `<use>`
+    // element's own opacity down as a group opacity, so propagating it into the
+    // shadow leaves here would double-apply it.
 
     // Visibility.
     if !has_presentation_attr(element, "visibility") {

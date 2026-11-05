@@ -25,8 +25,9 @@ pub(crate) fn build_text(
     node: ServoLayoutNode,
     get: &dyn Fn(&str) -> Option<String>,
     fs: f32,
+    css_origin: Option<(f32, f32)>,
 ) -> Option<TextSpan> {
-    build_text_run(extract_direct_text(node), get, fs)
+    build_text_run(extract_direct_text(node), get, fs, css_origin)
 }
 
 /// Build a text span from a raw string, for bare text-node runs inside a
@@ -36,6 +37,7 @@ pub(crate) fn build_text_run(
     text: String,
     get: &dyn Fn(&str) -> Option<String>,
     fs: f32,
+    css_origin: Option<(f32, f32)>,
 ) -> Option<TextSpan> {
     if text.is_empty() {
         return None;
@@ -43,6 +45,14 @@ pub(crate) fn build_text_run(
     let mut text = text;
     let mut x = parse_length_list("x", get, fs);
     let mut y = parse_length_list("y", get, fs);
+    // Override the line origin with the computed-style x/y longhand (folded
+    // from the first attribute value), so CSS/WAAPI animation of x/y moves the
+    // whole run. Merged before RTL reversal so it targets the logical first
+    // character (the line origin) in both text directions.
+    if let Some((css_x, css_y)) = css_origin {
+        merge_origin(css_x, &mut x);
+        merge_origin(css_y, &mut y);
+    }
     let mut dx = parse_length_list("dx", get, fs);
     let mut dy = parse_length_list("dy", get, fs);
     let mut rotate = parse_rotate_list(get);
@@ -174,6 +184,17 @@ pub(crate) fn parse_length_list(
 /// Parse a single length value (number or number + any SVG/CSS unit).
 fn parse_length_simple(val: &str, fs: f32) -> Option<f32> {
     crate::svg::primitives::attrs::parse_length_token(val, fs)
+}
+
+/// Overwrite the first per-character origin value with `css` (pushing it when
+/// the list is empty). The first value is the line origin the CSS `x`/`y`
+/// longhand animates.
+pub(crate) fn merge_origin(css: f32, list: &mut Vec<f32>) {
+    if list.is_empty() {
+        list.push(css);
+    } else {
+        list[0] = css;
+    }
 }
 
 /// Extract the **direct** text content of a DOM node — the concatenated

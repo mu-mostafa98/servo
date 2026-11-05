@@ -44,6 +44,7 @@ pub(crate) mod util;
 // Re-export the public API so existing imports stay working.
 pub(crate) use render_trait::{MAX_PAINT_SERVER_DEPTH, Render, RenderContext};
 pub(crate) use util::{
-    ZERO_LENGTH_EPSILON, clip_chain_option, color_interpolation, effective_stroke_width, fill_rule,
-    make_common_props, paint_order_stroke_before_fill, shape_rendering_value, to_colorf,
+    ZERO_LENGTH_EPSILON, clip_chain_option, color_interpolation, color_interpolation_of_style,
+    crisp_edges, effective_stroke_width, effective_stroke_widths, fill_rule, make_common_props,
+    paint_order_stroke_before_fill, shape_rendering_value, to_colorf,
 };

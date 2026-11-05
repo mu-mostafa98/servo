@@ -31,13 +31,18 @@ mod mask;
 mod pattern;
 
 pub use self::clip_path::{ClipPathDef, ClipPathUnits};
-pub use self::filter::{FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive};
+pub use self::filter::{
+    BlendMode, ColorChannel, ComponentTransfer, ComponentTransferFunc, ConvolveMatrix,
+    DiffuseLighting, EdgeMode, FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive,
+    FilterPrimitiveNode, FilterUnits, LightSource, MorphologyOperator, PrimitiveUnits, RegionValue,
+    SpecularLighting, Turbulence, TurbulenceType,
+};
 pub use self::gradient::{
     GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,
     RadialGradient, SpreadMethod,
 };
 pub use self::marker::{MarkerDef, MarkerOrient, MarkerUnits};
-pub use self::mask::{MaskContentUnits, MaskDef, MaskType};
+pub use self::mask::{MaskContentUnits, MaskDef, MaskType, MaskUnits};
 pub use self::pattern::{PatternContentUnits, PatternDef, PatternLength, PatternUnits};
 
 /// A reference to a definition (clip-path, mask, filter, or marker): either a

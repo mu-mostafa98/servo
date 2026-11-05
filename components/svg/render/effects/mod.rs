@@ -10,4 +10,5 @@
 
 pub(crate) mod clip;
 pub(crate) mod filter;
+pub(crate) mod group;
 pub(crate) mod mask;

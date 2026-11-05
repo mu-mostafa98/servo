@@ -25,9 +25,11 @@ pub(crate) struct RenderContext<'a> {
     pub spatial_id: SpatialId,
     pub clip_chain_id: ClipChainId,
     pub wr: &'a mut DisplayListBuilder,
-    /// Accumulated transform scale from all ancestor transforms.
-    /// Used by `vector-effect: non-scaling-stroke` to compensate stroke width.
-    pub accumulated_scale: f32,
+    /// Accumulated transform scale from all ancestor transforms, as
+    /// `(scale_x, scale_y)`. Used by `vector-effect: non-scaling-stroke` to
+    /// compensate stroke width; the per-axis form lets a non-uniform transform
+    /// (`scale(2, 0.6)`) be compensated per-axis.
+    pub accumulated_scale: (f32, f32),
     /// The viewBox → viewport scale factor, used to rasterize paths at the
     /// correct resolution. `(1.0, 1.0)` when there is no viewBox (or it is
     /// identity).
@@ -69,7 +71,7 @@ impl<'a> RenderContext<'a> {
         spatial_id: SpatialId,
         clip_chain_id: ClipChainId,
         wr: &'a mut DisplayListBuilder,
-        accumulated_scale: f32,
+        accumulated_scale: (f32, f32),
         viewbox_scale: (f32, f32),
         device_scale: f32,
         raster_offset: LayoutPoint,

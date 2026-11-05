@@ -177,11 +177,15 @@ pub(crate) fn compute_transform_matrix(ops: &[TransformOp]) -> Transform2D<f32, 
     matrix
 }
 
-/// Compute the approximate uniform scale factor from a list of transform operations.
+/// Compute the approximate per-axis scale factors from a list of transform
+/// operations.
 ///
-/// Returns the product of all scale factors in the transform chain.
-/// Used to compensate stroke widths for `vector-effect: non-scaling-stroke`.
-pub(crate) fn compute_transform_scale(ops: &[TransformOp]) -> f32 {
+/// Returns the product of all scale factors in the transform chain as
+/// `(scale_x, scale_y)`. Used to compensate stroke widths for
+/// `vector-effect: non-scaling-stroke`; the per-axis form is required because a
+/// non-uniform scale (e.g. `scale(2, 0.6)`) must be compensated per-axis for the
+/// stroke to stay constant in screen space.
+pub(crate) fn compute_transform_scale(ops: &[TransformOp]) -> (f32, f32) {
     let mut scale_x: f32 = 1.0;
     let mut scale_y: f32 = 1.0;
     for op in ops {
@@ -200,7 +204,7 @@ pub(crate) fn compute_transform_scale(ops: &[TransformOp]) -> f32 {
             _ => {}, // Translate, Rotate, Skew → no scale contribution
         }
     }
-    scale_x.max(scale_y)
+    (scale_x, scale_y)
 }
 
 /// Convert a `Transform2D` to a `LayoutTransform` suitable for WebRender.

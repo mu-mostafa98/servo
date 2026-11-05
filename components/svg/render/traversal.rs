@@ -21,12 +21,16 @@ use webrender_api::{
 use crate::RasterSink;
 use crate::model::document::*;
 use crate::model::element::*;
+use crate::model::units::Opacity;
 use crate::render::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
-use crate::render::effects::filter::get_filter_ops;
+use crate::render::effects::filter::{get_filter_ops, node_local_bounds, FilterOps};
+use crate::render::effects::group::rasterize_masked_group;
 use crate::render::effects::mask::{MaskRaster, rasterize_mask};
-use crate::render::geometry::ComplexClip;
+use crate::render::geometry::{ComplexClip, text_to_bez_path};
 use crate::render::renderer::path::rasterize_bez;
-use crate::render::renderer::{Render, RenderContext, clip_chain_option, transform};
+use crate::render::renderer::{
+    Render, RenderContext, clip_chain_option, color_interpolation_of_style, transform,
+};
 
 // ======================= Public Entry Point =======================
 
@@ -68,6 +72,7 @@ pub fn render_svg_tree(
         root_spatial_id,
         svg_clip_chain,
         wr,
+        (1.0, 1.0),
         1.0,
         viewbox_scale,
         device_scale,
@@ -76,6 +81,7 @@ pub fn render_svg_tree(
         Transform2D::<f32, (), ()>::identity(),
         sink,
         None,
+        &[],
         defs,
     );
 
@@ -170,7 +176,7 @@ fn push_viewbox_frame(
 struct EffectParams<'a> {
     mask: &'a Option<ResolvedMask>,
     complex_clips: &'a [ComplexClip],
-    filter_ops: &'a Option<Vec<webrender_api::FilterOp>>,
+    filter_ops: &'a Option<FilterOps>,
 }
 
 /// A resolved mask: either a CPU-rasterized luminance/alpha pixmap (real mask
@@ -199,7 +205,8 @@ fn render_node(
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
-    parent_scale: f32,
+    parent_scale: (f32, f32),
+    group_opacity: f32,
     viewbox_scale: (f32, f32),
     device_scale: f32,
     mut raster_offset: LayoutPoint,
@@ -207,6 +214,7 @@ fn render_node(
     mut node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
     inherited_mask: Option<ResolvedMask>,
+    inherited_complex_clips: &[ComplexClip],
     defs: Defs<'_>,
 ) {
     if !node.style.is_displayed() {
@@ -308,7 +316,12 @@ fn render_node(
     }
 
     // Step 3 — Resolve effects (clip-path, mask, filter).
-    let resolved = resolve_node_effects(
+    let ResolvedEffects {
+        clip_chain,
+        mask,
+        complex_clips: own_complex_clips,
+        filter_ops,
+    } = resolve_node_effects(
         node,
         &cur_origin,
         cur_spatial_id,
@@ -322,46 +335,113 @@ fn render_node(
         defs,
     );
 
-    // Step 4 — Render the element.
-    let shape_params = EffectParams {
-        mask: &resolved.mask,
-        complex_clips: &resolved.complex_clips,
-        filter_ops: &resolved.filter_ops,
-    };
-    emit_element(
-        node,
-        &cur_origin,
-        cur_spatial_id,
-        resolved.clip_chain,
-        accumulated_scale,
-        wr,
-        &shape_params,
-        cur_viewbox_scale,
-        device_scale,
-        raster_offset,
-        clip_rect,
-        node_xform,
-        sink,
-        defs,
-    );
+    // Combine ancestor clip-path geometry (from enclosing groups) with this
+    // node's own. Native shapes get the equivalent through the accumulated
+    // `clip_chain`; `complex_clips` is the vello-raster fallback for shapes
+    // that bypass the native clip chain (paths/polygons/polylines), so it must
+    // be threaded to every descendant.
+    let mut complex_clips = inherited_complex_clips.to_vec();
+    complex_clips.extend(own_complex_clips);
 
-    // Step 5 — Recurse into children.
-    recurse_children(
-        node,
-        &cur_origin,
-        cur_spatial_id,
-        resolved.clip_chain,
-        accumulated_scale,
-        wr,
-        cur_viewbox_scale,
-        device_scale,
-        raster_offset,
-        clip_rect,
-        node_xform,
-        sink,
-        resolved.mask,
-        defs,
-    );
+    // Group opacity accumulates multiplicatively down the tree: each element's
+    // own `opacity` composes with every ancestor group's. Leaves bake the
+    // combined value into their paint alpha (vello rasters carry it into their
+    // pixels), while containers simply thread it to their children. This avoids
+    // a stacking-context opacity filter, which cannot reach CPU-rasterized
+    // images (they are pushed with the outer SVG spatial id).
+    let effective_opacity = group_opacity * node.style.opacity.get();
+
+    // Step 4 — Render the element.
+    //
+    // A container that owns a raster mask is composited as a group: its subtree
+    // is rendered into one offscreen pixmap and masked once, so overlapping
+    // children are not double-masked (masking each leaf independently and then
+    // source-over compositing them lets the background bleed through). This only
+    // applies when the subtree is flat (no nested viewports/effects; child
+    // transforms are composed per-leaf), the group itself has no filter or
+    // clip-path, and every leaf paint is solid/gradient — otherwise we fall back
+    // to the per-leaf masking path.
+    let group_composited = match &mask {
+        Some(ResolvedMask::Raster(raster))
+            if matches!(node.tag, SvgTag::Container(_))
+                && node.style.mask.is_some()
+                && filter_ops.is_none()
+                && complex_clips.is_empty() =>
+        {
+            rasterize_masked_group(
+                node,
+                raster.as_ref(),
+                &raster_offset,
+                node_xform,
+                cur_viewbox_scale,
+                device_scale,
+                effective_opacity,
+                clip_rect,
+                defs,
+                wr,
+                sink,
+            )
+        },
+        _ => false,
+    };
+
+    if !group_composited {
+        let shape_params = EffectParams {
+            mask: &mask,
+            complex_clips: &complex_clips,
+            filter_ops: &filter_ops,
+        };
+        emit_element(
+            node,
+            &cur_origin,
+            cur_spatial_id,
+            clip_chain,
+            accumulated_scale,
+            effective_opacity,
+            wr,
+            &shape_params,
+            cur_viewbox_scale,
+            device_scale,
+            raster_offset,
+            clip_rect,
+            node_xform,
+            sink,
+            defs,
+        );
+
+        // Step 5 — Recurse into children. A container's filter applies to the
+        // whole rendered subtree, so wrap the recursion in a filter stacking
+        // context (shapes and leaves push their own filter around `emit_element`
+        // above).
+        let container_filter_pushed = if matches!(node.tag, SvgTag::Container(_)) {
+            push_filter_context(&filter_ops, cur_spatial_id, clip_chain, wr)
+        } else {
+            false
+        };
+
+        recurse_children(
+            node,
+            &cur_origin,
+            cur_spatial_id,
+            clip_chain,
+            accumulated_scale,
+            effective_opacity,
+            wr,
+            cur_viewbox_scale,
+            device_scale,
+            raster_offset,
+            clip_rect,
+            node_xform,
+            sink,
+            mask,
+            &complex_clips,
+            defs,
+        );
+
+        if container_filter_pushed {
+            wr.pop_stacking_context();
+        }
+    }
 
     // Step 6 — Pop transform reference frames.
     for _ in 0..pushed_count {
@@ -374,7 +454,7 @@ struct ResolvedEffects {
     clip_chain: ClipChainId,
     mask: Option<ResolvedMask>,
     complex_clips: Vec<ComplexClip>,
-    filter_ops: Option<Vec<webrender_api::FilterOp>>,
+    filter_ops: Option<FilterOps>,
 }
 
 /// Resolve clip-path, mask, and filter effects for a node.
@@ -451,21 +531,24 @@ fn resolve_node_mask(
         return inherited_mask.cloned();
     };
 
-    if mask_def.content_units == MaskContentUnits::UserSpaceOnUse {
-        if let Some(raster) = rasterize_mask(
-            mask_def,
-            &raster_offset,
-            node_xform,
-            viewbox_scale,
-            device_scale,
-            defs,
-        ) {
-            return Some(ResolvedMask::Raster(Rc::new(raster)));
-        }
+    // Real luminance/alpha masking works for both unit systems: the masked
+    // element's bounding box is resolved once and passed to the rasterizer so
+    // `objectBoundingBox` content is scaled correctly.
+    let element_bbox = node_local_bounds(node);
+    if let Some(raster) = rasterize_mask(
+        mask_def,
+        &raster_offset,
+        node_xform,
+        viewbox_scale,
+        device_scale,
+        element_bbox,
+        defs,
+    ) {
+        return Some(ResolvedMask::Raster(Rc::new(raster)));
     }
 
-    // Fall back to geometric clips (objectBoundingBox masks and non-rasterizable
-    // mask content).
+    // Fall back to geometric clips only for non-rasterizable mask content (e.g.
+    // a text-only mask, which has no shape leaves to rasterize).
     build_mask_clips(node, cur_origin, cur_spatial_id, parent_clip_chain, wr, defs)
         .map(ResolvedMask::Clips)
 }
@@ -480,14 +563,14 @@ fn apply_node_transforms(
     node: &SvgNode,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
-    parent_scale: f32,
+    parent_scale: (f32, f32),
     wr: &mut DisplayListBuilder,
-) -> (LayoutPoint, SpatialId, u32, f32) {
+) -> (LayoutPoint, SpatialId, u32, (f32, f32)) {
     let mut cur_spatial_id = spatial_id;
     let mut cur_origin = *svg_origin;
     let mut pushed_count: u32 = 0;
     let node_scale = transform::compute_transform_scale(&node.transforms);
-    let accumulated_scale = parent_scale * node_scale;
+    let accumulated_scale = (parent_scale.0 * node_scale.0, parent_scale.1 * node_scale.1);
     for op in &node.transforms {
         let result = transform::apply_transform_op(op, cur_origin, cur_spatial_id, wr);
         cur_origin = result.child_origin;
@@ -507,7 +590,8 @@ fn emit_element(
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     node_clip_chain: ClipChainId,
-    accumulated_scale: f32,
+    accumulated_scale: (f32, f32),
+    opacity: f32,
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
     viewbox_scale: (f32, f32),
@@ -526,6 +610,7 @@ fn emit_element(
             cur_spatial_id,
             node_clip_chain,
             accumulated_scale,
+            opacity,
             wr,
             params,
             viewbox_scale,
@@ -542,11 +627,14 @@ fn emit_element(
             cur_origin,
             cur_spatial_id,
             node_clip_chain,
+            opacity,
             wr,
             params,
             viewbox_scale,
             device_scale,
             raster_offset,
+            clip_rect,
+            node_xform,
             sink,
             defs,
         ),
@@ -556,11 +644,14 @@ fn emit_element(
             cur_origin,
             cur_spatial_id,
             node_clip_chain,
+            opacity,
             wr,
             params,
             viewbox_scale,
             device_scale,
             raster_offset,
+            clip_rect,
+            node_xform,
             sink,
             defs,
         ),
@@ -571,11 +662,12 @@ fn emit_element(
 /// Render a geometric shape with full clip-path, mask, and filter support.
 fn emit_shape(
     shape: &crate::model::element::shape::Shape,
-    style: crate::model::style::NodeStyle,
+    mut style: crate::model::style::NodeStyle,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     node_clip_chain: ClipChainId,
-    accumulated_scale: f32,
+    accumulated_scale: (f32, f32),
+    opacity: f32,
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
     viewbox_scale: (f32, f32),
@@ -589,6 +681,11 @@ fn emit_shape(
     if !style.is_visible() {
         return;
     }
+
+    // Fold the accumulated group opacity (this node's own `opacity` × all
+    // ancestor groups) into the style, so every downstream paint — native
+    // primitives, gradient stops, and vello rasters alike — bakes it in.
+    style.opacity = Opacity::new(opacity);
 
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, node_clip_chain, wr);
 
@@ -656,7 +753,7 @@ fn draw_shape(
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
-    accumulated_scale: f32,
+    accumulated_scale: (f32, f32),
     complex_clips: &[ComplexClip],
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
@@ -680,8 +777,13 @@ fn draw_shape(
     // which tiles the pattern via `fill_rect_with_pattern`.
     let has_pattern = style_has_pattern(style, defs);
     // A raster mask must be multiplied into the content's alpha at raster time,
-    // so it forces the vello path (WebRender can't express it as a clip).
-    let force_raster = alpha_mask.is_some();
+    // so it forces the vello path (WebRender can't express it as a clip). A
+    // non-native clip (polygon/path, whose only native form is a bounding-rect
+    // approximation) also forces rasterization so vello can apply the exact
+    // clip. Native-expressible clips (circle/rect/rounded-rect) do NOT force
+    // rasterization: native shapes keep using their exact clip chain, and only
+    // rasterized shapes apply the matching `ComplexClip`.
+    let force_raster = alpha_mask.is_some() || complex_clips.iter().any(|clip| !clip.native);
 
     // Convert the shape to a bez path once and reuse it between the raster pass
     // and marker placement (both would otherwise re-derive it from `Shape`).
@@ -697,12 +799,12 @@ fn draw_shape(
         // the remainder — paths, polygons, polylines, dashed rect borders, and
         // gradients the native renderer can't express — is rasterized by vello.
         //
-        // Polygon/path clip-paths (and complex mask shapes) can't be expressed
-        // as WebRender clip items (image-mask clips panic WebRender's quad
-        // path), so shapes carrying complex clips always rasterize and clip via
-        // vello `push_clip_path`.
+        // Non-native (polygon/path) clips already forced rasterization above, so
+        // reaching the native path means every present clip is native-expressible
+        // and already reflected in `clip_chain_id`; rasterized shapes still carry
+        // the matching `ComplexClip` for vello, while native shapes use the chain.
         let mut handled = false;
-        if !force_raster && complex_clips.is_empty() {
+        if !force_raster {
             handled = emit_native_gradients(
                 shape,
                 style,
@@ -760,6 +862,7 @@ fn draw_shape(
                     alpha_mask,
                     shape.path_length(),
                     defs,
+                    color_interpolation_of_style(style),
                 );
             }
         }
@@ -814,7 +917,7 @@ fn emit_native_gradients(
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
-    accumulated_scale: f32,
+    accumulated_scale: (f32, f32),
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
     defs: Defs<'_>,
@@ -1173,6 +1276,7 @@ fn emit_marker(
             None,
             m_shape.path_length(),
             defs,
+            color_interpolation_of_style(m_style),
         );
     });
 }
@@ -1190,7 +1294,7 @@ fn rotation_matrix(angle_deg: f32) -> Transform2D<f32, (), ()> {
 
 /// Push a filter stacking context. Returns `true` if one was pushed (caller must pop).
 fn push_filter_context(
-    filter_ops: &Option<Vec<webrender_api::FilterOp>>,
+    filter_ops: &Option<FilterOps>,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
@@ -1202,8 +1306,8 @@ fn push_filter_context(
         clip_chain_option(clip_chain_id),
         TransformStyle::Flat,
         MixBlendMode::Normal,
-        ops,
-        &[],
+        &ops.ops,
+        &ops.datas,
         RasterSpace::Screen,
         StackingContextFlags::empty(),
         None,
@@ -1220,11 +1324,14 @@ fn emit_leaf<T: crate::render::renderer::Render>(
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
+    opacity: f32,
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
     viewbox_scale: (f32, f32),
     device_scale: f32,
     raster_offset: LayoutPoint,
+    clip_rect: Option<LayoutRect>,
+    node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
     defs: Defs<'_>,
 ) {
@@ -1235,18 +1342,58 @@ fn emit_leaf<T: crate::render::renderer::Render>(
     // Apply filter stacking context if filter ops are present.
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, clip_chain_id, wr);
 
+    // A raster (luminance/alpha) mask must be multiplied into the content's
+    // alpha at raster time, the same way `emit_shape` does it via
+    // `rasterize_bez`. Text does that here by rasterizing its glyph outlines
+    // into a bez path. Images have no CPU-side pixels (they live only as a
+    // WebRender `ImageKey`), so a raster mask on an image cannot be applied and
+    // falls through to unmasked native rendering below.
+    if let (Some(ResolvedMask::Raster(raster)), SvgTag::Text(span)) = (&params.mask, &node.tag) {
+        if let Some(bez) = text_to_bez_path(span) {
+            let mut style = node.style.clone();
+            style.opacity = Opacity::new(opacity);
+            rasterize_bez(
+                &bez,
+                style.fill.as_ref(),
+                style.stroke.as_ref(),
+                style.opacity.get(),
+                &raster_offset,
+                viewbox_scale,
+                device_scale,
+                node_xform,
+                clip_rect,
+                params.complex_clips,
+                wr,
+                sink,
+                Some(raster.as_ref()),
+                None,
+                defs,
+                color_interpolation_of_style(&style),
+            );
+            if pushed_filter {
+                wr.pop_stacking_context();
+            }
+            return;
+        }
+    }
+
     let effective_clip = match &params.mask {
         Some(ResolvedMask::Clips(clips)) => clips.first().map(|m| m.chain).unwrap_or(clip_chain_id),
         _ => clip_chain_id,
     };
 
+    // Fold the accumulated group opacity into the leaf's own style (the same
+    // way `emit_shape` does) so text/image paint bakes it into alpha.
+    let mut style = node.style.clone();
+    style.opacity = Opacity::new(opacity);
+
     let mut ctx = RenderContext::new(
-        &node.style,
+        &style,
         *cur_origin,
         cur_spatial_id,
         effective_clip,
         &mut *wr,
-        1.0,
+        (1.0, 1.0),
         viewbox_scale,
         device_scale,
         raster_offset,
@@ -1269,7 +1416,8 @@ fn recurse_children(
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     clip_chain: ClipChainId,
-    accumulated_scale: f32,
+    accumulated_scale: (f32, f32),
+    group_opacity: f32,
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
     device_scale: f32,
@@ -1278,6 +1426,7 @@ fn recurse_children(
     node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
     inherited_mask: Option<ResolvedMask>,
+    inherited_complex_clips: &[ComplexClip],
     defs: Defs<'_>,
 ) {
     // <defs> and <symbol> children are only rendered when referenced
@@ -1296,6 +1445,7 @@ fn recurse_children(
             clip_chain,
             wr,
             accumulated_scale,
+            group_opacity,
             viewbox_scale,
             device_scale,
             raster_offset,
@@ -1303,6 +1453,7 @@ fn recurse_children(
             node_xform,
             sink,
             inherited_mask.clone(),
+            inherited_complex_clips,
             defs,
         );
     }

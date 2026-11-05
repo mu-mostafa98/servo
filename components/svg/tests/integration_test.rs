@@ -687,6 +687,7 @@ fn linear_gradient_default_x2() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        color_interpolation: ColorInterpolation::Auto,
         explicit: GradientExplicit::default(),
     };
     assert_eq!(lg.x2.to_object_bbox(), 1.0);
@@ -707,6 +708,7 @@ fn radial_gradient_default_center() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        color_interpolation: ColorInterpolation::Auto,
         explicit: GradientExplicit::default(),
     };
     assert_eq!(rg.cx.to_object_bbox(), 0.5);
@@ -748,6 +750,8 @@ fn clip_path_def_non_empty_shapes() {
     let def = ClipPathDef {
         root,
         clip_path_units: ClipPathUnits::UserSpaceOnUse,
+        clip_path: None,
+        clip_rule: FillRule::NonZero,
     };
     assert!(matches!(def.root.tag, SvgTag::Shape(_)));
 }
@@ -776,34 +780,138 @@ fn mask_def_with_shapes_and_styles() {
         root,
         mask_type: MaskType::Luminance,
         content_units: MaskContentUnits::UserSpaceOnUse,
+        x: RegionValue::Percent(-0.1),
+        y: RegionValue::Percent(-0.1),
+        width: RegionValue::Percent(1.2),
+        height: RegionValue::Percent(1.2),
+        mask_units: MaskUnits::ObjectBoundingBox,
     };
     assert!(matches!(def.root.tag, SvgTag::Shape(_)));
 }
 
 #[test]
+fn mask_type_luminance_and_alpha() {
+    assert!(matches!(MaskType::Luminance, MaskType::Luminance));
+    assert!(matches!(MaskType::Alpha, MaskType::Alpha));
+    assert_ne!(MaskType::Luminance, MaskType::Alpha);
+}
+
+#[test]
+fn mask_content_units_both_variants() {
+    assert!(matches!(
+        MaskContentUnits::ObjectBoundingBox,
+        MaskContentUnits::ObjectBoundingBox
+    ));
+    assert!(matches!(
+        MaskContentUnits::UserSpaceOnUse,
+        MaskContentUnits::UserSpaceOnUse
+    ));
+}
+
+#[test]
+fn mask_units_both_variants() {
+    assert!(matches!(
+        MaskUnits::ObjectBoundingBox,
+        MaskUnits::ObjectBoundingBox
+    ));
+    assert!(matches!(
+        MaskUnits::UserSpaceOnUse,
+        MaskUnits::UserSpaceOnUse
+    ));
+}
+
+#[test]
+fn mask_region_value_number_and_percent() {
+    assert!(matches!(RegionValue::Number(5.0), RegionValue::Number(5.0)));
+    assert!(matches!(RegionValue::Percent(0.5), RegionValue::Percent(0.5)));
+}
+
+#[test]
+fn mask_def_resolves_against_tree() {
+    let mut masks: HashMap<String, Arc<MaskDef>> = HashMap::new();
+    masks.insert("m".to_owned(), Arc::new(make_mask_def(MaskType::Luminance)));
+    let reference = DefRef::<MaskDef>::Ref(Id::new("m"));
+    assert!(reference.resolve(&masks).is_some());
+    assert!(DefRef::<MaskDef>::Ref(Id::new("missing"))
+        .resolve(&masks)
+        .is_none());
+}
+
+#[test]
+fn nested_mask_reference_resolves() {
+    // A `<mask>`'s content can itself carry a `mask` reference (nested mask);
+    // the render layer resolves it recursively against the same definition map.
+    let mut masks: HashMap<String, Arc<MaskDef>> = HashMap::new();
+    masks.insert("inner".to_owned(), Arc::new(make_mask_def(MaskType::Alpha)));
+
+    let mut outer = make_mask_def(MaskType::Luminance);
+    outer.root.style.mask = Some(DefRef::Ref(Id::new("inner")));
+
+    let resolved = outer
+        .root
+        .style
+        .mask
+        .as_ref()
+        .and_then(|m| m.resolve(&masks));
+    assert!(resolved.is_some());
+    assert_eq!(resolved.unwrap().mask_type, MaskType::Alpha);
+}
+
+#[test]
 fn filter_def_all_primitive_variants() {
     let primitives = vec![
-        FilterPrimitive::GaussianBlur(2.0, 2.0),
-        FilterPrimitive::DropShadow(5.0, 5.0, 3.0, 0.0, 0.0, 0.0, 0.5),
-        FilterPrimitive::ColorMatrix([1.0; 20]),
+        FilterPrimitiveNode {
+            op: FilterPrimitive::GaussianBlur(2.0, 2.0),
+            in1: None,
+            in2: None,
+            result: None,
+            x: None,
+            y: None,
+            width: None,
+            height: None,
+        },
+        FilterPrimitiveNode {
+            op: FilterPrimitive::DropShadow(5.0, 5.0, 3.0, 0.0, 0.0, 0.0, 0.5),
+            in1: Some("SourceAlpha".to_owned()),
+            in2: None,
+            result: Some("shadow".to_owned()),
+            x: None,
+            y: None,
+            width: None,
+            height: None,
+        },
+        FilterPrimitiveNode {
+            op: FilterPrimitive::ColorMatrix([1.0; 20]),
+            in1: None,
+            in2: None,
+            result: None,
+            x: None,
+            y: None,
+            width: None,
+            height: None,
+        },
     ];
     let def = FilterDef {
         primitives,
-        x: -0.1,
-        y: -0.1,
-        width: 1.2,
-        height: 1.2,
+        x: RegionValue::Percent(-0.1),
+        y: RegionValue::Percent(-0.1),
+        width: RegionValue::Percent(1.2),
+        height: RegionValue::Percent(1.2),
+        filter_units: FilterUnits::ObjectBoundingBox,
+        primitive_units: PrimitiveUnits::UserSpaceOnUse,
     };
     assert_eq!(def.primitives.len(), 3);
     assert!(matches!(
-        def.primitives[0],
+        def.primitives[0].op,
         FilterPrimitive::GaussianBlur(2.0, 2.0)
     ));
+    assert_eq!(def.primitives[1].in1.as_deref(), Some("SourceAlpha"));
+    assert_eq!(def.primitives[1].result.as_deref(), Some("shadow"));
     assert!(matches!(
-        def.primitives[1],
+        def.primitives[1].op,
         FilterPrimitive::DropShadow(_, _, _, _, _, _, _)
     ));
-    assert!(matches!(def.primitives[2], FilterPrimitive::ColorMatrix(_)));
+    assert!(matches!(def.primitives[2].op, FilterPrimitive::ColorMatrix(_)));
 }
 
 // ============================================================
@@ -1245,6 +1353,7 @@ fn tree_with_gradient_def() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        color_interpolation: ColorInterpolation::Auto,
         explicit: GradientExplicit::default(),
     }));
     tree.gradients.insert("g1".into(), grad);
@@ -1265,6 +1374,7 @@ fn tree_gradient_insert_and_check() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        color_interpolation: ColorInterpolation::Auto,
         explicit: GradientExplicit::default(),
     }));
     tree.gradients.insert("g1".into(), grad);
@@ -1427,5 +1537,36 @@ fn make_empty_tree() -> SvgTree {
         masks: HashMap::new(),
         filters: HashMap::new(),
         markers: HashMap::new(),
+    }
+}
+
+fn make_mask_def(mask_type: MaskType) -> MaskDef {
+    let rect = Shape::Rect(Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(10.0),
+        height: Length::new(10.0),
+        rx: None,
+        ry: None,
+        path_length: None,
+    });
+    let root = SvgNode {
+        id: None,
+        tag: SvgTag::Shape(rect),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+        source_node: None,
+    };
+    MaskDef {
+        root,
+        mask_type,
+        content_units: MaskContentUnits::UserSpaceOnUse,
+        x: RegionValue::Percent(-0.1),
+        y: RegionValue::Percent(-0.1),
+        width: RegionValue::Percent(1.2),
+        height: RegionValue::Percent(1.2),
+        mask_units: MaskUnits::ObjectBoundingBox,
     }
 }

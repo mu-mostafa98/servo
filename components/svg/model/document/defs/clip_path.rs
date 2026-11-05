@@ -5,7 +5,10 @@
 //! `<clipPath>` definitions and their coordinate-system units.
 
 use crate::model::element::SvgNode;
+use crate::model::style::FillRule;
 use malloc_size_of_derive::MallocSizeOf;
+
+use super::DefRef;
 
 /// A clip path definition collected from `<clipPath>`.
 #[derive(Debug, MallocSizeOf)]
@@ -15,6 +18,14 @@ pub struct ClipPathDef {
     pub root: SvgNode,
     /// Coordinate system for the clip path.
     pub clip_path_units: ClipPathUnits,
+    /// A `clip-path` on the `<clipPath>` element itself: the referenced clip is
+    /// applied to this definition's content (nested clipping), so the effective
+    /// clip is the intersection of the two.
+    pub clip_path: Option<DefRef<ClipPathDef>>,
+    /// `clip-rule` on the `<clipPath>` element. `clip-rule` is an inherited
+    /// property, so this is the default rule for shapes that do not set their
+    /// own `clip-rule` (`nonzero` unless the element overrides it).
+    pub clip_rule: FillRule,
 }
 
 /// Coordinate system for clip path contents.

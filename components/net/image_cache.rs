@@ -485,6 +485,12 @@ impl SvgRasterizationTaskStore {
     }
 }
 
+/// Upper bound on the total bytes cached in [`ImageCacheStore::raw_pixel_keys`].
+/// Once exceeded, the least-recently-used entries are evicted and their
+/// WebRender images deleted. 64 MiB of RGBA8 raw pixels keeps the cache bounded
+/// while leaving room for typical SVG filter/mask/clip raster output.
+const RAW_PIXEL_CACHE_BYTES_LIMIT: u64 = 64 * 1024 * 1024;
+
 /// ## Image cache implementation.
 #[derive(MallocSizeOf)]
 struct ImageCacheStore {
@@ -512,8 +518,17 @@ struct ImageCacheStore {
     broken_image_icon_image: OnceCell<Option<Arc<RasterImage>>>,
 
     /// Raw-pixel images uploaded directly (e.g. CPU-rasterized SVG paths),
-    /// keyed by content hash.
-    raw_pixel_keys: FxHashMap<u64, WebRenderImageKey>,
+    /// keyed by content hash. Values pair the WebRender image key with the byte
+    /// size of the uploaded RGBA buffer, so the cache can be bounded.
+    raw_pixel_keys: FxHashMap<u64, (WebRenderImageKey, u64)>,
+
+    /// Total bytes currently cached in `raw_pixel_keys`.
+    raw_pixel_bytes: u64,
+
+    /// LRU order of `raw_pixel_keys`: the front is least-recently-used and the
+    /// back is most-recently-used. Entries are evicted from the front once
+    /// `raw_pixel_bytes` exceeds [`RAW_PIXEL_CACHE_BYTES_LIMIT`].
+    raw_pixel_insertion_order: VecDeque<u64>,
 
     /// Cross-process `Paint` API instance.
     paint_api: CrossProcessPaintApi,
@@ -858,6 +873,8 @@ impl ImageCacheFactory for ImageCacheFactoryImpl {
                 rasterized_vector_images: FxHashMap::default(),
                 broken_image_icon_image: OnceCell::new(),
                 raw_pixel_keys: FxHashMap::default(),
+                raw_pixel_bytes: 0,
+                raw_pixel_insertion_order: VecDeque::new(),
                 paint_api: paint_api.clone(),
                 pipeline_id,
                 webview_id,
@@ -952,6 +969,7 @@ impl ImageCache for ImageCacheImpl {
         if store.raw_pixel_keys.contains_key(&hash) {
             return;
         }
+        let bytes = data.len() as u64;
         // Build a minimal RasterImage and use the existing upload path.
         let frame = ImageFrame {
             delay: None,
@@ -974,12 +992,46 @@ impl ImageCache for ImageCacheImpl {
             .generate_image_key_blocking(store.webview_id)
         {
             set_webrender_image_key(&store.paint_api, &mut image, key);
-            store.raw_pixel_keys.insert(hash, key);
+            store.raw_pixel_keys.insert(hash, (key, bytes));
+            store.raw_pixel_bytes += bytes;
+            store.raw_pixel_insertion_order.push_back(hash);
+        }
+
+        // Bound the cache: evict least-recently-used entries (the front of the
+        // queue) until we're back under the byte limit, deleting their
+        // WebRender images. The `len() > 1` guard keeps the just-inserted entry
+        // even when it alone exceeds the limit.
+        let mut evicted = Vec::new();
+        while store.raw_pixel_bytes > RAW_PIXEL_CACHE_BYTES_LIMIT &&
+            store.raw_pixel_insertion_order.len() > 1
+        {
+            let Some(oldest_hash) = store.raw_pixel_insertion_order.pop_front() else {
+                break;
+            };
+            if let Some((old_key, old_bytes)) = store.raw_pixel_keys.remove(&oldest_hash) {
+                store.raw_pixel_bytes -= old_bytes;
+                evicted.push(ImageUpdate::DeleteImage(old_key));
+            }
+        }
+        if !evicted.is_empty() {
+            store.paint_api
+                .update_images(store.webview_id.into(), evicted.into());
         }
     }
 
     fn raw_pixel_image_key(&self, hash: u64) -> Option<WebRenderImageKey> {
-        self.store.lock().raw_pixel_keys.get(&hash).copied()
+        let mut store = self.store.lock();
+        let (key, _) = store.raw_pixel_keys.get(&hash).copied()?;
+        // Touch the entry so it is evicted last (LRU).
+        if let Some(pos) = store
+            .raw_pixel_insertion_order
+            .iter()
+            .position(|&ordered_hash| ordered_hash == hash)
+        {
+            store.raw_pixel_insertion_order.remove(pos);
+            store.raw_pixel_insertion_order.push_back(hash);
+        }
+        Some(key)
     }
 
     fn get_image(
@@ -1446,6 +1498,11 @@ impl ImageCacheStore {
                     .and_then(|icon| icon.id)
                     .map(ImageUpdate::DeleteImage),
             )
+            .chain(
+                self.raw_pixel_keys
+                    .values()
+                    .map(|(key, _)| ImageUpdate::DeleteImage(*key)),
+            )
             .collect();
         if !deletions.is_empty() {
             self.paint_api
@@ -1460,6 +1517,9 @@ impl ImageCacheStore {
         self.svg_rasterization_task_store = Default::default();
         self.pending_loads = Default::default();
         self.key_cache = Default::default();
+        self.raw_pixel_keys = Default::default();
+        self.raw_pixel_bytes = 0;
+        self.raw_pixel_insertion_order = Default::default();
 
         let _ = self.broken_image_icon_image.take();
     }

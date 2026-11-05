@@ -58,9 +58,16 @@ pub enum LineCap {
 #[derive(Debug, Clone, Copy, PartialEq, MallocSizeOf)]
 pub enum LineJoin {
     Miter,
+    /// Miter join clipped flat at `miter_limit × width` (SVG 2 `miter-clip`)
+    /// instead of falling back to a bevel.
+    // TODO: needs `miter-clip` parsing/computed-value support in Stylo, and a
+    // true clip in the renderer (kurbo only does bevel fallback).
     MiterClip,
     Round,
     Bevel,
+    /// Circular arc join (SVG 2 `arcs`).
+    // TODO: needs `arcs` parsing/computed-value support in Stylo, and true arc
+    // geometry in the renderer (currently approximated as a round join).
     Arcs,
 }
 
