@@ -13,6 +13,7 @@ use euclid::{Box2D, Point2D, Rect, Scale, SideOffsets2D, Size2D, UnknownUnit, Ve
 use fonts::ShapedTextSlice;
 use gradient::WebRenderGradient;
 use layout_api::ReflowStatistics;
+use net_traits::image_cache::ImageCache;
 use paint_api::display_list::{PaintDisplayListInfo, SpatialTreeNodeInfo};
 use servo_arc::Arc as ServoArc;
 use servo_base::id::{PipelineId, ScrollTreeNodeId};
@@ -63,13 +64,30 @@ use crate::display_list::paint_traversal::{PaintTraversal, PaintTraversalHandler
 use crate::fragment_tree::{
     BackgroundMode, BaseFragment, BoxFragment, BoxFragmentWithStyle, ContainingBlockCalculation,
     Fragment, FragmentFlags, FragmentStatus, FragmentTree, IFrameFragment, ImageFragment,
-    PositioningFragment, SpecificLayoutInfo, Tag, TextFragment,
+    PositioningFragment, SpecificLayoutInfo, SvgFragment, Tag, TextFragment,
 };
 use crate::geom::{
     LengthPercentageOrAuto, PhysicalPoint, PhysicalRect, PhysicalSides, PhysicalSize,
 };
 use crate::replaced::NaturalSizes;
 use crate::style_ext::{BorderStyleColor, ComputedValuesExt};
+
+/// Adapts the layout image cache to [`servo_svg::RasterImageUploader`] so the
+/// SVG engine can upload CPU-rasterized pixels inline, in document order.
+struct ImageCacheUploader(Arc<dyn ImageCache>);
+
+impl servo_svg::RasterImageUploader for ImageCacheUploader {
+    fn upload(
+        &self,
+        hash: u64,
+        data: Vec<u8>,
+        width: u32,
+        height: u32,
+    ) -> Option<webrender_api::ImageKey> {
+        self.0.upload_raw_pixels(hash, data, width, height);
+        self.0.raw_pixel_image_key(hash)
+    }
+}
 
 mod background;
 mod clip;
@@ -879,6 +897,88 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
         if fragment.showing_broken_image_icon {
             Fragment::build_display_list_for_broken_image_border(self, &containing_block, &common);
         }
+
+        if fragment.selected.load(Ordering::Relaxed) {
+            // If there is no selected style, just fall back to using the unfocused selection color,
+            // which is strictly better than not drawing a selection highlight.
+            let selected_style = fragment.selected_style.borrow();
+            let mut background_color =
+                if self.frame_focused && !ServoArc::ptr_eq(&*selected_style, &*style) {
+                    selected_style.resolve_color(&selected_style.get_background().background_color)
+                } else {
+                    *UNFOCUSED_SELECTION_COLOR
+                };
+
+            if !background_color.is_transparent() {
+                background_color.alpha *= 0.5;
+                self.wr().push_rect(
+                    &common,
+                    containing_block.to_webrender(),
+                    rgba(background_color),
+                );
+            }
+        }
+    }
+
+    fn visit_svg(
+        &mut self,
+        state: &TraversalState,
+        containing_block: PhysicalRect<Au>,
+        fragment: &Arc<SvgFragment>,
+    ) {
+        fragment.base.visit_fragment(self);
+
+        let style = fragment.style.borrow();
+        if style.get_inherited_box().visibility != Visibility::Visible {
+            return;
+        }
+
+        // A `None` tree means tree construction failed; the element still occupies
+        // its laid-out box but paints nothing.
+        let Some(svg_tree) = fragment.tree.as_ref() else {
+            return;
+        };
+
+        let rect = fragment
+            .base
+            .rect()
+            .translate(containing_block.origin.to_vector())
+            .to_webrender();
+        let clip = fragment
+            .clip
+            .translate(containing_block.origin.to_vector())
+            .to_webrender();
+        let common = self.common_properties(state, clip, &style);
+
+        use servo_svg::render_svg_tree;
+        let spatial_id = self.spatial_id(state.spatial_id);
+        let clip_chain_id = self.clip_chain_id(state.clip_id);
+        let origin = rect.min;
+        let size = rect.size();
+        // Upload CPU-rasterized pixels inline (in document order) through the
+        // layout image cache. Rasters carry no spatial id — their geometry is
+        // baked to absolute space — so the sink pushes them with the *outer*
+        // SVG element's spatial/clip ids, the fragment clip rect, and the
+        // style's primitive flags (mirroring `common_properties`).
+        let uploader = ImageCacheUploader(self.image_resolver.image_cache.clone());
+        let sink = servo_svg::RasterSink {
+            uploader: &uploader,
+            spatial_id,
+            clip_chain_id,
+            clip_rect: clip,
+            flags: style.get_webrender_primitive_flags(),
+            origin,
+        };
+        render_svg_tree(
+            svg_tree,
+            &origin,
+            size,
+            self.device_pixel_ratio.get(),
+            spatial_id,
+            clip_chain_id,
+            &sink,
+            self.wr(),
+        );
 
         if fragment.selected.load(Ordering::Relaxed) {
             // If there is no selected style, just fall back to using the unfocused selection color,

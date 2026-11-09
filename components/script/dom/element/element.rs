@@ -1631,6 +1631,11 @@ impl<'dom> LayoutDom<'dom, Element> {
         *self.namespace() == ns!(html)
     }
 
+    #[inline]
+    pub(crate) fn is_svg_element(&self) -> bool {
+        *self.namespace() == ns!(svg)
+    }
+
     #[expect(unsafe_code)]
     pub(crate) fn id_attribute(self) -> *const Option<Atom> {
         unsafe { (self.unsafe_get()).id_attribute.borrow_for_layout() }

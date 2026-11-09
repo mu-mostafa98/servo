@@ -19,6 +19,7 @@ use style_traits::ParsingMode;
 use stylo_dom::ElementState;
 
 use crate::dom::bindings::codegen::Bindings::HTMLOrSVGElementBinding::FocusOptions;
+use crate::dom::bindings::codegen::Bindings::NodeBinding::NodeMethods;
 use crate::dom::bindings::codegen::Bindings::SVGElementBinding::SVGElementMethods;
 use crate::dom::bindings::inheritance::Castable;
 use crate::dom::bindings::root::{Dom, DomRoot, LayoutDom, MutNullableDom};
@@ -27,23 +28,27 @@ use crate::dom::css::cssstyledeclaration::{
 };
 use crate::dom::document::Document;
 use crate::dom::document::focus::FocusableArea;
+use crate::dom::domstringmap::DOMStringMap;
 use crate::dom::element::attributes::storage::AttrRef;
 use crate::dom::element::{AttributeMutation, Element};
 use crate::dom::node::focus::FocusTrigger;
 use crate::dom::node::virtualmethods::VirtualMethods;
-use crate::dom::node::{Node, NodeTraits};
+use crate::dom::node::{Node, NodeDamage, NodeTraits};
 use crate::dom::svg::svgcircleelement::SVGCircleElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
 use crate::dom::svg::svgpathelement::SVGPathElement;
 use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
+use crate::dom::svg::svgtextelement::SVGTextElement;
+use crate::dom::svg::svgtspanelement::SVGTSpanElement;
 use crate::dom::window::scrolling_box::{ScrollAxisState, ScrollRequirement};
 
 #[dom_struct]
 pub(crate) struct SVGElement {
     element: Element,
     style_decl: MutNullableDom<CSSStyleDeclaration>,
+    dataset: MutNullableDom<DOMStringMap>,
 }
 
 impl SVGElement {
@@ -64,6 +69,7 @@ impl SVGElement {
         SVGElement {
             element: Element::new_inherited_with_state(state, tag_name, ns!(svg), prefix, document),
             style_decl: Default::default(),
+            dataset: Default::default(),
         }
     }
 
@@ -113,12 +119,23 @@ impl VirtualMethods for SVGElement {
                 },
             }
         }
+
+        // The SVG engine rebuilds the render tree from the DOM on every reflow
+        // of the root `<svg>` (see `build_svg_tree`). Any attribute change on a
+        // descendant must dirty the node so the nearest `<svg>` ancestor is
+        // reflowed and re-reads its fresh subtree. `NodeDamage::Other` produces
+        // `RebuildAncestor` damage, which walks up to the `<svg>` replaced
+        // element and rebuilds it — the same mechanism `SVGSVGElement` already
+        // uses for its own attributes and child insertions.
+        self.upcast::<Node>()
+            .dirty(cx.no_gc(), NodeDamage::Other);
     }
 
     fn attribute_affects_presentational_hints(&self, attr: AttrRef<'_>) -> bool {
         matches!(
             attr.local_name(),
-            &local_name!("fill") |
+            &local_name!("display") |
+                &local_name!("fill") |
                 &local_name!("fill-opacity") |
                 &local_name!("fill-rule") |
                 &local_name!("stroke") |
@@ -129,9 +146,13 @@ impl VirtualMethods for SVGElement {
                 &local_name!("stroke-dashoffset") |
                 &local_name!("stroke-miterlimit") |
                 &local_name!("stroke-opacity") |
-                &local_name!("display") |
                 &local_name!("visibility") |
                 &local_name!("opacity") |
+                &local_name!("vector-effect") |
+                &local_name!("shape-rendering") |
+                &local_name!("clip-path") |
+                &local_name!("mask") |
+                &local_name!("filter") |
                 &local_name!("cx") |
                 &local_name!("cy") |
                 &local_name!("r") |
@@ -141,7 +162,11 @@ impl VirtualMethods for SVGElement {
                 &local_name!("y") |
                 &local_name!("width") |
                 &local_name!("height") |
-                &local_name!("d")
+                &local_name!("d") |
+                &local_name!("font-size") |
+                &local_name!("font-family") |
+                &local_name!("font-style") |
+                &local_name!("font-weight")
         ) || self
             .super_type()
             .unwrap()
@@ -162,6 +187,33 @@ impl SVGElementMethods<crate::DomTypeHolder> for SVGElement {
                 CSSModificationAccess::ReadWrite,
             )
         })
+    }
+
+    /// <https://html.spec.whatwg.org/multipage/#dom-dataset>
+    fn Dataset(&self, cx: &mut JSContext) -> DomRoot<DOMStringMap> {
+        self.dataset
+            .or_init(|| DOMStringMap::new(cx, self.as_element()))
+    }
+
+    /// <https://svgwg.org/svg2-draft/types.html#__svg__SVGElement__ownerSVGElement>
+    fn GetOwnerSVGElement(&self) -> Option<DomRoot<SVGSVGElement>> {
+        let mut ancestor = self.upcast::<Node>().GetParentElement();
+        while let Some(element) = ancestor {
+            if element.is::<SVGSVGElement>() {
+                return Some(DomRoot::downcast(element).unwrap());
+            }
+            // A `foreignObject` starts a new, foreign document fragment, so an
+            // `<svg>` inside it is the outermost `svg` element of its own
+            // fragment: the owner-svg search must not cross this boundary.
+            // <https://w3c.github.io/svgwg/svg2-draft/types.html#__svg__SVGElement__ownerSVGElement>
+            if element.namespace() == &ns!(svg) &&
+                element.local_name() == &local_name!("foreignObject")
+            {
+                return None;
+            }
+            ancestor = element.upcast::<Node>().GetParentElement();
+        }
+        None
     }
 
     // https://html.spec.whatwg.org/multipage/#globaleventhandlers
@@ -313,6 +365,35 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             push,
         );
 
+        // Font presentation attributes (SVG spec §10.10). These are required so
+        // that `<text>` and `<tspan>` `font-size`/`font-family`/`font-style`/
+        // `font-weight` attributes reach the computed `font` used by the SVG
+        // engine's text shaper. Without this, every span uses the default font.
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-size",
+            longhands::font_size::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-family",
+            longhands::font_family::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-style",
+            longhands::font_style::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-weight",
+            longhands::font_weight::parse_declared,
+            push,
+        );
+
         self.parse_svg_attribute(
             &parser_context,
             "stroke",
@@ -379,6 +460,36 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             longhands::opacity::parse_declared,
             push,
         );
+        self.parse_svg_attribute(
+            &parser_context,
+            "vector-effect",
+            longhands::vector_effect::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "shape-rendering",
+            longhands::shape_rendering::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "clip-path",
+            longhands::clip_path::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "mask",
+            longhands::mask_image::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "filter",
+            longhands::filter::parse_declared,
+            push,
+        );
 
         // Parse geometry attributes based on element type
         // <circle>: https://svgwg.org/svg2-draft/shapes.html#CircleElement
@@ -430,6 +541,16 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
                 push,
             );
         }
+        // <text>/<tspan>: x/y attributes are per-character lists, but the CSS
+        // x/y longhand is single-valued. Fold only the first value so
+        // CSS/WAAPI can animate the line origin; the remaining list positions
+        // are read directly by the SVG text builder.
+        if element.downcast::<SVGTextElement>().is_some() ||
+            element.downcast::<SVGTSpanElement>().is_some()
+        {
+            self.parse_svg_attribute_first(&parser_context, "x", longhands::x::parse_declared, push);
+            self.parse_svg_attribute_first(&parser_context, "y", longhands::y::parse_declared, push);
+        }
         // <path>: https://svgwg.org/svg2-draft/paths.html#PathElement
         if element.downcast::<SVGPathElement>().is_some() {
             // The d CSS property only accepts `none` or `path(<string>)`,
@@ -474,6 +595,30 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             if let Ok(property) =
                 parser.parse_entirely(|parse_input| parse(parser_context, parse_input))
             {
+                push(property);
+            }
+        }
+    }
+
+    /// Like [`Self::parse_svg_attribute`], but parses only the first component
+    /// of the attribute value and drops any trailing tokens. Used for list
+    /// attributes (`x`/`y` on text) whose CSS longhand is single-valued.
+    fn parse_svg_attribute_first<F>(
+        self,
+        parser_context: &ParserContext,
+        attr_name: &str,
+        parse: F,
+        push: &mut impl FnMut(PropertyDeclaration),
+    ) where
+        F: for<'i, 't> FnOnce(
+            &ParserContext,
+            &mut cssparser::Parser<'i>,
+        ) -> Result<PropertyDeclaration, style_traits::ParseError>,
+    {
+        let element = self.upcast::<Element>();
+        if let Some(value) = element.get_attr_val_for_layout(&ns!(), &LocalName::from(attr_name)) {
+            let mut parser = cssparser::Parser::new(value);
+            if let Ok(property) = parse(parser_context, &mut parser) {
                 push(property);
             }
         }

@@ -10,12 +10,13 @@ use std::cell::RefCell;
 use std::ffi::c_void;
 use std::fmt;
 use std::ops::Deref;
+use std::rc::Rc;
 use std::sync::Arc;
 
 use app_units::Au;
 use dwrote::{
     DWRITE_FONT_AXIS_VALUE, DWRITE_FONT_SIMULATIONS_BOLD, DWRITE_FONT_SIMULATIONS_NONE,
-    FontCollection, FontFace, FontFile, FontSimulations,
+    FontCollection, FontFace, FontFile, FontSimulations, OutlineBuilder,
 };
 use euclid::default::{Point2D, Rect, Size2D};
 use fonts_traits::LocalFontIdentifier;
@@ -369,9 +370,156 @@ impl PlatformFontMethods for PlatformFont {
         )
     }
 
+    fn glyph_outline(&self, glyph_id: GlyphId, font_size_px: f32) -> Option<Vec<Vec<(f32, f32)>>> {
+        // GetGlyphRunOutline returns the geometry in DIPs (1 DIP == 1 CSS px for
+        // a 96 dpi layout), so passing the CSS-pixel font size yields outlines in
+        // the same user-space units as the shaped glyph advances.
+        let data = Rc::new(RefCell::new(GlyphOutlineData::default()));
+        let collector = GlyphOutlineCollector {
+            data: Rc::clone(&data),
+        };
+        self.face
+            .glyph_run_outline(
+                font_size_px,
+                &[glyph_id as u16],
+                None,
+                None,
+                false,
+                false,
+                Box::new(collector),
+            )
+            .ok()?;
+
+        let mut data = data.borrow_mut();
+        if !data.current.is_empty() {
+            let current = std::mem::take(&mut data.current);
+            data.contours.push(current);
+        }
+        let contours = data
+            .contours
+            .iter()
+            .filter(|c| c.len() >= 2)
+            .cloned()
+            .collect::<Vec<_>>();
+        if contours.is_empty() {
+            None
+        } else {
+            Some(contours)
+        }
+    }
+
     fn variations(&self) -> &[FontVariation] {
         &self.variations
     }
+}
+
+/// Tolerance, in pixels, for flattening glyph outlines into line segments.
+const GLYPH_OUTLINE_FLATTEN_TOLERANCE: f32 = 0.25;
+
+/// Shared, mutable storage populated by [`GlyphOutlineCollector`] while
+/// DirectWrite walks the glyph outline.
+#[derive(Default)]
+struct GlyphOutlineData {
+    contours: Vec<Vec<(f32, f32)>>,
+    current: Vec<(f32, f32)>,
+    start: Option<(f32, f32)>,
+}
+
+/// Adapts DirectWrite's `ID2D1SimplifiedGeometrySink` callbacks into flattened
+/// contours. `GetGlyphRunOutline` already emits points in a y-down space
+/// (glyph above the baseline is negative y), matching SVG's y-down user space,
+/// so the coordinates are used as-is without a y flip.
+struct GlyphOutlineCollector {
+    data: Rc<RefCell<GlyphOutlineData>>,
+}
+
+impl OutlineBuilder for GlyphOutlineCollector {
+    fn move_to(&mut self, x: f32, y: f32) {
+        let mut data = self.data.borrow_mut();
+        if !data.current.is_empty() {
+            let current = std::mem::take(&mut data.current);
+            data.contours.push(current);
+        }
+        let point = (x, y);
+        data.current.push(point);
+        data.start = Some(point);
+    }
+
+    fn line_to(&mut self, x: f32, y: f32) {
+        self.data.borrow_mut().current.push((x, y));
+    }
+
+    fn curve_to(&mut self, cp0x: f32, cp0y: f32, cp1x: f32, cp1y: f32, x: f32, y: f32) {
+        let mut data = self.data.borrow_mut();
+        let p0 = data.current.last().copied().unwrap_or((0.0, 0.0));
+        let p1 = (cp0x, cp0y);
+        let p2 = (cp1x, cp1y);
+        let p3 = (x, y);
+        flatten_cubic(
+            p0,
+            p1,
+            p2,
+            p3,
+            GLYPH_OUTLINE_FLATTEN_TOLERANCE,
+            &mut data.current,
+        );
+    }
+
+    fn close(&mut self) {
+        let mut data = self.data.borrow_mut();
+        if let Some(start) = data.start {
+            if data.current.last() != Some(&start) {
+                data.current.push(start);
+            }
+        }
+    }
+}
+
+/// Recursively flatten a cubic Bézier into line segments, appending every
+/// endpoint after `p0` to `out`.
+fn flatten_cubic(
+    p0: (f32, f32),
+    p1: (f32, f32),
+    p2: (f32, f32),
+    p3: (f32, f32),
+    tolerance: f32,
+    out: &mut Vec<(f32, f32)>,
+) {
+    // Stop when both control points are within `tolerance` of the chord p0-p3.
+    if point_segment_distance(p1, p0, p3) <= tolerance &&
+        point_segment_distance(p2, p0, p3) <= tolerance
+    {
+        out.push(p3);
+        return;
+    }
+
+    // De Casteljau subdivision at t = 0.5.
+    let p01 = midpoint(p0, p1);
+    let p12 = midpoint(p1, p2);
+    let p23 = midpoint(p2, p3);
+    let p012 = midpoint(p01, p12);
+    let p123 = midpoint(p12, p23);
+    let p0123 = midpoint(p012, p123);
+    flatten_cubic(p0, p01, p012, p0123, tolerance, out);
+    flatten_cubic(p0123, p123, p23, p3, tolerance, out);
+}
+
+#[inline]
+fn midpoint(a: (f32, f32), b: (f32, f32)) -> (f32, f32) {
+    ((a.0 + b.0) * 0.5, (a.1 + b.1) * 0.5)
+}
+
+/// Distance from point `p` to the line segment `a`-`b`.
+fn point_segment_distance(p: (f32, f32), a: (f32, f32), b: (f32, f32)) -> f32 {
+    let dx = b.0 - a.0;
+    let dy = b.1 - a.1;
+    let len2 = dx * dx + dy * dy;
+    if len2 < 1e-9 {
+        return ((p.0 - a.0).powi(2) + (p.1 - a.1).powi(2)).sqrt();
+    }
+    let t = (((p.0 - a.0) * dx + (p.1 - a.1) * dy) / len2).clamp(0.0, 1.0);
+    let proj = (a.0 + t * dx, a.1 + t * dy);
+    ((p.0 - proj.0).powi(2) + (p.1 - proj.1).powi(2)).sqrt()
 }
 
 /// A wrapper struct around [`PlatformFont`] which is responsible for

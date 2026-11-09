@@ -151,6 +151,10 @@ impl<'dom> LayoutNode<'dom> for ServoLayoutNode<'dom> {
         self.node.opaque()
     }
 
+    fn inclusive_descendants_version(&self) -> u64 {
+        self.node.inclusive_descendants_version()
+    }
+
     fn pseudo_element_chain(&self) -> PseudoElementChain {
         self.pseudo_element_chain
     }
@@ -262,6 +266,10 @@ impl<'dom> LayoutNode<'dom> for ServoLayoutNode<'dom> {
 
     fn image_url(&self) -> Option<ServoUrl> {
         self.node.image_url()
+    }
+
+    fn base_url(&self) -> ServoUrl {
+        self.node.owner_doc_for_layout().url_for_layout()
     }
 
     fn image_density(&self) -> Option<f64> {

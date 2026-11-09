@@ -30,6 +30,8 @@ use uuid::Uuid;
 use webrender_api::ImageKey;
 use webrender_api::units::{DeviceIntSize, DeviceSize};
 
+use crate::svg::SvgSubtreeCache;
+
 pub(crate) type CachedImageOrError = Result<CachedImage, ResolveImageError>;
 
 pub(crate) struct LayoutContext<'a> {
@@ -45,6 +47,12 @@ pub(crate) struct LayoutContext<'a> {
     /// An [`ImageResolver`] used for resolving images during box and fragment
     /// tree construction. Later passed to display list construction.
     pub image_resolver: Arc<ImageResolver>,
+
+    /// A persistent cache of clean SVG render subtrees, reused across reflows
+    /// for incremental SVG build (see [`crate::svg::SvgSubtreeCache`]). Lives on
+    /// the layout context — not the [`ImageResolver`] — because it is part of the
+    /// SVG build pipeline, not image resolution.
+    pub svg_subtree_cache: Arc<RwLock<SvgSubtreeCache>>,
 
     /// The [`PainterId`] that identifies which `RenderingContext` that this layout targets.
     pub painter_id: PainterId,
@@ -125,6 +133,11 @@ pub(crate) struct ImageResolver {
     /// as replaced elements and the layout is responsible for triggering the
     /// network load for the corresponding serialized data: urls (similar to
     /// background images).
+    ///
+    /// Only the resvg path (used when `layout_servo_svg_enabled` is false)
+    /// enqueues here — the native SVG engine builds an `Arc<SvgTree>` straight
+    /// from the DOM (see [`crate::svg::build_svg_tree`]) instead of serializing
+    /// to a data URL, so this queue stays empty when the pref is enabled.
     pub pending_svg_elements_for_serialization: Mutex<Vec<UntrustedNodeAddress>>,
 
     /// A shared reference to script's map of DOM nodes with animated images. This is used

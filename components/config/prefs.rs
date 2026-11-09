@@ -303,6 +303,7 @@ pub struct Preferences {
     pub layout_container_queries_enabled: bool,
     pub layout_css_ellipse_corners_enabled: bool,
     pub layout_style_sharing_cache_enabled: bool,
+    pub layout_servo_svg_enabled: bool,
     pub layout_threads: i64,
     /// The minimum number of parallelizable jobs required before turning on parallelism
     /// for a set of jobs.
@@ -554,6 +555,7 @@ impl Preferences {
             layout_flexbox_balance: false,
             layout_grid_enabled: true,
             layout_style_sharing_cache_enabled: true,
+            layout_servo_svg_enabled: false,
             // TODO(mrobinson): This should likely be based on the number of processors.
             layout_threads: 3,
             layout_parallelism_job_count_minimum: 4,
