@@ -76,6 +76,10 @@ fn parse_svg_class_rules(css_text: &str) -> CssClassRules {
         if selector.is_empty() || declarations.is_empty() {
             continue;
         }
+        // Skip leading at-rules (`@import url(...);`, `@charset ...;`, ...).
+        // They terminate with `;`, not `}`, so a preceding at-rule would
+        // otherwise be merged into the selector and drop the rule after it.
+        let selector = selector.rsplit(';').next().unwrap_or("").trim();
         if !selector.starts_with('.') {
             continue;
         }
