@@ -60,6 +60,9 @@ impl Tokenizer {
             script: Default::default(),
             parsing_algorithm,
             custom_element_reaction_stack,
+            element_count: Cell::new(0),
+            depth: Cell::new(0),
+            over_limit: Cell::new(false),
         };
 
         let quirks_mode = match document.quirks_mode() {

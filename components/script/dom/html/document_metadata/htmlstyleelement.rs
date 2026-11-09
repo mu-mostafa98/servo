@@ -13,6 +13,7 @@ use net_traits::ReferrerPolicy;
 use script_bindings::cell::DomRefCell;
 use script_bindings::root::Dom;
 use servo_arc::Arc;
+use servo_config::pref;
 use style::media_queries::MediaList as StyleMediaList;
 use style::stylesheets::{Stylesheet, StylesheetInDocument, UrlExtraData};
 use stylo_atoms::Atom;
@@ -101,6 +102,21 @@ impl HTMLStyleElement {
         MediaList::parse_media_list(mq_str, &self.owner_window())
     }
 
+    /// Whether `self` lives inside an SVG subtree. For an `HTMLStyleElement`
+    /// this can only happen through an SVG `<foreignObject>`, whose children
+    /// are parsed in the HTML namespace (an `<svg><style>` directly is created
+    /// as a plain `SVGElement`, not an `HTMLStyleElement`).
+    fn is_in_svg_subtree(&self) -> bool {
+        let mut ancestor = self.upcast::<Node>().GetParentElement();
+        while let Some(element) = ancestor {
+            if element.is_svg_element() {
+                return true;
+            }
+            ancestor = element.upcast::<Node>().GetParentElement();
+        }
+        false
+    }
+
     /// <https://html.spec.whatwg.org/multipage/#update-a-style-block>
     pub(crate) fn update_a_style_block(&self, cx: &mut JSContext) {
         // Step 1. Let element be the style element.
@@ -144,6 +160,19 @@ impl HTMLStyleElement {
                 doc.get_current_parser_line(),
             )
         {
+            return;
+        }
+
+        // Security Stage 2 (CSS injection guard), servo-svg engine only: an
+        // `HTMLStyleElement` can only sit inside an SVG subtree through an SVG
+        // `<foreignObject>` (its children are parsed in the HTML namespace). A
+        // `<style>` there would otherwise be registered as a document-wide
+        // stylesheet and could leak host-document data through attribute
+        // selectors + `url()`. The servo-svg engine does not render
+        // `<foreignObject>` content, and it parses SVG `<style>` itself through
+        // its restricted class-only collector (`layout::svg::primitives::css`),
+        // so skip the Stylo registration entirely.
+        if pref!(layout_servo_svg_enabled) && self.is_in_svg_subtree() {
             return;
         }
 

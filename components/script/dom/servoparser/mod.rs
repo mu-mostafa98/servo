@@ -1764,6 +1764,15 @@ fn insert(
     }
 }
 
+/// Resource-exhaustion guards for tokenization (security layer 1). A
+/// pathological document — `<g>` nested a hundred thousand deep, or a stream
+/// of millions of elements — can build an unbounded DOM (memory) and a nesting
+/// depth that overflows the native stack later, in the recursive layout/SVG
+/// builder. These caps bound both. The values sit far above anything a
+/// legitimate document needs.
+const MAX_PARSE_ELEMENT_COUNT: usize = 1_000_000;
+const MAX_PARSE_DEPTH: usize = 512;
+
 #[derive(JSTraceable, MallocSizeOf)]
 #[cfg_attr(crown, crown::unrooted_must_root_lint::must_root)]
 pub(crate) struct Sink {
@@ -1775,6 +1784,15 @@ pub(crate) struct Sink {
     parsing_algorithm: ParsingAlgorithm,
     #[conditional_malloc_size_of]
     custom_element_reaction_stack: Rc<CustomElementReactionStack>,
+    /// Number of elements created so far; once past [`MAX_PARSE_ELEMENT_COUNT`]
+    /// the sink drops further inserts so the DOM stays bounded.
+    element_count: Cell<usize>,
+    /// Current open-element nesting depth (a `create_element`/`pop` counter),
+    /// used to cap recursion depth at [`MAX_PARSE_DEPTH`].
+    depth: Cell<usize>,
+    /// Set once a resource-exhaustion limit is exceeded; further inserts are
+    /// dropped rather than appended.
+    over_limit: Cell<bool>,
 }
 
 impl Sink {
@@ -1840,6 +1858,21 @@ impl TreeSink for Sink {
         attrs: Vec<Attribute>,
         flags: ElementFlags,
     ) -> Dom<Node> {
+        // Resource-exhaustion guard: bound element count and nesting depth
+        // (security layer 1). Once a cap is exceeded the element is still
+        // produced — the tree builder needs a valid handle — but the matching
+        // `append`/`append_before_sibling` drops it.
+        let element_count = self.element_count.get();
+        self.element_count.set(element_count + 1);
+        if element_count >= MAX_PARSE_ELEMENT_COUNT {
+            self.over_limit.set(true);
+        }
+        let depth = self.depth.get();
+        self.depth.set(depth + 1);
+        if depth >= MAX_PARSE_DEPTH {
+            self.over_limit.set(true);
+        }
+
         // TODO: https://github.com/servo/servo/issues/42839
         let mut cx = unsafe { temp_cx() };
         let cx = &mut cx;
@@ -1931,6 +1964,12 @@ impl TreeSink for Sink {
     #[expect(unsafe_code)]
     #[cfg_attr(crown, expect(crown::unrooted_must_root))]
     fn append_before_sibling(&self, sibling: &Dom<Node>, new_node: NodeOrText<Dom<Node>>) {
+        // Resource-exhaustion guard: once a limit is exceeded, drop further
+        // inserts so the DOM stays bounded.
+        if self.over_limit.get() {
+            return;
+        }
+
         // TODO: https://github.com/servo/servo/issues/42839
         let mut cx = unsafe { temp_cx() };
         let cx = &mut cx;
@@ -1965,6 +2004,12 @@ impl TreeSink for Sink {
     #[expect(unsafe_code)]
     #[cfg_attr(crown, expect(crown::unrooted_must_root))]
     fn append(&self, parent: &Dom<Node>, child: NodeOrText<Dom<Node>>) {
+        // Resource-exhaustion guard: once a limit is exceeded, drop further
+        // inserts so the DOM stays bounded.
+        if self.over_limit.get() {
+            return;
+        }
+
         // TODO: https://github.com/servo/servo/issues/42839
         let mut cx = unsafe { temp_cx() };
         let cx = &mut cx;
@@ -2081,6 +2126,14 @@ impl TreeSink for Sink {
 
     #[expect(unsafe_code)]
     fn pop(&self, node: &Dom<Node>) {
+        // Balance the depth tracked in `create_element` (guarded against
+        // underflow, since the HTML tree builder may pop without a matching
+        // create in some foster-parenting edge cases).
+        let depth = self.depth.get();
+        if depth > 0 {
+            self.depth.set(depth - 1);
+        }
+
         // TODO: https://github.com/servo/servo/issues/42839
         let mut cx = unsafe { temp_cx() };
         let cx = &mut cx;

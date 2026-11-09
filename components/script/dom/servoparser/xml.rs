@@ -36,6 +36,9 @@ impl Tokenizer {
             script: Default::default(),
             parsing_algorithm: ParsingAlgorithm::Normal,
             custom_element_reaction_stack: document.custom_element_reaction_stack(),
+            element_count: Cell::new(0),
+            depth: Cell::new(0),
+            over_limit: Cell::new(false),
         };
 
         let tb = XmlTreeBuilder::new(sink, Default::default());
