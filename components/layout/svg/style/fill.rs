@@ -9,7 +9,6 @@ use script::layout_dom::ServoLayoutElement;
 use servo_svg::style::paint_servers::PaintServer;
 use servo_svg::style::{FillParams, FillRule, NodeStyle};
 use servo_svg::units::{Id, Opacity};
-use style::color::ColorSpace;
 use style::values::computed::svg::{SVGOpacity, SVGPaintKind};
 use svgtypes::Color as SvgColor;
 
@@ -18,9 +17,12 @@ use crate::svg::primitives::attrs::{get_attr, parse_inline_style_prop};
 use crate::svg::primitives::paint::parse_paint_server;
 
 impl FromComputedValues for FillParams {
-    fn from_computed_values(values: &style::properties::ComputedValues) -> Option<Self> {
+    fn from_computed_values(
+        values: &style::properties::ComputedValues,
+        current_color: &SvgColor,
+    ) -> Option<Self> {
         let inherited_svg = values.get_inherited_svg();
-        let paint = resolve_svg_paint(&inherited_svg.fill, values);
+        let paint = resolve_svg_paint(&inherited_svg.fill, current_color);
         let opacity = match inherited_svg.fill_opacity {
             SVGOpacity::Opacity(opacity) => Opacity::new(opacity),
             _ => Opacity::ONE,
@@ -49,15 +51,8 @@ impl FromComputedValues for FillParams {
                 if matches!(inherited_svg.fill.kind, SVGPaintKind::None) {
                     None
                 } else {
-                    let current_color = values.clone_color();
-                    let srgb = current_color.to_color_space(ColorSpace::Srgb);
                     Some(FillParams {
-                        paint_server: Some(PaintServer::Solid(SvgColor::new_rgba(
-                            (srgb.components.0.clamp(0.0, 1.0) * 255.0) as u8,
-                            (srgb.components.1.clamp(0.0, 1.0) * 255.0) as u8,
-                            (srgb.components.2.clamp(0.0, 1.0) * 255.0) as u8,
-                            (srgb.alpha.clamp(0.0, 1.0) * 255.0) as u8,
-                        ))),
+                        paint_server: Some(PaintServer::Solid(*current_color)),
                         opacity,
                         fill_rule,
                     })
