@@ -1089,7 +1089,16 @@ fn shape_vertices(
     match shape {
         Shape::Rect(_) | Shape::Circle(_) | Shape::Ellipse(_) => None,
         _ => {
-            let bez = bez?;
+            // Shapes rendered natively (e.g. `line` with a solid stroke) never
+            // build a bez path for painting, so convert on demand here.
+            let owned;
+            let bez = match bez {
+                Some(bez) => bez,
+                None => {
+                    owned = shape.to_bez_path()?;
+                    &owned
+                },
+            };
             let mut vertices = Vec::new();
             for el in bez.elements() {
                 match el {
