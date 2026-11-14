@@ -135,27 +135,48 @@ pub(crate) fn build_text_node<'dom>(
             (span, run_node, placement.is_some())
         })
         .collect::<Vec<_>>();
-    let total_advance: f32 = shaped
-        .iter()
-        .filter(|(_, _, is_text_path)| !is_text_path)
-        .map(|(s, _, _)| s.total_advance())
-        .sum();
-    let anchor_shift = get("text-anchor")
+    // Group the shaped runs into text chunks (§11.6.2): a run with an explicit
+    // x starts a new chunk; runs without x flow on within the current chunk.
+    // `text-anchor` shifts each chunk as a whole relative to its anchor point
+    // (the chunk's x, or the line origin for the leading chunk).
+    let line_anchor = get("text-anchor")
         .as_deref()
         .map(|v| match v.trim() {
             "middle" => -0.5,
             "end" => -1.0,
             _ => 0.0,
         })
-        .unwrap_or(0.0) *
-        total_advance;
+        .unwrap_or(0.0);
+    // Per run: the chunk's anchor shift when the run starts a chunk, 0.0
+    // otherwise.
+    let mut chunk_shift_at = vec![0.0f32; shaped.len()];
+    {
+        let mut chunk_start: Option<usize> = None;
+        let mut chunk_sum = 0.0f32;
+        for (i, (span, _, is_text_path)) in shaped.iter().enumerate() {
+            if *is_text_path {
+                continue;
+            }
+            if chunk_start.is_none() || !span.x.is_empty() {
+                if let Some(s) = chunk_start {
+                    chunk_shift_at[s] = line_anchor * chunk_sum;
+                }
+                chunk_start = Some(i);
+                chunk_sum = 0.0;
+            }
+            chunk_sum += span.total_advance();
+        }
+        if let Some(s) = chunk_start {
+            chunk_shift_at[s] = line_anchor * chunk_sum;
+        }
+    }
 
-    let mut pen = anchor_shift;
+    let mut pen = 0.0f32;
     // `dy` shifts the *current* text position, so it accumulates across runs
     // (a later tspan's `dy` is relative to the position after earlier ones).
     let mut dy_pen = 0.0f32;
     let mut children = Vec::with_capacity(shaped.len());
-    for (mut span, run_node, is_text_path) in shaped {
+    for (i, (mut span, run_node, is_text_path)) in shaped.into_iter().enumerate() {
         if is_text_path {
             // A `<textPath>` run is already positioned on the path; it does not
             // take part in the horizontal pen / vertical dy flow.
@@ -173,9 +194,19 @@ pub(crate) fn build_text_node<'dom>(
             }));
             continue;
         }
-        span.advance_offset = pen;
-        // The whole-line anchor shift is already folded into `advance_offset`,
-        // so clear each run's own text-anchor to avoid double-applying it.
+        // An explicit x repositions this run absolutely (§11.5.2) and starts a
+        // new text chunk; without one the run flows on from the pen. Glyphs
+        // are stored relative to the run's own origin, so a flowing run is
+        // offset by the absolute pen position.
+        if span.x.is_empty() {
+            span.advance_offset = pen + chunk_shift_at[i];
+            pen += chunk_shift_at[i];
+        } else {
+            span.advance_offset = chunk_shift_at[i];
+            pen = span.origin_x() + chunk_shift_at[i];
+        }
+        // The chunk's anchor shift is already folded into `advance_offset`, so
+        // clear each run's own text-anchor to avoid double-applying it.
         span.text_anchor = TextAnchor::Start;
         // Offset this run by the accumulated vertical shift from preceding runs.
         if span.y.is_empty() {
@@ -234,9 +265,9 @@ type RunWithNode<'dom> = (TextSpan, ServoLayoutNode<'dom>, Option<TextPathPlacem
 ///
 /// Each bare text node becomes a run that inherits the parent element's
 /// attributes; each `<tspan>` child becomes a run carrying its own attributes
-/// (`fill`, `font-size`, `x`/`y`, `dx`/`dy`, `text-anchor`). Pure-whitespace
-/// text between tspans (indentation/newlines) is dropped so it does not render
-/// as missing-glyph boxes.
+/// (`fill`, `font-size`, `x`/`y`, `dx`/`dy`, `text-anchor`). Whitespace between
+/// runs collapses to a single space run (§11.4.3) that advances the pen but
+/// renders no ink; whitespace at the line edges is dropped.
 fn collect_text_runs<'dom>(
     node: ServoLayoutNode<'dom>,
     fs: f32,
@@ -262,20 +293,37 @@ fn collect_text_runs<'dom>(
     }
     let children: Vec<_> = node.dom_children().collect();
     let mut runs = Vec::new();
+    // Whether any non-whitespace inline content has been emitted yet. Only the
+    // line's first content run starts at the <text>'s x; later runs flow on
+    // from the current pen position.
+    let mut seen_content = false;
+    // Whether the previously emitted run already ends with a separating space,
+    // so an adjacent whitespace-only text node must not add a second one.
+    let mut pending_space = false;
     for (i, child) in children.iter().enumerate() {
         if let Some(child_elem) = child.as_element() {
             if child_elem.local_name() == &local_name!("tspan") {
                 let get = |n: &str| get_attr(&child_elem, n);
                 if let Some(mut span) = build_text(*child, &get, fs, None) {
-                    // Inherit the <text>'s baseline/origin for any axis the
-                    // <tspan> does not set explicitly.
-                    if get_attr(&child_elem, "x").is_none() {
-                        span.x = parent_x.clone();
-                    }
+                    // Inherit the <text>'s baseline when the <tspan> does not
+                    // set y explicitly.
                     if get_attr(&child_elem, "y").is_none() {
                         span.y = parent_y.clone();
                     }
+                    // An own `x` attribute repositions the run absolutely;
+                    // without one the run flows on from the current pen. The
+                    // <text>'s x only positions the line's first content run —
+                    // later runs would wrongly reset back to it.
+                    if get_attr(&child_elem, "x").is_none() {
+                        if seen_content {
+                            span.x.clear();
+                        } else {
+                            span.x = parent_x.clone();
+                        }
+                    }
                     runs.push((span, *child, None));
+                    seen_content = true;
+                    pending_space = false;
                 }
             } else if child_elem.local_name() == &local_name!("textPath") {
                 // A `<textPath>` places its own text along a referenced path.
@@ -309,11 +357,33 @@ fn collect_text_runs<'dom>(
                     let placement =
                         resolve_text_path_placement(&child_elem, fs, element_ids, anchor);
                     runs.push((span, *child, placement));
+                    seen_content = true;
+                    pending_space = false;
                 }
             }
         } else {
             let t = child.text_content();
             if t.trim().is_empty() {
+                // Collapsed inter-run whitespace (§11.4.3): a single space that
+                // advances the pen but renders no ink. Dropped at the line
+                // edges, and after a run that already ends with a space.
+                let followed_by_content = children[i + 1..].iter().any(|c| match c.as_element() {
+                    Some(e) => {
+                        e.local_name() == &local_name!("tspan") ||
+                            e.local_name() == &local_name!("textPath")
+                    },
+                    None => !(*c).text_content().trim().is_empty(),
+                });
+                if seen_content && followed_by_content && !pending_space {
+                    let get = |n: &str| get_attr(&parent_elem, n);
+                    if let Some(mut span) = build_text_run(" ".to_owned(), &get, fs, css_origin) {
+                        // A space run always flows; it never carries an
+                        // absolute x of its own.
+                        span.x.clear();
+                        runs.push((span, node, None));
+                        pending_space = true;
+                    }
+                }
                 continue;
             }
             // Trim leading whitespace (the text node usually starts with the
@@ -336,14 +406,22 @@ fn collect_text_runs<'dom>(
                 None => !(*c).text_content().trim().is_empty(),
             });
             let text = if followed_by_content && trimmed.len() < text.len() {
+                pending_space = true;
                 format!("{} ", trimmed)
             } else {
+                pending_space = false;
                 trimmed.to_owned()
             };
-            // Bare-text runs always use the <text>'s x/y (no own attributes).
+            // Bare-text runs always use the <text>'s y (no own attributes).
             let get = |n: &str| get_attr(&parent_elem, n);
-            if let Some(span) = build_text_run(text, &get, fs, css_origin) {
+            if let Some(mut span) = build_text_run(text, &get, fs, css_origin) {
+                // Later bare runs flow on from the current pen; the <text>'s x
+                // only positions the line's first content run.
+                if seen_content {
+                    span.x.clear();
+                }
                 runs.push((span, node, None));
+                seen_content = true;
             }
         }
     }
