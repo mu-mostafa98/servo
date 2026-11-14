@@ -364,15 +364,32 @@ pub(crate) fn fill_rect_with_gradient(
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
+    fill_area_with_gradient(def, bounds, bounds, ctx, opacity);
+}
+
+/// Fill `area` with a gradient, resolving the gradient's own geometry against
+/// `geometry_bounds`.
+///
+/// The two differ when the painted area is not the shape's own bounding box —
+/// a centered stroke paints a band that reaches half the stroke width beyond
+/// the shape's outline, while the gradient's `objectBoundingBox` units still
+/// resolve against the shape's bounding box.
+pub(crate) fn fill_area_with_gradient(
+    def: &GradientDef,
+    area: LayoutRect,
+    geometry_bounds: LayoutRect,
+    ctx: &mut RenderContext,
+    opacity: f32,
+) {
     match def {
         GradientDef::Linear(lg) => {
-            if !push_linear_native(lg, bounds, ctx, opacity) {
-                render_linear(lg, bounds, ctx, opacity);
+            if !push_linear_native(lg, area, geometry_bounds, ctx, opacity) {
+                render_linear(lg, area, geometry_bounds, ctx, opacity);
             }
         },
         GradientDef::Radial(rg) => {
-            if !push_radial_native(rg, bounds, ctx, opacity) {
-                render_radial(rg, bounds, ctx, opacity);
+            if !push_radial_native(rg, area, geometry_bounds, ctx, opacity) {
+                render_radial(rg, area, geometry_bounds, ctx, opacity);
             }
         },
     }
@@ -617,7 +634,8 @@ pub(crate) fn resolve_gradient(
 /// natively (caller falls back to the software renderer).
 fn push_linear_native(
     lg: &crate::model::document::LinearGradient,
-    bounds: LayoutRect,
+    area: LayoutRect,
+    geometry_bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
 ) -> bool {
@@ -631,17 +649,17 @@ fn push_linear_native(
     ) else {
         return false;
     };
-    let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
+    let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
     // WebRender stores gradient geometry relative to the primitive origin (it
     // adds `bounds.min` back in the shader), while `resolve_*_geometry` returns
     // absolute layout coordinates. Subtract the primitive origin to avoid the
     // double offset.
-    let origin = bounds.min.to_vector();
+    let origin = area.min.to_vector();
     let start = start - origin;
     let end = end - origin;
     let gradient = ctx.wr.create_gradient(start, end, stops, extend_mode);
     let common = CommonItemProperties::new(
-        bounds,
+        area,
         SpaceAndClipInfo {
             spatial_id: ctx.spatial_id,
             clip_chain_id: ctx.clip_chain_id,
@@ -649,9 +667,9 @@ fn push_linear_native(
     );
     ctx.wr.push_gradient(
         &common,
-        bounds,
+        area,
         gradient,
-        bounds.size(),
+        area.size(),
         LayoutSize::new(0.0, 0.0),
     );
     true
@@ -661,7 +679,8 @@ fn push_linear_native(
 /// natively (caller falls back to the software renderer).
 fn push_radial_native(
     rg: &crate::model::document::RadialGradient,
-    bounds: LayoutRect,
+    area: LayoutRect,
+    geometry_bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
 ) -> bool {
@@ -681,17 +700,17 @@ fn push_radial_native(
     ) else {
         return false;
     };
-    let Some((center, radius)) = resolve_radial_center_radius(rg, bounds, ctx) else {
+    let Some((center, radius)) = resolve_radial_center_radius(rg, geometry_bounds, ctx) else {
         return false;
     };
     // See `push_linear_native`: WebRender adds `bounds.min` back in the shader,
     // so store the center relative to the primitive origin.
-    let center = center - bounds.min.to_vector();
+    let center = center - area.min.to_vector();
     let gradient = ctx
         .wr
         .create_radial_gradient(center, radius, stops, extend_mode);
     let common = CommonItemProperties::new(
-        bounds,
+        area,
         SpaceAndClipInfo {
             spatial_id: ctx.spatial_id,
             clip_chain_id: ctx.clip_chain_id,
@@ -699,9 +718,9 @@ fn push_radial_native(
     );
     ctx.wr.push_radial_gradient(
         &common,
-        bounds,
+        area,
         gradient,
-        bounds.size(),
+        area.size(),
         LayoutSize::new(0.0, 0.0),
     );
     true
@@ -711,14 +730,12 @@ fn push_radial_native(
 /// gradientTransform is applied in gradient coordinate space (normed bbox or user space).
 fn render_linear(
     lg: &crate::model::document::LinearGradient,
-    bounds: LayoutRect,
+    area: LayoutRect,
+    geometry_bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
-    let bx = bounds.min.x;
-    let by = bounds.min.y;
-
-    let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
+    let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
 
     let strategy = LinearStrategy {
         stops: &lg.stops,
@@ -726,11 +743,11 @@ fn render_linear(
         gy1: start.y,
         gx2: end.x,
         gy2: end.y,
-        offset_x: bx,
-        offset_y: by,
+        offset_x: area.min.x,
+        offset_y: area.min.y,
     };
     render_gradient(
-        bounds,
+        area,
         ctx,
         opacity,
         &strategy,
@@ -742,23 +759,27 @@ fn render_linear(
 /// Render a radial gradient.
 fn render_radial(
     rg: &crate::model::document::RadialGradient,
-    bounds: LayoutRect,
+    area: LayoutRect,
+    geometry_bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
-    let Some((_center, radius)) = resolve_radial_center_radius(rg, bounds, ctx) else {
+    let Some((_center, radius)) = resolve_radial_center_radius(rg, geometry_bounds, ctx) else {
         return;
     };
 
     // Honor an offset focal point (fx/fy); `center` coincides with the focal
     // only when the gradient is concentric.
-    let focal = resolve_radial_focal(rg, bounds, ctx);
+    let focal = resolve_radial_focal(rg, geometry_bounds, ctx);
 
     // Resolve the focal radius (`fr`) to the same absolute space as `r`. It is
     // a radial distance, so its percentage resolves against the normalized
     // diagonal (kept scalar; the focal disk is approximated as a circle, which
     // is exact for the common `fr=0` case).
-    let nd = normalized_diagonal(bounds.size().width, bounds.size().height);
+    let nd = normalized_diagonal(
+        geometry_bounds.size().width,
+        geometry_bounds.size().height,
+    );
     let fr = match rg.units {
         GradientUnits::ObjectBoundingBox => rg.fr.to_object_bbox().max(0.0) * nd,
         GradientUnits::UserSpaceOnUse => rg.fr.to_user_space(nd).max(0.0),
@@ -771,11 +792,11 @@ fn render_radial(
         rx: radius.width,
         ry: radius.height,
         fr,
-        offset_x: bounds.min.x,
-        offset_y: bounds.min.y,
+        offset_x: area.min.x,
+        offset_y: area.min.y,
     };
     render_gradient(
-        bounds,
+        area,
         ctx,
         opacity,
         &strategy,
