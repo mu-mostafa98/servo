@@ -14,6 +14,7 @@ use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use servo_svg::element::text::{TextAnchor, TextSpan};
 use servo_svg::element::{Container, SvgNode, SvgTag};
 use web_atoms::ns;
+use unicode_bidi::BidiInfo;
 
 use super::{CrossRef, extract_id, font_key_to_resource};
 use crate::context::LayoutContext;
@@ -600,113 +601,170 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
     let chars: Vec<char> = span.text.chars().collect();
     let mut font_instance_key = None;
 
-    let mut ci = 0;
-    while ci < chars.len() {
-        let Some(font) = font_group.find_by_codepoint(
-            &*context.font_context,
-            chars[ci],
-            chars.get(ci + 1).copied(),
-            language,
-        ) else {
-            // No font for this character — fallback. Whitespace is skipped.
-            let ch = chars[ci];
-            if ci < span.x.len() {
-                cur_x = span.x[ci];
+    // Resolve the Unicode bidi levels of the text, using the span's
+    // `direction` as the paragraph embedding level. Each level run is then
+    // shaped as a whole (HarfBuzz reorders the glyphs within an RTL run) and
+    // the runs are laid out left-to-right in visual order, so mixed-direction
+    // text (e.g. Latin words inside an RTL paragraph) keeps its internal
+    // character order instead of being reversed wholesale.
+    let paragraph_level = if span.rtl {
+        unicode_bidi::Level::rtl()
+    } else {
+        unicode_bidi::Level::ltr()
+    };
+    let bidi_info = BidiInfo::new(&span.text, Some(paragraph_level));
+    let mut runs: Vec<std::ops::Range<usize>> = Vec::new();
+    for para in &bidi_info.paragraphs {
+        let (_, para_runs) = bidi_info.visual_runs(para, para.range.clone());
+        runs.extend(para_runs);
+    }
+
+    for byte_range in &runs {
+        let level = bidi_info.levels[byte_range.start];
+        let run_chars: Vec<char> = span.text[byte_range.clone()].chars().collect();
+        let run_char_start = span.text[..byte_range.start].chars().count();
+        let is_rtl_run = level.is_rtl();
+
+        // Split the run into segments of consecutive characters that map to
+        // the same font, so each segment is shaped as a whole.
+        let mut segments: Vec<(usize, usize, Option<_>)> = Vec::new();
+        let mut cs = 0;
+        while cs < run_chars.len() {
+            let font = font_group.find_by_codepoint(
+                &*context.font_context,
+                run_chars[cs],
+                run_chars.get(cs + 1).copied(),
+                language,
+            );
+            let mut ce = cs + 1;
+            while ce < run_chars.len() {
+                match font_group.find_by_codepoint(
+                    &*context.font_context,
+                    run_chars[ce],
+                    run_chars.get(ce + 1).copied(),
+                    language,
+                ) {
+                    Some(next_font) if Some(&next_font) == font.as_ref() => ce += 1,
+                    _ => break,
+                }
             }
-            if ci < span.y.len() {
-                cur_y = span.y[ci];
+            segments.push((cs, ce, font));
+            cs = ce;
+        }
+
+        // An RTL run displays its segments in reverse logical order (HarfBuzz
+        // reorders the glyphs *within* each segment); an LTR run keeps logical
+        // order. Either way the pen advances left-to-right over visual order.
+        let segment_indices: Vec<usize> = if is_rtl_run {
+            (0..segments.len()).rev().collect()
+        } else {
+            (0..segments.len()).collect()
+        };
+
+        for si in segment_indices {
+            let (s, e, font) = &segments[si];
+            let seg_char_start = run_char_start + s;
+            let seg_char_end = run_char_start + e;
+            let Some(font) = font else {
+                // No font for these characters — fallback. Whitespace is
+                // skipped but still advances the pen.
+                let fallback_indices: Vec<usize> = if is_rtl_run {
+                    (seg_char_start..seg_char_end).rev().collect()
+                } else {
+                    (seg_char_start..seg_char_end).collect()
+                };
+                for char_idx in fallback_indices {
+                    let ch = chars[char_idx];
+                    if char_idx < span.x.len() {
+                        cur_x = span.x[char_idx];
+                    }
+                    if char_idx < span.y.len() {
+                        cur_y = span.y[char_idx];
+                    }
+                    cur_x += span.dx.get(char_idx).copied().unwrap_or(0.0);
+                    cur_y += span.dy.get(char_idx).copied().unwrap_or(0.0);
+                    let advance = if ch.is_whitespace() { 4.0f32 } else { 8.0f32 };
+                    if !ch.is_whitespace() {
+                        glyphs.push(ShapedGlyph {
+                            x: cur_x - origin_x,
+                            y: cur_y - origin_y + baseline_shift,
+                            advance,
+                            glyph_id: 0,
+                            character: ch,
+                            font_instance_key: None,
+                            outline: None,
+                        });
+                    }
+                    cur_x += advance;
+                }
+                continue;
+            };
+
+            // Shape the whole segment (HarfBuzz handles Arabic joining,
+            // ligatures, and RTL glyph reordering).
+            let segment_text: String = run_chars[*s..*e].iter().collect();
+            let options = ShapingOptions {
+                letter_spacing,
+                word_spacing,
+                script: Script::from(run_chars[*s]),
+                language,
+                ligatures: FontVariantLigatures::NORMAL,
+                numeric: FontVariantNumeric::NORMAL,
+                east_asian: FontVariantEastAsian::NORMAL,
+                feature_settings: FontFeatureSettings::normal(),
+                position: FontVariantPosition::Normal,
+                alternates: Default::default(),
+                flags: if is_rtl_run {
+                    ShapingFlags::RTL_FLAG
+                } else {
+                    ShapingFlags::empty()
+                },
+            };
+
+            let key = font_key_to_resource(font.key(context.painter_id, &*context.font_context));
+            if font_instance_key.is_none() {
+                font_instance_key = Some(key);
             }
-            cur_x += span.dx.get(ci).copied().unwrap_or(0.0);
-            cur_y += span.dy.get(ci).copied().unwrap_or(0.0);
-            let advance = if ch.is_whitespace() { 4.0f32 } else { 8.0f32 };
-            if !ch.is_whitespace() {
+
+            let shaped = font.shape_text(&segment_text, &options);
+
+            // Map the shaped glyphs (in visual order) back to their logical
+            // character indices: an RTL segment's glyphs come out reversed, so
+            // the glyph at pen position k renders the logically-last
+            // unconsumed character of the segment.
+            let mut consumed = 0usize;
+            for glyph_info in shaped.glyphs() {
+                let count = usize::from(glyph_info.character_count()).max(1);
+                let char_idx = if is_rtl_run {
+                    seg_char_start + (e - s).saturating_sub(1 + consumed)
+                } else {
+                    (seg_char_start + consumed).min(chars.len() - 1)
+                };
+                consumed += count;
+                if char_idx < span.x.len() {
+                    cur_x = span.x[char_idx];
+                }
+                if char_idx < span.y.len() {
+                    cur_y = span.y[char_idx];
+                }
+                cur_x += span.dx.get(char_idx).copied().unwrap_or(0.0);
+                cur_y += span.dy.get(char_idx).copied().unwrap_or(0.0);
+                let advance = glyph_info.advance().to_f32_px();
+                let glyph_id = glyph_info.id() as u32;
+                let outline = font.glyph_outline(glyph_id, font_size);
+
                 glyphs.push(ShapedGlyph {
                     x: cur_x - origin_x,
                     y: cur_y - origin_y + baseline_shift,
                     advance,
-                    glyph_id: 0,
-                    character: ch,
-                    font_instance_key: None,
-                    outline: None,
+                    glyph_id,
+                    character: chars[char_idx],
+                    font_instance_key: Some(key),
+                    outline,
                 });
-            }
-            cur_x += advance;
-            ci += 1;
-            continue;
-        };
-
-        // Extend the run over consecutive characters that map to the same font.
-        let mut cj = ci + 1;
-        while cj < chars.len() {
-            match font_group.find_by_codepoint(
-                &*context.font_context,
-                chars[cj],
-                chars.get(cj + 1).copied(),
-                language,
-            ) {
-                Some(next_font) if next_font == font => cj += 1,
-                _ => break,
+                cur_x += advance;
             }
         }
-
-        // Shape the whole run (HarfBuzz handles Arabic joining, ligatures, …).
-        let run_text: String = chars[ci..cj].iter().collect();
-        let options = ShapingOptions {
-            letter_spacing,
-            word_spacing,
-            script: Script::from(chars[ci]),
-            language,
-            ligatures: FontVariantLigatures::NORMAL,
-            numeric: FontVariantNumeric::NORMAL,
-            east_asian: FontVariantEastAsian::NORMAL,
-            feature_settings: FontFeatureSettings::normal(),
-            position: FontVariantPosition::Normal,
-            alternates: Default::default(),
-            flags: if span.rtl {
-                ShapingFlags::RTL_FLAG
-            } else {
-                ShapingFlags::empty()
-            },
-        };
-
-        let key = font_key_to_resource(font.key(context.painter_id, &*context.font_context));
-        if font_instance_key.is_none() {
-            font_instance_key = Some(key);
-        }
-
-        let shaped = font.shape_text(&run_text, &options);
-
-        // Map the shaped glyphs (already in visual order) to positions,
-        // applying the per-character `dx`/`dy` (reversed for RTL).
-        let mut run_char_index = 0;
-        for glyph_info in shaped.glyphs() {
-            let char_idx = (ci + run_char_index).min(chars.len() - 1);
-            if char_idx < span.x.len() {
-                cur_x = span.x[char_idx];
-            }
-            if char_idx < span.y.len() {
-                cur_y = span.y[char_idx];
-            }
-            cur_x += span.dx.get(char_idx).copied().unwrap_or(0.0);
-            cur_y += span.dy.get(char_idx).copied().unwrap_or(0.0);
-            let advance = glyph_info.advance().to_f32_px();
-            let glyph_id = glyph_info.id() as u32;
-            let outline = font.glyph_outline(glyph_id, font_size);
-
-            glyphs.push(ShapedGlyph {
-                x: cur_x - origin_x,
-                y: cur_y - origin_y + baseline_shift,
-                advance,
-                glyph_id,
-                character: chars[char_idx],
-                font_instance_key: Some(key),
-                outline,
-            });
-            cur_x += advance;
-            run_char_index += usize::from(glyph_info.character_count()).max(1);
-        }
-
-        ci = cj;
     }
 
     // Apply `textLength` / `lengthAdjust` (§11.6): scale the glyph run so its
