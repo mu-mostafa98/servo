@@ -1166,13 +1166,20 @@ fn emit_markers(
     if let Some(def) = refs.mid.as_ref().and_then(|m| m.resolve(&defs.markers)) {
         for i in 1..n - 1 {
             let (x, y) = vertices[i];
+            let (px, py) = vertices[i - 1];
             let (nx, ny) = vertices[i + 1];
+            // A mid marker is oriented along the bisector of the incoming and
+            // outgoing segment directions, not merely the outgoing direction.
+            let in_angle = tangent_angle_deg(x - px, y - py);
+            let out_angle = tangent_angle_deg(nx - x, ny - y);
+            let angle = bisecting_angle_deg(in_angle, out_angle).to_radians();
+            let (sine, cosine) = angle.sin_cos();
             emit_marker(
                 def,
                 x,
                 y,
-                nx - x,
-                ny - y,
+                cosine,
+                sine,
                 false,
                 stroke_width,
                 node_xform,
@@ -1293,6 +1300,17 @@ fn emit_marker(
 /// Angle (degrees) of a direction vector, falling back to 0 for a zero vector.
 fn tangent_angle_deg(dx: f32, dy: f32) -> f32 {
     dy.atan2(dx).to_degrees()
+}
+
+/// Angle (degrees) bisecting the incoming and outgoing segment directions.
+fn bisecting_angle_deg(in_angle: f32, out_angle: f32) -> f32 {
+    let mut in_angle = in_angle;
+    // Keep the two angles continuous (avoid wrapping artifacts at ±180°).
+    let diff = in_angle - out_angle;
+    if diff > 180.0 || diff <= -180.0 {
+        in_angle += 360.0;
+    }
+    (in_angle + out_angle) / 2.0
 }
 
 /// Clockwise rotation matrix (SVG y-down) by `angle_deg` degrees.
