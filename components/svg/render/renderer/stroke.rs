@@ -103,6 +103,127 @@ pub(crate) fn dash_intervals(
     intervals
 }
 
+// ======================= Zero-length subpath =======================
+
+/// Render the dot that a zero-length subpath is stroked with when the line
+/// cap is `round` or `square` (SVG 1.1 §11.4).
+///
+/// A zero-length subpath paints nothing with a `butt` cap, but a `round` cap
+/// strokes it as a circle and a `square` cap as a square, both of side
+/// `stroke-width` and centred on the subpath's point.
+///
+/// `(x, y)` is the subpath's point in absolute layout space (svg_origin
+/// already added).
+pub(crate) fn stroke_zero_length_dot(x: f32, y: f32, ctx: &mut RenderContext) {
+    let Some(stroke) = &ctx.style.stroke else {
+        return;
+    };
+    if stroke.paint_server.is_none() {
+        return;
+    }
+    let stroke_width = effective_stroke_width(ctx, stroke.width.get());
+    if stroke_width <= 0.0 {
+        return;
+    }
+    // A `butt` cap leaves a zero-length subpath unpainted.
+    let line_cap = match stroke.line_cap {
+        LineCap::Butt => return,
+        LineCap::Round | LineCap::Square => stroke.line_cap,
+    };
+
+    let half_w = stroke_width / 2.0;
+    let paint = stroke
+        .paint_server
+        .as_ref()
+        .and_then(|p| ctx.defs.resolve_paint_server(p));
+
+    match &paint {
+        Some(PaintServer::Solid(svg_color)) => {
+            let mut color = to_colorf(svg_color);
+            color.a *= stroke.opacity.get() * ctx.style.opacity.get();
+            if crisp_edges(ctx) {
+                stroke_zero_length_dot_crisp(x, y, half_w, color, line_cap, ctx);
+                return;
+            }
+            // The dot is a zero-length segment of width `stroke_width`: the
+            // cap styles extend it into a circle (`round`) or a square
+            // (`square`), both centred on the segment's midpoint.
+            let segment = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(x, y - half_w),
+                LayoutSize::new(0.0, stroke_width),
+            );
+            draw_capped_rect(segment, half_w, color, line_cap, ctx.spatial_id, ctx);
+        },
+        Some(PaintServer::Gradient(def)) => {
+            let def = Arc::clone(def);
+            let dot_bounds = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(x - half_w, y - half_w),
+                LayoutSize::new(stroke_width, stroke_width),
+            );
+            // A `round` cap paints a circle: clip the gradient to it.
+            let saved_clip = ctx.clip_chain_id;
+            if line_cap == LineCap::Round {
+                let radii = BorderRadius {
+                    top_left: LayoutSize::new(half_w, half_w),
+                    top_right: LayoutSize::new(half_w, half_w),
+                    bottom_left: LayoutSize::new(half_w, half_w),
+                    bottom_right: LayoutSize::new(half_w, half_w),
+                };
+                let clip_id = ctx.wr.define_clip_rounded_rect(
+                    ctx.spatial_id,
+                    ComplexClipRegion {
+                        rect: dot_bounds,
+                        radii,
+                        mode: ClipMode::Clip,
+                    },
+                );
+                ctx.clip_chain_id = ctx
+                    .wr
+                    .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [clip_id]);
+            }
+            gradient::fill_rect_with_gradient(
+                def.as_ref(),
+                dot_bounds,
+                ctx,
+                stroke.opacity.get() * ctx.style.opacity.get(),
+            );
+            ctx.clip_chain_id = saved_clip;
+        },
+        _ => {},
+    }
+}
+
+/// Stroke the dot of a zero-length subpath with crisp, aliased edges.
+///
+/// The dot's outline is a circle (`round` cap) or a square (`square` cap)
+/// filled via the scanline tessellator, matching the aliased rendering of
+/// ordinary strokes under `shape-rendering="crispEdges"`.
+fn stroke_zero_length_dot_crisp(
+    x: f32,
+    y: f32,
+    half_w: f32,
+    color: ColorF,
+    line_cap: LineCap,
+    ctx: &mut RenderContext,
+) {
+    let stroke_width = half_w * 2.0;
+    let bounds = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(x - half_w, y - half_w),
+        LayoutSize::new(stroke_width, stroke_width),
+    );
+    let outline = match line_cap {
+        LineCap::Round => rounded_rect_outline(bounds, half_w, half_w),
+        _ => vec![
+            LyonPoint::new(bounds.min.x, bounds.min.y),
+            LyonPoint::new(bounds.max.x, bounds.min.y),
+            LyonPoint::new(bounds.max.x, bounds.max.y),
+            LyonPoint::new(bounds.min.x, bounds.max.y),
+        ],
+    };
+    let fill = FillStyle::Solid(color);
+    tessellate_contours(&[&outline], FillRule::NonZero, &fill, ctx);
+}
+
 // ======================= Shared line-segment stroke =======================
 
 /// Render a single line segment as a rotated rect filled with the stroke color
