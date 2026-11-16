@@ -24,7 +24,7 @@ use crate::model::element::*;
 use crate::model::units::Opacity;
 use crate::render::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::render::effects::filter::{get_filter_ops, node_local_bounds, FilterOps};
-use crate::render::effects::group::rasterize_masked_group;
+use crate::render::effects::group::{rasterize_masked_group, rasterize_opacity_group};
 use crate::render::effects::mask::{MaskRaster, rasterize_mask};
 use crate::render::geometry::{ComplexClip, text_to_bez_path};
 use crate::render::renderer::path::rasterize_bez;
@@ -344,10 +344,14 @@ fn render_node(
     complex_clips.extend(own_complex_clips);
 
     // Group opacity accumulates multiplicatively down the tree: each element's
-    // own `opacity` composes with every ancestor group's. Leaves bake the
-    // combined value into their paint alpha (vello rasters carry it into their
-    // pixels), while containers simply thread it to their children. This avoids
-    // a stacking-context opacity filter, which cannot reach CPU-rasterized
+    // own `opacity` composes with every ancestor group's. When a container can
+    // be flattened, its subtree is composited offscreen and the container's own
+    // opacity is applied to the finished composite once (a group compositing
+    // operation — see `rasterize_opacity_group`); only the leftover accumulated
+    // ancestor opacity is threaded down to the leaves. Leaves that can't be
+    // grouped (or whose group isn't flat) bake the combined value into their
+    // paint alpha (vello rasters carry it into their pixels). This avoids a
+    // stacking-context opacity filter, which cannot reach CPU-rasterized
     // images (they are pushed with the outer SVG spatial id).
     let effective_opacity = group_opacity * node.style.opacity.get();
 
@@ -361,6 +365,13 @@ fn render_node(
     // transforms are composed per-leaf), the group itself has no filter or
     // clip-path, and every leaf paint is solid/gradient — otherwise we fall back
     // to the per-leaf masking path.
+    //
+    // The same offscreen compositing handles a container's own `opacity`:
+    // children composite among themselves at full strength, then the finished
+    // group is faded once. Folding the group opacity into each leaf's paint
+    // instead lets overlapping children over-composite (a 50%-opaque group with
+    // two overlapping opaque children shows a darker overlap than one uniform
+    // 50% fade). Containers that own a mask keep the masked-group path below.
     let group_composited = match &mask {
         Some(ResolvedMask::Raster(raster))
             if matches!(node.tag, SvgTag::Container(_))
@@ -376,6 +387,28 @@ fn render_node(
                 cur_viewbox_scale,
                 device_scale,
                 effective_opacity,
+                clip_rect,
+                defs,
+                wr,
+                sink,
+            )
+        },
+        None
+            if matches!(node.tag, SvgTag::Container(Container::Group | Container::Use))
+                && node.style.opacity.get() < 1.0
+                && node.style.clip_path.is_none()
+                && node.style.basic_shape_clip.is_none()
+                && filter_ops.is_none()
+                && complex_clips.is_empty() =>
+        {
+            rasterize_opacity_group(
+                node,
+                group_opacity,
+                node.style.opacity.get(),
+                &raster_offset,
+                node_xform,
+                cur_viewbox_scale,
+                device_scale,
                 clip_rect,
                 defs,
                 wr,
