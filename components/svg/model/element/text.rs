@@ -104,9 +104,13 @@ impl TextSpan {
     pub fn total_advance(&self) -> f32 {
         if let Some(last) = self.glyphs.last() {
             let total = last.x + last.advance;
-            // Trailing whitespace is skipped during shaping (advance, no
-            // glyph), so add its approximate advance back so the following run
-            // is placed after the space.
+            // Trailing whitespace is normally shaped into a real (inkless)
+            // glyph, so `last` already carries its advance. Only the fallback
+            // shaper skips whitespace glyphs while still advancing the pen, so
+            // compensate for that case only.
+            if last.character.is_whitespace() {
+                return total;
+            }
             let trailing_ws = self
                 .text
                 .chars()

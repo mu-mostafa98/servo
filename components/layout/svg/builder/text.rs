@@ -321,9 +321,17 @@ fn collect_text_runs<'dom>(
                             span.x = parent_x.clone();
                         }
                     }
+                    // A run whose own text ends with whitespace already carries
+                    // the separating space, so adjacent inter-run whitespace
+                    // must collapse into it instead of adding a second one.
+                    let ends_with_space = span
+                        .text
+                        .chars()
+                        .last()
+                        .map_or(false, |c| c.is_whitespace());
                     runs.push((span, *child, None));
                     seen_content = true;
-                    pending_space = false;
+                    pending_space = ends_with_space;
                 }
             } else if child_elem.local_name() == &local_name!("textPath") {
                 // A `<textPath>` places its own text along a referenced path.
