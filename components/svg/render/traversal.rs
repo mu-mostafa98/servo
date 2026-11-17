@@ -29,7 +29,8 @@ use crate::render::effects::mask::{MaskRaster, rasterize_mask};
 use crate::render::geometry::{ComplexClip, text_to_bez_path};
 use crate::render::renderer::path::rasterize_bez;
 use crate::render::renderer::{
-    Render, RenderContext, clip_chain_option, color_interpolation_of_style, transform,
+    Render, RenderContext, clip_chain_option, color_interpolation_of_style,
+    non_scaling_stroke_style, transform,
 };
 
 // ======================= Public Entry Point =======================
@@ -888,6 +889,7 @@ fn draw_shape(
                     viewbox_scale,
                     device_scale,
                     node_xform,
+                    non_scaling_stroke_style(style),
                     clip_rect,
                     complex_clips,
                     wr,
@@ -1318,6 +1320,7 @@ fn emit_marker(
             viewbox_scale,
             device_scale,
             full_xform,
+            non_scaling_stroke_style(m_style),
             clip_rect,
             &[],
             wr,
@@ -1421,6 +1424,7 @@ fn emit_leaf<T: crate::render::renderer::Render>(
                 viewbox_scale,
                 device_scale,
                 node_xform,
+                non_scaling_stroke_style(&style),
                 clip_rect,
                 params.complex_clips,
                 wr,

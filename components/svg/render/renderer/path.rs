@@ -18,7 +18,9 @@ use crate::model::element::shape::Path;
 use crate::model::style::paint_servers::PaintServer;
 use crate::model::style::{ColorInterpolation, FillParams, FillRule, LineCap, LineJoin, StrokeParams};
 use crate::render::geometry::{ComplexClip, path_data_to_bez};
-use crate::render::renderer::{Render, RenderContext, color_interpolation, fill_rule};
+use crate::render::renderer::{
+    Render, RenderContext, color_interpolation, fill_rule, non_scaling_stroke,
+};
 use crate::{RasterSink, RasterizedImage};
 
 /// Tolerance for flattening bezier curves into line segments.
@@ -105,6 +107,7 @@ impl Render for Path {
             ctx.viewbox_scale,
             ctx.device_scale,
             Transform2D::identity(),
+            non_scaling_stroke(ctx),
             None,
             &[],
             ctx.wr,
@@ -167,6 +170,7 @@ pub(crate) fn rasterize_bez(
     viewbox_scale: (f32, f32),
     scale: f32,
     node_xform: Transform2D<f32, (), ()>,
+    non_scaling_stroke: bool,
     clip_rect: Option<LayoutRect>,
     complex_clips: &[ComplexClip],
     wr: &mut DisplayListBuilder,
@@ -189,6 +193,18 @@ pub(crate) fn rasterize_bez(
     // Device-space scale (CSS scale × device pixel ratio), used for the stroke
     // width/dash lengths at raster time.
     let total_scale = css_scale * scale;
+    // `vector-effect: non-scaling-stroke` keeps the stroke constant in screen
+    // space, ignoring the element's transforms (and the viewBox scale). The
+    // geometry is still transformed, so the stroke is rasterized at its
+    // authored width in screen CSS pixels — only the device scale applies.
+    let stroke_scale = if non_scaling_stroke {
+        scale
+    } else {
+        total_scale
+    };
+    // The stroke's width in the CSS space `bez_scaled` lives in: used to expand
+    // the pixmap bounds to include the (centered) stroke overhang.
+    let stroke_css_scale = stroke_scale / scale;
 
     // Apply the node transform (full affine: translate/scale/rotate/skew), then
     // the viewBox scale so the pixmap is rasterized at viewport resolution.
@@ -208,7 +224,7 @@ pub(crate) fn rasterize_bez(
         // and would be clipped at the pixmap edge if we only reserved the
         // half-width (a clipped miter tip renders like a bevel). Square caps
         // likewise reach (width/2) × √2 at their corners.
-        let half_width = s.width.get() as f64 * css_scale as f64 / 2.0;
+        let half_width = s.width.get() as f64 * stroke_css_scale as f64 / 2.0;
         let join_inset = match s.line_join {
             LineJoin::Miter | LineJoin::MiterClip => {
                 half_width * (s.miter_limit.max(1.0) as f64)
@@ -319,10 +335,11 @@ pub(crate) fn rasterize_bez(
             shape_ci,
         ) {
             apply_paint(&mut context, scale_paint(paint, scale as f64));
-            let mut vello_stroke = vello_cpu::kurbo::Stroke::new(s.width.get() as f64 * total_scale as f64)
-                .with_caps(line_cap_to_kurbo(s.line_cap))
-                .with_join(line_join_to_kurbo(s.line_join))
-                .with_miter_limit(s.miter_limit.max(1.0) as f64);
+            let mut vello_stroke =
+                vello_cpu::kurbo::Stroke::new(s.width.get() as f64 * stroke_scale as f64)
+                    .with_caps(line_cap_to_kurbo(s.line_cap))
+                    .with_join(line_join_to_kurbo(s.line_join))
+                    .with_miter_limit(s.miter_limit.max(1.0) as f64);
             // Dash lengths/offset are in user units, so scale them by the
             // same factor as the path (viewBox scale × node-transform scale
             // × device scale) before handing them to kurbo, which implements
@@ -338,7 +355,7 @@ pub(crate) fn rasterize_bez(
                     },
                     _ => 1.0,
                 };
-                let dash_scale = total_scale as f64 * calibration;
+                let dash_scale = stroke_scale as f64 * calibration;
                 let pattern: Vec<f64> = dashes.iter().map(|d| *d as f64 * dash_scale).collect();
                 vello_stroke =
                     vello_stroke.with_dashes(s.dash_offset as f64 * dash_scale, &pattern);

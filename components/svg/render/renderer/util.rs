@@ -33,12 +33,14 @@ pub(crate) fn make_common_props(
 }
 
 /// Whether the current style requests `vector-effect: non-scaling-stroke`.
-fn non_scaling_stroke(ctx: &RenderContext) -> bool {
+pub(crate) fn non_scaling_stroke(ctx: &RenderContext) -> bool {
+    non_scaling_stroke_style(ctx.style)
+}
+
+/// Whether a given style requests `vector-effect: non-scaling-stroke`.
+pub(crate) fn non_scaling_stroke_style(style: &NodeStyle) -> bool {
     matches!(
-        ctx.style
-            .render_hints
-            .as_ref()
-            .and_then(|h| h.vector_effect),
+        style.render_hints.as_ref().and_then(|h| h.vector_effect),
         Some(VectorEffect::NonScalingStroke)
     )
 }

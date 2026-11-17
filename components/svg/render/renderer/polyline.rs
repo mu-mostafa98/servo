@@ -13,8 +13,8 @@ use crate::model::element::shape::Polyline;
 use crate::model::style::FillRule;
 use crate::render::renderer::path::rasterize_bez;
 use crate::render::renderer::{
-    Render, RenderContext, color_interpolation, fill, fill_rule, paint_order_stroke_before_fill,
-    stroke,
+    Render, RenderContext, color_interpolation, fill, fill_rule, non_scaling_stroke,
+    paint_order_stroke_before_fill, stroke,
 };
 
 /// Renders an SVG `<polyline>`.
@@ -57,6 +57,7 @@ impl Render for Polyline {
             ctx.viewbox_scale,
             ctx.device_scale,
             Transform2D::identity(),
+            non_scaling_stroke(ctx),
             None,
             &[],
             ctx.wr,
