@@ -70,6 +70,52 @@ pub(crate) fn lerp_color_linear(a: &ColorF, b: &ColorF, t: f32) -> ColorF {
     )
 }
 
+/// Number of sRGB samples generated for each stop interval when approximating
+/// linear-light interpolation with a backend that can only interpolate in sRGB.
+/// 128 keeps the approximation well within one 8-bit step everywhere.
+const LINEAR_RGB_SUBDIVISIONS: usize = 128;
+
+/// Expand a gradient's stops so that interpolating them in sRGB reproduces
+/// linear-light (`linearRGB`) interpolation.
+///
+/// WebRender — and vello_cpu's color-ramp encoding — only interpolate gradient
+/// stops in sRGB. For [`ColorInterpolation::LinearRGB`] we therefore sample the
+/// true linear-light ramp at a fixed resolution here; interpolating those
+/// samples in sRGB then stays within a fraction of an 8-bit step of the exact
+/// result. For sRGB interpolation the stops are returned unchanged.
+pub(crate) fn stops_for_srgb_interpolation(
+    stops: &[GradientStop],
+    color_interpolation: ColorInterpolation,
+) -> Vec<(f32, ColorF)> {
+    if !matches!(color_interpolation, ColorInterpolation::LinearRGB) {
+        return stops
+            .iter()
+            .map(|s| (s.offset, to_colorf(&s.color)))
+            .collect();
+    }
+
+    let mut out = Vec::with_capacity(stops.len().saturating_mul(LINEAR_RGB_SUBDIVISIONS + 1));
+    let Some(first) = stops.first() else {
+        return out;
+    };
+    out.push((first.offset, to_colorf(&first.color)));
+    for pair in stops.windows(2) {
+        let (a, b) = (&pair[0], &pair[1]);
+        let ca = to_colorf(&a.color);
+        let cb = to_colorf(&b.color);
+        let range = b.offset - a.offset;
+        if range <= 0.0 {
+            out.push((b.offset, cb));
+            continue;
+        }
+        for step in 1..=LINEAR_RGB_SUBDIVISIONS {
+            let t = step as f32 / LINEAR_RGB_SUBDIVISIONS as f32;
+            out.push((a.offset + range * t, lerp_color_linear(&ca, &cb, t)));
+        }
+    }
+    out
+}
+
 /// Evaluate the color at position `t` (0.0–1.0) along the gradient stop list.
 ///
 /// Uses sRGB interpolation by default, or linear RGB when `color_interpolation`
@@ -421,30 +467,22 @@ fn spread_to_extend(spread: SpreadMethod) -> Option<webrender_api::ExtendMode> {
 }
 
 /// Convert SVG gradient stops to WebRender stops, folding `opacity` into each
-/// stop's alpha (native gradient items have no item-level opacity). Returns
-/// `None` for `linearRGB` interpolation, which WebRender does not support
-/// (it always interpolates in sRGB).
+/// stop's alpha (native gradient items have no item-level opacity).
+///
+/// WebRender always interpolates in sRGB, so `linearRGB` gradients are converted
+/// to an equivalent dense sRGB stop list (see [`stops_for_srgb_interpolation`]).
 fn stops_to_webrender(
     stops: &[GradientStop],
     color_interpolation: ColorInterpolation,
     opacity: f32,
-) -> Option<Vec<webrender_api::GradientStop>> {
-    match color_interpolation {
-        ColorInterpolation::LinearRGB => None,
-        ColorInterpolation::Srgb | ColorInterpolation::Auto => Some(
-            stops
-                .iter()
-                .map(|s| {
-                    let mut c = to_colorf(&s.color);
-                    c.a *= opacity;
-                    webrender_api::GradientStop {
-                        offset: s.offset,
-                        color: c,
-                    }
-                })
-                .collect(),
-        ),
-    }
+) -> Vec<webrender_api::GradientStop> {
+    stops_for_srgb_interpolation(stops, color_interpolation)
+        .into_iter()
+        .map(|(offset, mut color)| {
+            color.a *= opacity;
+            webrender_api::GradientStop { offset, color }
+        })
+        .collect()
 }
 
 /// Whether two [`crate::model::document::GradientLength`]s denote the same
@@ -587,8 +625,9 @@ fn resolve_radial_focal(
 }
 
 /// Resolve a gradient definition to a native WebRender gradient, or `None` when
-/// it cannot be expressed natively (reflect spread, offset-focal radial, or
-/// linearRGB interpolation).
+/// it cannot be expressed natively (reflect spread or an offset-focal radial).
+/// `linearRGB` interpolation is supported by converting the stops to an
+/// equivalent sRGB stop list (see [`stops_for_srgb_interpolation`]).
 pub(crate) fn resolve_gradient(
     def: &GradientDef,
     bounds: LayoutRect,
@@ -599,7 +638,7 @@ pub(crate) fn resolve_gradient(
     match def {
         GradientDef::Linear(lg) => {
             let extend_mode = spread_to_extend(lg.spread_method)?;
-            let stops = stops_to_webrender(&lg.stops, color_interpolation, opacity)?;
+            let stops = stops_to_webrender(&lg.stops, color_interpolation, opacity);
             let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
             Some(crate::GradientKind::Linear {
                 start,
@@ -618,7 +657,7 @@ pub(crate) fn resolve_gradient(
                 return None;
             }
             let extend_mode = spread_to_extend(rg.spread_method)?;
-            let stops = stops_to_webrender(&rg.stops, color_interpolation, opacity)?;
+            let stops = stops_to_webrender(&rg.stops, color_interpolation, opacity);
             let (center, radius) = resolve_radial_center_radius(rg, bounds, ctx)?;
             Some(crate::GradientKind::Radial {
                 center,
@@ -642,13 +681,11 @@ fn push_linear_native(
     let Some(extend_mode) = spread_to_extend(lg.spread_method) else {
         return false;
     };
-    let Some(stops) = stops_to_webrender(
+    let stops = stops_to_webrender(
         &lg.stops,
         resolve_color_interpolation(lg.color_interpolation, ctx),
         opacity,
-    ) else {
-        return false;
-    };
+    );
     let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
     // WebRender stores gradient geometry relative to the primitive origin (it
     // adds `bounds.min` back in the shader), while `resolve_*_geometry` returns
@@ -693,13 +730,11 @@ fn push_radial_native(
     let Some(extend_mode) = spread_to_extend(rg.spread_method) else {
         return false;
     };
-    let Some(stops) = stops_to_webrender(
+    let stops = stops_to_webrender(
         &rg.stops,
         resolve_color_interpolation(rg.color_interpolation, ctx),
         opacity,
-    ) else {
-        return false;
-    };
+    );
     let Some((center, radius)) = resolve_radial_center_radius(rg, geometry_bounds, ctx) else {
         return false;
     };
