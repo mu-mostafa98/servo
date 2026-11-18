@@ -289,14 +289,18 @@ impl Circle {
     pub(crate) fn clip_info(&self, space: ClipSpace) -> Option<ClipGeometry> {
         let cx = self.cx.get() * space.sx + space.ox;
         let cy = self.cy.get() * space.sy + space.oy;
-        let r = self.r.get() * space.uniform_scale();
+        // A `<circle>` in `objectBoundingBox` units is scaled per axis by the
+        // clipped element's bbox, so it becomes an ellipse unless the box is
+        // square (matching Chrome). `userSpaceOnUse` keeps `sx == sy == 1`.
+        let rx = self.r.get() * space.sx;
+        let ry = self.r.get() * space.sy;
         let bounds = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(cx - r, cy - r),
-            LayoutSize::new(r * 2.0, r * 2.0),
+            LayoutPoint::new(cx - rx, cy - ry),
+            LayoutSize::new(rx * 2.0, ry * 2.0),
         );
         Some(ClipGeometry::RoundedRect {
             bounds,
-            radii: all_equal_radius(r, r),
+            radii: all_equal_radius(rx, ry),
         })
     }
 }

@@ -292,11 +292,14 @@ fn resolve_use_children<'dom>(
                 Arc::try_unwrap(target_node).expect("`<use>` shadow content is uniquely owned");
 
             // Shared helper: apply `<use>` x/y offset as a translate transform.
+            // `x` and `y` are independent and each default to 0 (§5.6), so a
+            // `<use>` that specifies only one axis must still translate by the
+            // given axis (the missing axis translates by 0).
             let apply_offset = |node: &mut SvgNode| {
-                if let (Some(dx), Some(dy)) = offset {
-                    if dx != 0.0 || dy != 0.0 {
-                        node.transforms.insert(0, TransformOp::Translate(dx, dy));
-                    }
+                let dx = offset.0.unwrap_or(0.0);
+                let dy = offset.1.unwrap_or(0.0);
+                if dx != 0.0 || dy != 0.0 {
+                    node.transforms.insert(0, TransformOp::Translate(dx, dy));
                 }
             };
 

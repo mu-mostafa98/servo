@@ -24,12 +24,13 @@ use crate::model::element::*;
 use crate::model::units::Opacity;
 use crate::render::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::render::effects::filter::{get_filter_ops, node_local_bounds, FilterOps};
-use crate::render::effects::group::rasterize_masked_group;
+use crate::render::effects::group::{rasterize_masked_group, rasterize_opacity_group};
 use crate::render::effects::mask::{MaskRaster, rasterize_mask};
 use crate::render::geometry::{ComplexClip, text_to_bez_path};
 use crate::render::renderer::path::rasterize_bez;
 use crate::render::renderer::{
-    Render, RenderContext, clip_chain_option, color_interpolation_of_style, transform,
+    Render, RenderContext, clip_chain_option, color_interpolation_of_style,
+    non_scaling_stroke_style, transform,
 };
 
 // ======================= Public Entry Point =======================
@@ -274,45 +275,52 @@ fn render_node(
             cur_clip_chain = wr.define_clip_chain(clip_chain_option(cur_clip_chain), [vp_clip_id]);
         }
 
-        if let Some(vb) = &vp.viewport.view_box {
-            let (sx, sy, ox, oy) = compute_viewbox_transform(
-                vb.width.get(),
-                vb.height.get(),
-                vp.viewport.width.get(),
-                vp.viewport.height.get(),
-                vp.viewport.aspect_ratio.as_ref(),
-            );
+        // Resolve the viewBox → viewport mapping, or the identity when the
+        // nested `<svg>` has no `viewBox`. Either way the nested viewport's
+        // `x`/`y` must translate its content into the parent coordinate system.
+        let (sx, sy, ox, oy, min_x, min_y) = match vp.viewport.view_box.as_ref() {
+            Some(vb) => {
+                let (sx, sy, ox, oy) = compute_viewbox_transform(
+                    vb.width.get(),
+                    vb.height.get(),
+                    vp.viewport.width.get(),
+                    vp.viewport.height.get(),
+                    vp.viewport.aspect_ratio.as_ref(),
+                );
+                (sx, sy, ox, oy, vb.min_x.get(), vb.min_y.get())
+            },
+            None => (1.0, 1.0, 0.0, 0.0, 0.0, 0.0),
+        };
 
-            // Translation that maps viewBox space → parent space:
-            //   p -> scale(p - min) + offset, then + (x, y)
-            //   = scale*p + (x + offset - scale*min)
-            let tx = vp.x.get() + ox - vb.min_x.get() * sx;
-            let ty = vp.y.get() + oy - vb.min_y.get() * sy;
-            raster_offset = LayoutPoint::new(
-                raster_offset.x + cur_viewbox_scale.0 * tx,
-                raster_offset.y + cur_viewbox_scale.1 * ty,
-            );
+        // Translation that maps nested user space → parent space:
+        //   p -> scale(p - min) + offset, then + (x, y)
+        //   = scale*p + (x + offset - scale*min)
+        let tx = vp.x.get() + ox - min_x * sx;
+        let ty = vp.y.get() + oy - min_y * sy;
+        raster_offset = LayoutPoint::new(
+            raster_offset.x + cur_viewbox_scale.0 * tx,
+            raster_offset.y + cur_viewbox_scale.1 * ty,
+        );
 
-            let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x.get(), -vb.min_y.get());
-            let s = Transform2D::<f32, (), ()>::scale(sx, sy);
-            let t2 = Transform2D::<f32, (), ()>::translation(ox, oy);
-            let combined = t1.then(&s).then(&t2);
-            let lt = transform::to_layout_transform(&combined);
-            cur_spatial_id = wr.push_reference_frame(
-                vp_origin,
-                cur_spatial_id,
-                TransformStyle::Flat,
-                PropertyBinding::Value(lt),
-                ReferenceFrameKind::Transform {
-                    is_2d_scale_translation: false,
-                    should_snap: false,
-                    paired_with_perspective: false,
-                },
-            );
-            cur_origin = LayoutPoint::new(0.0, 0.0);
-            pushed_count += 1;
-            cur_viewbox_scale = (cur_viewbox_scale.0 * sx, cur_viewbox_scale.1 * sy);
-        }
+        let t1 = Transform2D::<f32, (), ()>::translation(-min_x, -min_y);
+        let s = Transform2D::<f32, (), ()>::scale(sx, sy);
+        let t2 = Transform2D::<f32, (), ()>::translation(ox, oy);
+        let combined = t1.then(&s).then(&t2);
+        let lt = transform::to_layout_transform(&combined);
+        cur_spatial_id = wr.push_reference_frame(
+            vp_origin,
+            cur_spatial_id,
+            TransformStyle::Flat,
+            PropertyBinding::Value(lt),
+            ReferenceFrameKind::Transform {
+                is_2d_scale_translation: false,
+                should_snap: false,
+                paired_with_perspective: false,
+            },
+        );
+        cur_origin = LayoutPoint::new(0.0, 0.0);
+        pushed_count += 1;
+        cur_viewbox_scale = (cur_viewbox_scale.0 * sx, cur_viewbox_scale.1 * sy);
     }
 
     // Step 3 — Resolve effects (clip-path, mask, filter).
@@ -344,10 +352,14 @@ fn render_node(
     complex_clips.extend(own_complex_clips);
 
     // Group opacity accumulates multiplicatively down the tree: each element's
-    // own `opacity` composes with every ancestor group's. Leaves bake the
-    // combined value into their paint alpha (vello rasters carry it into their
-    // pixels), while containers simply thread it to their children. This avoids
-    // a stacking-context opacity filter, which cannot reach CPU-rasterized
+    // own `opacity` composes with every ancestor group's. When a container can
+    // be flattened, its subtree is composited offscreen and the container's own
+    // opacity is applied to the finished composite once (a group compositing
+    // operation — see `rasterize_opacity_group`); only the leftover accumulated
+    // ancestor opacity is threaded down to the leaves. Leaves that can't be
+    // grouped (or whose group isn't flat) bake the combined value into their
+    // paint alpha (vello rasters carry it into their pixels). This avoids a
+    // stacking-context opacity filter, which cannot reach CPU-rasterized
     // images (they are pushed with the outer SVG spatial id).
     let effective_opacity = group_opacity * node.style.opacity.get();
 
@@ -361,6 +373,13 @@ fn render_node(
     // transforms are composed per-leaf), the group itself has no filter or
     // clip-path, and every leaf paint is solid/gradient — otherwise we fall back
     // to the per-leaf masking path.
+    //
+    // The same offscreen compositing handles a container's own `opacity`:
+    // children composite among themselves at full strength, then the finished
+    // group is faded once. Folding the group opacity into each leaf's paint
+    // instead lets overlapping children over-composite (a 50%-opaque group with
+    // two overlapping opaque children shows a darker overlap than one uniform
+    // 50% fade). Containers that own a mask keep the masked-group path below.
     let group_composited = match &mask {
         Some(ResolvedMask::Raster(raster))
             if matches!(node.tag, SvgTag::Container(_))
@@ -376,6 +395,28 @@ fn render_node(
                 cur_viewbox_scale,
                 device_scale,
                 effective_opacity,
+                clip_rect,
+                defs,
+                wr,
+                sink,
+            )
+        },
+        None
+            if matches!(node.tag, SvgTag::Container(Container::Group | Container::Use))
+                && node.style.opacity.get() < 1.0
+                && node.style.clip_path.is_none()
+                && node.style.basic_shape_clip.is_none()
+                && filter_ops.is_none()
+                && complex_clips.is_empty() =>
+        {
+            rasterize_opacity_group(
+                node,
+                group_opacity,
+                node.style.opacity.get(),
+                &raster_offset,
+                node_xform,
+                cur_viewbox_scale,
+                device_scale,
                 clip_rect,
                 defs,
                 wr,
@@ -855,6 +896,7 @@ fn draw_shape(
                     viewbox_scale,
                     device_scale,
                     node_xform,
+                    non_scaling_stroke_style(style),
                     clip_rect,
                     complex_clips,
                     wr,
@@ -1089,7 +1131,16 @@ fn shape_vertices(
     match shape {
         Shape::Rect(_) | Shape::Circle(_) | Shape::Ellipse(_) => None,
         _ => {
-            let bez = bez?;
+            // Shapes rendered natively (e.g. `line` with a solid stroke) never
+            // build a bez path for painting, so convert on demand here.
+            let owned;
+            let bez = match bez {
+                Some(bez) => bez,
+                None => {
+                    owned = shape.to_bez_path()?;
+                    &owned
+                },
+            };
             let mut vertices = Vec::new();
             for el in bez.elements() {
                 match el {
@@ -1157,13 +1208,20 @@ fn emit_markers(
     if let Some(def) = refs.mid.as_ref().and_then(|m| m.resolve(&defs.markers)) {
         for i in 1..n - 1 {
             let (x, y) = vertices[i];
+            let (px, py) = vertices[i - 1];
             let (nx, ny) = vertices[i + 1];
+            // A mid marker is oriented along the bisector of the incoming and
+            // outgoing segment directions, not merely the outgoing direction.
+            let in_angle = tangent_angle_deg(x - px, y - py);
+            let out_angle = tangent_angle_deg(nx - x, ny - y);
+            let angle = bisecting_angle_deg(in_angle, out_angle).to_radians();
+            let (sine, cosine) = angle.sin_cos();
             emit_marker(
                 def,
                 x,
                 y,
-                nx - x,
-                ny - y,
+                cosine,
+                sine,
                 false,
                 stroke_width,
                 node_xform,
@@ -1269,6 +1327,7 @@ fn emit_marker(
             viewbox_scale,
             device_scale,
             full_xform,
+            non_scaling_stroke_style(m_style),
             clip_rect,
             &[],
             wr,
@@ -1284,6 +1343,17 @@ fn emit_marker(
 /// Angle (degrees) of a direction vector, falling back to 0 for a zero vector.
 fn tangent_angle_deg(dx: f32, dy: f32) -> f32 {
     dy.atan2(dx).to_degrees()
+}
+
+/// Angle (degrees) bisecting the incoming and outgoing segment directions.
+fn bisecting_angle_deg(in_angle: f32, out_angle: f32) -> f32 {
+    let mut in_angle = in_angle;
+    // Keep the two angles continuous (avoid wrapping artifacts at ±180°).
+    let diff = in_angle - out_angle;
+    if diff > 180.0 || diff <= -180.0 {
+        in_angle += 360.0;
+    }
+    (in_angle + out_angle) / 2.0
 }
 
 /// Clockwise rotation matrix (SVG y-down) by `angle_deg` degrees.
@@ -1361,6 +1431,7 @@ fn emit_leaf<T: crate::render::renderer::Render>(
                 viewbox_scale,
                 device_scale,
                 node_xform,
+                non_scaling_stroke_style(&style),
                 clip_rect,
                 params.complex_clips,
                 wr,

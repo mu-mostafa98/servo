@@ -578,7 +578,7 @@ fn build_tag<'dom>(
         "use" => Some(SvgTag::Container(Container::Use)),
         "symbol" => Some(SvgTag::Container(Container::Symbol)),
         "switch" => Some(SvgTag::Container(Container::Switch)),
-        "image" => image::build_image_tag(element, node, context, vw, vh).map(SvgTag::Image),
+        "image" => image::build_image_tag(element, node, context, computed, vw, vh).map(SvgTag::Image),
         _ => match build_shape(element, tag, computed, vw, vh) {
             Some(shape) => Some(SvgTag::Shape(shape)),
             // §5.3 unknown elements: an SVG-namespace element that is not a

@@ -303,7 +303,7 @@ pub(crate) fn bez_to_path_data(bez: &kurbo::BezPath) -> PathData {
 
 /// Convert a [`LengthPercentage`] to a pixel value, resolving percentages
 /// against `reference`.
-fn resolve_length_percentage(lp: &LengthPercentage, reference: f32) -> f32 {
+pub(crate) fn resolve_length_percentage(lp: &LengthPercentage, reference: f32) -> f32 {
     lp.resolve(CssLength::new(reference)).px()
 }
 

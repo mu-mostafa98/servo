@@ -38,9 +38,9 @@ use crate::render::renderer::path::{
 use crate::render::renderer::transform::compute_transform_matrix;
 use crate::{RasterSink, RasterizedImage};
 
-/// One content leaf of a masked group, ready to composite into the shared
+/// One content leaf of a flattened subtree, ready to composite into a shared
 /// pixmap.
-struct GroupLeaf {
+pub(crate) struct GroupLeaf {
     bez: BezPath,
     fill: Option<FillParams>,
     stroke: Option<StrokeParams>,
@@ -52,6 +52,254 @@ struct GroupLeaf {
     /// the masked group's and every ancestor's), mapping leaf-local space into
     /// the same layout space the union bbox and mask raster live in.
     xform: Transform2D<f32, (), ()>,
+}
+
+/// The result of flattening a container's subtree into one offscreen composite.
+enum GroupComposite {
+    /// The subtree is too complex to flatten (nested transforms/viewports/
+    /// effects); the caller falls back to per-leaf traversal.
+    NotFlat,
+    /// The subtree flattens but has nothing to draw.
+    Empty,
+    /// A finished premultiplied RGBA pixmap covering `x`/`y` (layout space,
+    /// relative to the SVG's raster offset) at `w`×`h` device pixels.
+    Ready {
+        x: f32,
+        y: f32,
+        w: u16,
+        h: u16,
+        rgba: Vec<u8>,
+    },
+}
+
+/// Collect a container's subtree, composite it source-over into one offscreen
+/// premultiplied RGBA pixmap, and return the result.
+///
+/// `leaf_opacity` is threaded into each leaf's own paint (the accumulated
+/// opacity of every *enclosing* group — the container's own opacity, if any,
+/// is applied afterwards to the finished composite, so it must not be baked
+/// into the leaves here). Children composite among themselves at full
+/// strength: overlapping children do not over-composite.
+#[allow(clippy::too_many_arguments)]
+fn composite_group_content(
+    group: &SvgNode,
+    leaf_opacity: f32,
+    raster_offset: &LayoutPoint,
+    node_xform: Transform2D<f32, (), ()>,
+    viewbox_scale: (f32, f32),
+    device_scale: f32,
+    clip_rect: Option<LayoutRect>,
+    defs: Defs<'_>,
+) -> GroupComposite {
+    // Collect the group's content leaves, accumulating opacity and transform.
+    // Nested transforms are composed into each leaf's own transform; nested
+    // viewports/effects clear `flat`, so the caller can fall back.
+    let mut flat = true;
+    let mut leaves: Vec<GroupLeaf> = Vec::new();
+    for child in &group.children {
+        collect_leaves(child, node_xform, leaf_opacity, defs, &mut flat, &mut leaves);
+    }
+    if !flat {
+        return GroupComposite::NotFlat;
+    }
+    if leaves.is_empty() {
+        return GroupComposite::Empty;
+    }
+
+    // First pass: apply each leaf's transform and the viewBox scale to its path
+    // and compute the union bounding box (in the same layout space
+    // `raster_offset` uses). The per-leaf scale (from the leaf transform's
+    // determinant) is used for the stroke inset that expands the layout-space
+    // bounding box.
+    let Some(mut union) = prepare_leaves(&mut leaves, viewbox_scale) else {
+        return GroupComposite::Empty;
+    };
+
+    // Intersect with an ancestor sub-viewport clip (when present).
+    if let Some(clip) = clip_rect {
+        let clip = Rect::new(
+            clip.min.x as f64,
+            clip.min.y as f64,
+            clip.max.x as f64,
+            clip.max.y as f64,
+        );
+        union = Rect::new(
+            union.x0.max(clip.x0),
+            union.y0.max(clip.y0),
+            union.x1.min(clip.x1),
+            union.y1.min(clip.y1),
+        );
+        if union.width() <= 0.0 || union.height() <= 0.0 {
+            return GroupComposite::Empty;
+        }
+    }
+
+    let css_w = (union.width().ceil() as u16).max(1);
+    let css_h = (union.height().ceil() as u16).max(1);
+    let w = ((css_w as f32 * device_scale).ceil() as u16).max(1);
+    let h = ((css_h as f32 * device_scale).ceil() as u16).max(1);
+
+    let rgba = render_leaves(
+        &leaves,
+        union.x0,
+        union.y0,
+        w,
+        h,
+        device_scale,
+        viewbox_scale,
+        defs,
+    );
+
+    GroupComposite::Ready {
+        x: raster_offset.x + union.x0 as f32,
+        y: raster_offset.y + union.y0 as f32,
+        w,
+        h,
+        rgba,
+    }
+}
+
+/// Upload and emit a finished group composite as a single image display item.
+fn emit_group_composite(
+    composite: GroupComposite,
+    device_scale: f32,
+    wr: &mut DisplayListBuilder,
+    sink: &RasterSink,
+) {
+    let GroupComposite::Ready { x, y, w, h, rgba } = composite else {
+        return;
+    };
+    let mut hasher = std::collections::hash_map::DefaultHasher::new();
+    rgba.hash(&mut hasher);
+    let hash = hasher.finish();
+
+    sink.emit(
+        wr,
+        RasterizedImage {
+            x,
+            y,
+            width: w as u32,
+            height: h as u32,
+            scale: device_scale,
+            data: rgba,
+            content_hash: hash,
+        },
+    );
+}
+
+/// Multiply a premultiplied RGBA pixmap by a single opacity factor, scaling RGB
+/// by the same factor as alpha so the unpremultiplied color is unchanged.
+fn apply_composite_opacity(mut rgba: Vec<u8>, opacity: f32) -> Vec<u8> {
+    if opacity >= 1.0 {
+        return rgba;
+    }
+    for px in rgba.chunks_exact_mut(4) {
+        for channel in px.iter_mut() {
+            *channel = (*channel as f32 * opacity).round() as u8;
+        }
+    }
+    rgba
+}
+
+/// Multiply a premultiplied RGBA pixmap by a mask raster, sampling the mask at
+/// each composite pixel's layout-space position. Pixels outside the mask region
+/// are fully hidden (alpha 0).
+fn apply_composite_mask(
+    mut rgba: Vec<u8>,
+    mask: &MaskRaster,
+    composite_x: f32,
+    composite_y: f32,
+    w: u16,
+    h: u16,
+    device_scale: f32,
+) -> Vec<u8> {
+    let mask_w = mask.width as usize;
+    for row in 0..h as usize {
+        for col in 0..w as usize {
+            let idx = (row * w as usize + col) * 4;
+            let lx = composite_x + (col as f32 + 0.5) / device_scale;
+            let ly = composite_y + (row as f32 + 0.5) / device_scale;
+            let mx = (lx - mask.x) * mask.scale;
+            let my = (ly - mask.y) * mask.scale;
+            let mask_alpha: f32 = if mx < 0.0
+                || my < 0.0
+                || mx >= mask.width as f32
+                || my >= mask.height as f32
+            {
+                0.0
+            } else {
+                let mxi = mx as usize;
+                let myi = my as usize;
+                mask.data[((myi * mask_w + mxi) * 4) + 3] as f32 / 255.0
+            };
+            // `rgba` is premultiplied, so scaling the mask into the alpha must
+            // scale RGB by the same factor to keep the unpremultiplied color
+            // unchanged (same as `rasterize_bez`).
+            rgba[idx + 0] = (rgba[idx + 0] as f32 * mask_alpha).round() as u8;
+            rgba[idx + 1] = (rgba[idx + 1] as f32 * mask_alpha).round() as u8;
+            rgba[idx + 2] = (rgba[idx + 2] as f32 * mask_alpha).round() as u8;
+            rgba[idx + 3] = (rgba[idx + 3] as f32 * mask_alpha).round() as u8;
+        }
+    }
+    rgba
+}
+
+/// Rasterize an opacity-composited container's subtree into one offscreen
+/// pixmap, apply the container's own opacity to the finished composite once,
+/// and emit it.
+///
+/// Group opacity is a compositing operation: the children are painted among
+/// themselves at full strength (their own opacities only) and the finished
+/// group image is then faded as a whole. Folding the group's opacity into each
+/// leaf's paint instead lets overlapping children over-composite, tinting the
+/// overlap darker than the correct single fade.
+///
+/// `ancestor_opacity` is the accumulated opacity of every enclosing group
+/// (threaded into the leaves); `own_opacity` is this container's own `opacity`,
+/// applied to the composite.
+///
+/// Returns `true` when the group was fully handled (including the empty-group
+/// case). Returns `false` when the subtree is too complex to flatten (nested
+/// transforms/viewports/effects), signalling the caller to fall back to the
+/// per-leaf path.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn rasterize_opacity_group(
+    group: &SvgNode,
+    ancestor_opacity: f32,
+    own_opacity: f32,
+    raster_offset: &LayoutPoint,
+    node_xform: Transform2D<f32, (), ()>,
+    viewbox_scale: (f32, f32),
+    device_scale: f32,
+    clip_rect: Option<LayoutRect>,
+    defs: Defs<'_>,
+    wr: &mut DisplayListBuilder,
+    sink: &RasterSink,
+) -> bool {
+    let composite = composite_group_content(
+        group,
+        ancestor_opacity,
+        raster_offset,
+        node_xform,
+        viewbox_scale,
+        device_scale,
+        clip_rect,
+        defs,
+    );
+    let (x, y, w, h, rgba) = match composite {
+        GroupComposite::NotFlat => return false,
+        GroupComposite::Empty => return true,
+        GroupComposite::Ready { x, y, w, h, rgba } => (x, y, w, h, rgba),
+    };
+    // Fade the finished composite once, as a whole.
+    let rgba = apply_composite_opacity(rgba, own_opacity);
+    emit_group_composite(
+        GroupComposite::Ready { x, y, w, h, rgba },
+        device_scale,
+        wr,
+        sink,
+    );
+    true
 }
 
 /// Rasterize a masked container's subtree into one offscreen pixmap, mask it
@@ -75,27 +323,40 @@ pub(crate) fn rasterize_masked_group(
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
 ) -> bool {
-    // Collect the group's content leaves, accumulating opacity and transform.
-    // Nested transforms are composed into each leaf's own transform; nested
-    // viewports/effects clear `flat`, so the caller can fall back.
-    let mut flat = true;
-    let mut leaves: Vec<GroupLeaf> = Vec::new();
-    for child in &group.children {
-        collect_leaves(child, node_xform, effective_opacity, defs, &mut flat, &mut leaves);
-    }
-    if !flat {
-        return false;
-    }
-    if leaves.is_empty() {
-        return true;
-    }
+    let composite = composite_group_content(
+        group,
+        effective_opacity,
+        svg_origin,
+        node_xform,
+        viewbox_scale,
+        device_scale,
+        clip_rect,
+        defs,
+    );
+    let (x, y, w, h, rgba) = match composite {
+        GroupComposite::NotFlat => return false,
+        GroupComposite::Empty => return true,
+        GroupComposite::Ready { x, y, w, h, rgba } => (x, y, w, h, rgba),
+    };
+    // Multiply the whole composite by the mask once. The mask raster lives in
+    // the same layout space as `svg_origin`, so each composite pixel is mapped
+    // through the shared layout coordinate system into the mask's pixmap.
+    let rgba = apply_composite_mask(rgba, mask, x, y, w, h, device_scale);
+    emit_group_composite(
+        GroupComposite::Ready { x, y, w, h, rgba },
+        device_scale,
+        wr,
+        sink,
+    );
+    true
+}
 
-    // First pass: apply each leaf's transform and the viewBox scale to its path
-    // and compute the union bounding box (in the same layout space `svg_origin`
-    // uses). The per-leaf scale (from the leaf transform's determinant) is used
-    // for the stroke inset that expands the layout-space bounding box.
+/// First pass over flattened leaves: bake each leaf's transform and the viewBox
+/// scale into its path and compute the union bounding box. Returns `None` when
+/// no leaf has an area.
+pub(crate) fn prepare_leaves(leaves: &mut [GroupLeaf], viewbox_scale: (f32, f32)) -> Option<Rect> {
     let mut union: Option<Rect> = None;
-    for leaf in &mut leaves {
+    for leaf in leaves.iter_mut() {
         let node_scale = (leaf.xform.m11 * leaf.xform.m22 - leaf.xform.m12 * leaf.xform.m21)
             .abs()
             .sqrt()
@@ -145,35 +406,23 @@ pub(crate) fn rasterize_masked_group(
             None => bbox,
         });
     }
+    union
+}
 
-    let Some(mut union) = union else {
-        return true;
-    };
-
-    // Intersect with an ancestor sub-viewport clip (when present).
-    if let Some(clip) = clip_rect {
-        let clip = Rect::new(
-            clip.min.x as f64,
-            clip.min.y as f64,
-            clip.max.x as f64,
-            clip.max.y as f64,
-        );
-        union = Rect::new(
-            union.x0.max(clip.x0),
-            union.y0.max(clip.y0),
-            union.x1.min(clip.x1),
-            union.y1.min(clip.y1),
-        );
-        if union.width() <= 0.0 || union.height() <= 0.0 {
-            return true;
-        }
-    }
-
-    let css_w = (union.width().ceil() as u16).max(1);
-    let css_h = (union.height().ceil() as u16).max(1);
-    let w = ((css_w as f32 * device_scale).ceil() as u16).max(1);
-    let h = ((css_h as f32 * device_scale).ceil() as u16).max(1);
-
+/// Second pass over prepared leaves: composite every fill and stroke into one
+/// premultiplied RGBA pixmap of `w`x`h` device pixels. `origin` is the
+/// layout-space position of the pixmap's top-left corner.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn render_leaves(
+    leaves: &[GroupLeaf],
+    origin_x: f64,
+    origin_y: f64,
+    w: u16,
+    h: u16,
+    device_scale: f32,
+    viewbox_scale: (f32, f32),
+    defs: Defs<'_>,
+) -> Vec<u8> {
     let mut context = vello_cpu::RenderContext::new_with(
         w,
         h,
@@ -185,9 +434,9 @@ pub(crate) fn rasterize_masked_group(
     let mut resources = vello_cpu::Resources::new();
     let mut target = vello_cpu::Pixmap::new(w, h);
 
-    // Second pass: composite each leaf's fill and stroke into the shared pixmap
-    // (in document order, source-over over transparent black).
-    for leaf in &leaves {
+    // Composite each leaf's fill and stroke into the shared pixmap (in document
+    // order, source-over over transparent black).
+    for leaf in leaves {
         if leaf.bbox.width() <= 0.0 || leaf.bbox.height() <= 0.0 {
             continue;
         }
@@ -202,16 +451,16 @@ pub(crate) fn rasterize_masked_group(
             device_scale as f64,
         ));
         bez_local.apply_affine(Affine::translate((
-            -union.x0 * device_scale as f64,
-            -union.y0 * device_scale as f64,
+            -origin_x * device_scale as f64,
+            -origin_y * device_scale as f64,
         )));
 
         // Shift a resolved gradient from the leaf's own bbox-local space into
-        // union-local space before scaling to device resolution.
+        // pixmap-local space before scaling to device resolution.
         let shift_gradient = |paint: &mut crate::render::renderer::path::ResolvedPaint| {
             if let crate::render::renderer::path::ResolvedPaint::Gradient(g, transform) = paint {
-                let dx = (leaf.bbox.x0 - union.x0) as f64;
-                let dy = (leaf.bbox.y0 - union.y0) as f64;
+                let dx = leaf.bbox.x0 - origin_x;
+                let dy = leaf.bbox.y0 - origin_y;
                 translate_gradient(g, dx, dy);
                 // A radial paint transform is a scale-about-the-center, so shift
                 // its center by conjugating with a translation.
@@ -266,8 +515,8 @@ pub(crate) fn rasterize_masked_group(
                         .iter()
                         .map(|d| *d as f64 * stroke_total_scale as f64)
                         .collect();
-                    vello_stroke =
-                        vello_stroke.with_dashes(st.dash_offset as f64 * stroke_total_scale as f64, &pattern);
+                    vello_stroke = vello_stroke
+                        .with_dashes(st.dash_offset as f64 * stroke_total_scale as f64, &pattern);
                 }
                 context.set_stroke(vello_stroke);
                 context.stroke_path(&bez_local);
@@ -278,65 +527,11 @@ pub(crate) fn rasterize_masked_group(
     context.flush();
     context.render(&mut target, &mut resources);
 
-    let mut rgba: Vec<u8> = target
+    target
         .data()
         .iter()
         .flat_map(|p| [p.r, p.g, p.b, p.a])
-        .collect();
-
-    // Multiply the whole composite by the mask once. The mask raster lives in
-    // the same layout space as `svg_origin`, so each composite pixel is mapped
-    // through the shared layout coordinate system into the mask's pixmap.
-    // Pixels outside the mask region are fully hidden (alpha 0).
-    let composite_x = svg_origin.x + union.x0 as f32;
-    let composite_y = svg_origin.y + union.y0 as f32;
-    let mask_w = mask.width as usize;
-    for row in 0..h as usize {
-        for col in 0..w as usize {
-            let idx = (row * w as usize + col) * 4;
-            let lx = composite_x + (col as f32 + 0.5) / device_scale;
-            let ly = composite_y + (row as f32 + 0.5) / device_scale;
-            let mx = (lx - mask.x) * mask.scale;
-            let my = (ly - mask.y) * mask.scale;
-            let mask_alpha: f32 = if mx < 0.0
-                || my < 0.0
-                || mx >= mask.width as f32
-                || my >= mask.height as f32
-            {
-                0.0
-            } else {
-                let mxi = mx as usize;
-                let myi = my as usize;
-                mask.data[((myi * mask_w + mxi) * 4) + 3] as f32 / 255.0
-            };
-            // `rgba` is premultiplied, so scaling the mask into the alpha must
-            // scale RGB by the same factor to keep the unpremultiplied color
-            // unchanged (same as `rasterize_bez`).
-            rgba[idx + 0] = (rgba[idx + 0] as f32 * mask_alpha).round() as u8;
-            rgba[idx + 1] = (rgba[idx + 1] as f32 * mask_alpha).round() as u8;
-            rgba[idx + 2] = (rgba[idx + 2] as f32 * mask_alpha).round() as u8;
-            rgba[idx + 3] = (rgba[idx + 3] as f32 * mask_alpha).round() as u8;
-        }
-    }
-
-    let mut hasher = std::collections::hash_map::DefaultHasher::new();
-    rgba.hash(&mut hasher);
-    let hash = hasher.finish();
-
-    sink.emit(
-        wr,
-        RasterizedImage {
-            x: composite_x,
-            y: composite_y,
-            width: w as u32,
-            height: h as u32,
-            scale: device_scale,
-            data: rgba,
-            content_hash: hash,
-        },
-    );
-
-    true
+        .collect()
 }
 
 /// Recursively collect a masked group's content leaves, accumulating opacity
@@ -345,7 +540,7 @@ pub(crate) fn rasterize_masked_group(
 /// A node whose viewport, clip-path, mask, filter, markers, or non-rasterizable
 /// paint makes it unsafe to flatten clears `flat`, so the caller falls back to
 /// the per-leaf traversal.
-fn collect_leaves(
+pub(crate) fn collect_leaves(
     node: &SvgNode,
     accumulated: Transform2D<f32, (), ()>,
     inherited_opacity: f32,

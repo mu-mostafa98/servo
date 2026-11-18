@@ -70,6 +70,52 @@ pub(crate) fn lerp_color_linear(a: &ColorF, b: &ColorF, t: f32) -> ColorF {
     )
 }
 
+/// Number of sRGB samples generated for each stop interval when approximating
+/// linear-light interpolation with a backend that can only interpolate in sRGB.
+/// 128 keeps the approximation well within one 8-bit step everywhere.
+const LINEAR_RGB_SUBDIVISIONS: usize = 128;
+
+/// Expand a gradient's stops so that interpolating them in sRGB reproduces
+/// linear-light (`linearRGB`) interpolation.
+///
+/// WebRender — and vello_cpu's color-ramp encoding — only interpolate gradient
+/// stops in sRGB. For [`ColorInterpolation::LinearRGB`] we therefore sample the
+/// true linear-light ramp at a fixed resolution here; interpolating those
+/// samples in sRGB then stays within a fraction of an 8-bit step of the exact
+/// result. For sRGB interpolation the stops are returned unchanged.
+pub(crate) fn stops_for_srgb_interpolation(
+    stops: &[GradientStop],
+    color_interpolation: ColorInterpolation,
+) -> Vec<(f32, ColorF)> {
+    if !matches!(color_interpolation, ColorInterpolation::LinearRGB) {
+        return stops
+            .iter()
+            .map(|s| (s.offset, to_colorf(&s.color)))
+            .collect();
+    }
+
+    let mut out = Vec::with_capacity(stops.len().saturating_mul(LINEAR_RGB_SUBDIVISIONS + 1));
+    let Some(first) = stops.first() else {
+        return out;
+    };
+    out.push((first.offset, to_colorf(&first.color)));
+    for pair in stops.windows(2) {
+        let (a, b) = (&pair[0], &pair[1]);
+        let ca = to_colorf(&a.color);
+        let cb = to_colorf(&b.color);
+        let range = b.offset - a.offset;
+        if range <= 0.0 {
+            out.push((b.offset, cb));
+            continue;
+        }
+        for step in 1..=LINEAR_RGB_SUBDIVISIONS {
+            let t = step as f32 / LINEAR_RGB_SUBDIVISIONS as f32;
+            out.push((a.offset + range * t, lerp_color_linear(&ca, &cb, t)));
+        }
+    }
+    out
+}
+
 /// Evaluate the color at position `t` (0.0–1.0) along the gradient stop list.
 ///
 /// Uses sRGB interpolation by default, or linear RGB when `color_interpolation`
@@ -364,15 +410,32 @@ pub(crate) fn fill_rect_with_gradient(
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
+    fill_area_with_gradient(def, bounds, bounds, ctx, opacity);
+}
+
+/// Fill `area` with a gradient, resolving the gradient's own geometry against
+/// `geometry_bounds`.
+///
+/// The two differ when the painted area is not the shape's own bounding box —
+/// a centered stroke paints a band that reaches half the stroke width beyond
+/// the shape's outline, while the gradient's `objectBoundingBox` units still
+/// resolve against the shape's bounding box.
+pub(crate) fn fill_area_with_gradient(
+    def: &GradientDef,
+    area: LayoutRect,
+    geometry_bounds: LayoutRect,
+    ctx: &mut RenderContext,
+    opacity: f32,
+) {
     match def {
         GradientDef::Linear(lg) => {
-            if !push_linear_native(lg, bounds, ctx, opacity) {
-                render_linear(lg, bounds, ctx, opacity);
+            if !push_linear_native(lg, area, geometry_bounds, ctx, opacity) {
+                render_linear(lg, area, geometry_bounds, ctx, opacity);
             }
         },
         GradientDef::Radial(rg) => {
-            if !push_radial_native(rg, bounds, ctx, opacity) {
-                render_radial(rg, bounds, ctx, opacity);
+            if !push_radial_native(rg, area, geometry_bounds, ctx, opacity) {
+                render_radial(rg, area, geometry_bounds, ctx, opacity);
             }
         },
     }
@@ -404,30 +467,22 @@ fn spread_to_extend(spread: SpreadMethod) -> Option<webrender_api::ExtendMode> {
 }
 
 /// Convert SVG gradient stops to WebRender stops, folding `opacity` into each
-/// stop's alpha (native gradient items have no item-level opacity). Returns
-/// `None` for `linearRGB` interpolation, which WebRender does not support
-/// (it always interpolates in sRGB).
+/// stop's alpha (native gradient items have no item-level opacity).
+///
+/// WebRender always interpolates in sRGB, so `linearRGB` gradients are converted
+/// to an equivalent dense sRGB stop list (see [`stops_for_srgb_interpolation`]).
 fn stops_to_webrender(
     stops: &[GradientStop],
     color_interpolation: ColorInterpolation,
     opacity: f32,
-) -> Option<Vec<webrender_api::GradientStop>> {
-    match color_interpolation {
-        ColorInterpolation::LinearRGB => None,
-        ColorInterpolation::Srgb | ColorInterpolation::Auto => Some(
-            stops
-                .iter()
-                .map(|s| {
-                    let mut c = to_colorf(&s.color);
-                    c.a *= opacity;
-                    webrender_api::GradientStop {
-                        offset: s.offset,
-                        color: c,
-                    }
-                })
-                .collect(),
-        ),
-    }
+) -> Vec<webrender_api::GradientStop> {
+    stops_for_srgb_interpolation(stops, color_interpolation)
+        .into_iter()
+        .map(|(offset, mut color)| {
+            color.a *= opacity;
+            webrender_api::GradientStop { offset, color }
+        })
+        .collect()
 }
 
 /// Whether two [`crate::model::document::GradientLength`]s denote the same
@@ -570,8 +625,9 @@ fn resolve_radial_focal(
 }
 
 /// Resolve a gradient definition to a native WebRender gradient, or `None` when
-/// it cannot be expressed natively (reflect spread, offset-focal radial, or
-/// linearRGB interpolation).
+/// it cannot be expressed natively (reflect spread or an offset-focal radial).
+/// `linearRGB` interpolation is supported by converting the stops to an
+/// equivalent sRGB stop list (see [`stops_for_srgb_interpolation`]).
 pub(crate) fn resolve_gradient(
     def: &GradientDef,
     bounds: LayoutRect,
@@ -582,7 +638,7 @@ pub(crate) fn resolve_gradient(
     match def {
         GradientDef::Linear(lg) => {
             let extend_mode = spread_to_extend(lg.spread_method)?;
-            let stops = stops_to_webrender(&lg.stops, color_interpolation, opacity)?;
+            let stops = stops_to_webrender(&lg.stops, color_interpolation, opacity);
             let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
             Some(crate::GradientKind::Linear {
                 start,
@@ -601,7 +657,7 @@ pub(crate) fn resolve_gradient(
                 return None;
             }
             let extend_mode = spread_to_extend(rg.spread_method)?;
-            let stops = stops_to_webrender(&rg.stops, color_interpolation, opacity)?;
+            let stops = stops_to_webrender(&rg.stops, color_interpolation, opacity);
             let (center, radius) = resolve_radial_center_radius(rg, bounds, ctx)?;
             Some(crate::GradientKind::Radial {
                 center,
@@ -617,31 +673,30 @@ pub(crate) fn resolve_gradient(
 /// natively (caller falls back to the software renderer).
 fn push_linear_native(
     lg: &crate::model::document::LinearGradient,
-    bounds: LayoutRect,
+    area: LayoutRect,
+    geometry_bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
 ) -> bool {
     let Some(extend_mode) = spread_to_extend(lg.spread_method) else {
         return false;
     };
-    let Some(stops) = stops_to_webrender(
+    let stops = stops_to_webrender(
         &lg.stops,
         resolve_color_interpolation(lg.color_interpolation, ctx),
         opacity,
-    ) else {
-        return false;
-    };
-    let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
+    );
+    let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
     // WebRender stores gradient geometry relative to the primitive origin (it
     // adds `bounds.min` back in the shader), while `resolve_*_geometry` returns
     // absolute layout coordinates. Subtract the primitive origin to avoid the
     // double offset.
-    let origin = bounds.min.to_vector();
+    let origin = area.min.to_vector();
     let start = start - origin;
     let end = end - origin;
     let gradient = ctx.wr.create_gradient(start, end, stops, extend_mode);
     let common = CommonItemProperties::new(
-        bounds,
+        area,
         SpaceAndClipInfo {
             spatial_id: ctx.spatial_id,
             clip_chain_id: ctx.clip_chain_id,
@@ -649,9 +704,9 @@ fn push_linear_native(
     );
     ctx.wr.push_gradient(
         &common,
-        bounds,
+        area,
         gradient,
-        bounds.size(),
+        area.size(),
         LayoutSize::new(0.0, 0.0),
     );
     true
@@ -661,7 +716,8 @@ fn push_linear_native(
 /// natively (caller falls back to the software renderer).
 fn push_radial_native(
     rg: &crate::model::document::RadialGradient,
-    bounds: LayoutRect,
+    area: LayoutRect,
+    geometry_bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
 ) -> bool {
@@ -674,24 +730,22 @@ fn push_radial_native(
     let Some(extend_mode) = spread_to_extend(rg.spread_method) else {
         return false;
     };
-    let Some(stops) = stops_to_webrender(
+    let stops = stops_to_webrender(
         &rg.stops,
         resolve_color_interpolation(rg.color_interpolation, ctx),
         opacity,
-    ) else {
-        return false;
-    };
-    let Some((center, radius)) = resolve_radial_center_radius(rg, bounds, ctx) else {
+    );
+    let Some((center, radius)) = resolve_radial_center_radius(rg, geometry_bounds, ctx) else {
         return false;
     };
     // See `push_linear_native`: WebRender adds `bounds.min` back in the shader,
     // so store the center relative to the primitive origin.
-    let center = center - bounds.min.to_vector();
+    let center = center - area.min.to_vector();
     let gradient = ctx
         .wr
         .create_radial_gradient(center, radius, stops, extend_mode);
     let common = CommonItemProperties::new(
-        bounds,
+        area,
         SpaceAndClipInfo {
             spatial_id: ctx.spatial_id,
             clip_chain_id: ctx.clip_chain_id,
@@ -699,9 +753,9 @@ fn push_radial_native(
     );
     ctx.wr.push_radial_gradient(
         &common,
-        bounds,
+        area,
         gradient,
-        bounds.size(),
+        area.size(),
         LayoutSize::new(0.0, 0.0),
     );
     true
@@ -711,14 +765,12 @@ fn push_radial_native(
 /// gradientTransform is applied in gradient coordinate space (normed bbox or user space).
 fn render_linear(
     lg: &crate::model::document::LinearGradient,
-    bounds: LayoutRect,
+    area: LayoutRect,
+    geometry_bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
-    let bx = bounds.min.x;
-    let by = bounds.min.y;
-
-    let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
+    let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
 
     let strategy = LinearStrategy {
         stops: &lg.stops,
@@ -726,11 +778,11 @@ fn render_linear(
         gy1: start.y,
         gx2: end.x,
         gy2: end.y,
-        offset_x: bx,
-        offset_y: by,
+        offset_x: area.min.x,
+        offset_y: area.min.y,
     };
     render_gradient(
-        bounds,
+        area,
         ctx,
         opacity,
         &strategy,
@@ -742,23 +794,27 @@ fn render_linear(
 /// Render a radial gradient.
 fn render_radial(
     rg: &crate::model::document::RadialGradient,
-    bounds: LayoutRect,
+    area: LayoutRect,
+    geometry_bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
-    let Some((_center, radius)) = resolve_radial_center_radius(rg, bounds, ctx) else {
+    let Some((_center, radius)) = resolve_radial_center_radius(rg, geometry_bounds, ctx) else {
         return;
     };
 
     // Honor an offset focal point (fx/fy); `center` coincides with the focal
     // only when the gradient is concentric.
-    let focal = resolve_radial_focal(rg, bounds, ctx);
+    let focal = resolve_radial_focal(rg, geometry_bounds, ctx);
 
     // Resolve the focal radius (`fr`) to the same absolute space as `r`. It is
     // a radial distance, so its percentage resolves against the normalized
     // diagonal (kept scalar; the focal disk is approximated as a circle, which
     // is exact for the common `fr=0` case).
-    let nd = normalized_diagonal(bounds.size().width, bounds.size().height);
+    let nd = normalized_diagonal(
+        geometry_bounds.size().width,
+        geometry_bounds.size().height,
+    );
     let fr = match rg.units {
         GradientUnits::ObjectBoundingBox => rg.fr.to_object_bbox().max(0.0) * nd,
         GradientUnits::UserSpaceOnUse => rg.fr.to_user_space(nd).max(0.0),
@@ -771,11 +827,11 @@ fn render_radial(
         rx: radius.width,
         ry: radius.height,
         fr,
-        offset_x: bounds.min.x,
-        offset_y: bounds.min.y,
+        offset_x: area.min.x,
+        offset_y: area.min.y,
     };
     render_gradient(
-        bounds,
+        area,
         ctx,
         opacity,
         &strategy,

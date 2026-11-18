@@ -103,6 +103,127 @@ pub(crate) fn dash_intervals(
     intervals
 }
 
+// ======================= Zero-length subpath =======================
+
+/// Render the dot that a zero-length subpath is stroked with when the line
+/// cap is `round` or `square` (SVG 1.1 §11.4).
+///
+/// A zero-length subpath paints nothing with a `butt` cap, but a `round` cap
+/// strokes it as a circle and a `square` cap as a square, both of side
+/// `stroke-width` and centred on the subpath's point.
+///
+/// `(x, y)` is the subpath's point in absolute layout space (svg_origin
+/// already added).
+pub(crate) fn stroke_zero_length_dot(x: f32, y: f32, ctx: &mut RenderContext) {
+    let Some(stroke) = &ctx.style.stroke else {
+        return;
+    };
+    if stroke.paint_server.is_none() {
+        return;
+    }
+    let stroke_width = effective_stroke_width(ctx, stroke.width.get());
+    if stroke_width <= 0.0 {
+        return;
+    }
+    // A `butt` cap leaves a zero-length subpath unpainted.
+    let line_cap = match stroke.line_cap {
+        LineCap::Butt => return,
+        LineCap::Round | LineCap::Square => stroke.line_cap,
+    };
+
+    let half_w = stroke_width / 2.0;
+    let paint = stroke
+        .paint_server
+        .as_ref()
+        .and_then(|p| ctx.defs.resolve_paint_server(p));
+
+    match &paint {
+        Some(PaintServer::Solid(svg_color)) => {
+            let mut color = to_colorf(svg_color);
+            color.a *= stroke.opacity.get() * ctx.style.opacity.get();
+            if crisp_edges(ctx) {
+                stroke_zero_length_dot_crisp(x, y, half_w, color, line_cap, ctx);
+                return;
+            }
+            // The dot is a zero-length segment of width `stroke_width`: the
+            // cap styles extend it into a circle (`round`) or a square
+            // (`square`), both centred on the segment's midpoint.
+            let segment = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(x, y - half_w),
+                LayoutSize::new(0.0, stroke_width),
+            );
+            draw_capped_rect(segment, half_w, color, line_cap, ctx.spatial_id, ctx);
+        },
+        Some(PaintServer::Gradient(def)) => {
+            let def = Arc::clone(def);
+            let dot_bounds = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(x - half_w, y - half_w),
+                LayoutSize::new(stroke_width, stroke_width),
+            );
+            // A `round` cap paints a circle: clip the gradient to it.
+            let saved_clip = ctx.clip_chain_id;
+            if line_cap == LineCap::Round {
+                let radii = BorderRadius {
+                    top_left: LayoutSize::new(half_w, half_w),
+                    top_right: LayoutSize::new(half_w, half_w),
+                    bottom_left: LayoutSize::new(half_w, half_w),
+                    bottom_right: LayoutSize::new(half_w, half_w),
+                };
+                let clip_id = ctx.wr.define_clip_rounded_rect(
+                    ctx.spatial_id,
+                    ComplexClipRegion {
+                        rect: dot_bounds,
+                        radii,
+                        mode: ClipMode::Clip,
+                    },
+                );
+                ctx.clip_chain_id = ctx
+                    .wr
+                    .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [clip_id]);
+            }
+            gradient::fill_rect_with_gradient(
+                def.as_ref(),
+                dot_bounds,
+                ctx,
+                stroke.opacity.get() * ctx.style.opacity.get(),
+            );
+            ctx.clip_chain_id = saved_clip;
+        },
+        _ => {},
+    }
+}
+
+/// Stroke the dot of a zero-length subpath with crisp, aliased edges.
+///
+/// The dot's outline is a circle (`round` cap) or a square (`square` cap)
+/// filled via the scanline tessellator, matching the aliased rendering of
+/// ordinary strokes under `shape-rendering="crispEdges"`.
+fn stroke_zero_length_dot_crisp(
+    x: f32,
+    y: f32,
+    half_w: f32,
+    color: ColorF,
+    line_cap: LineCap,
+    ctx: &mut RenderContext,
+) {
+    let stroke_width = half_w * 2.0;
+    let bounds = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(x - half_w, y - half_w),
+        LayoutSize::new(stroke_width, stroke_width),
+    );
+    let outline = match line_cap {
+        LineCap::Round => rounded_rect_outline(bounds, half_w, half_w),
+        _ => vec![
+            LyonPoint::new(bounds.min.x, bounds.min.y),
+            LyonPoint::new(bounds.max.x, bounds.min.y),
+            LyonPoint::new(bounds.max.x, bounds.max.y),
+            LyonPoint::new(bounds.min.x, bounds.max.y),
+        ],
+    };
+    let fill = FillStyle::Solid(color);
+    tessellate_contours(&[&outline], FillRule::NonZero, &fill, ctx);
+}
+
 // ======================= Shared line-segment stroke =======================
 
 /// Render a single line segment as a rotated rect filled with the stroke color
@@ -405,6 +526,62 @@ fn draw_capped_rect(
     }
 }
 
+// ======================= Centered stroke geometry =======================
+
+/// Inflate a rect by `dx` horizontally and `dy` vertically, keeping its centre.
+fn inflate_rect(bounds: LayoutRect, dx: f32, dy: f32) -> LayoutRect {
+    LayoutRect::from_origin_and_size(
+        LayoutPoint::new(bounds.min.x - dx, bounds.min.y - dy),
+        LayoutSize::new(
+            bounds.size().width + 2.0 * dx,
+            bounds.size().height + 2.0 * dy,
+        ),
+    )
+}
+
+/// Deflate a rect by `dx` horizontally and `dy` vertically, keeping its centre.
+fn deflate_rect(bounds: LayoutRect, dx: f32, dy: f32) -> LayoutRect {
+    LayoutRect::from_origin_and_size(
+        LayoutPoint::new(bounds.min.x + dx, bounds.min.y + dy),
+        LayoutSize::new(
+            (bounds.size().width - 2.0 * dx).max(0.0),
+            (bounds.size().height - 2.0 * dy).max(0.0),
+        ),
+    )
+}
+
+/// Grow every corner radius by `dx` (horizontal) and `dy` (vertical).
+fn inflate_radii(radii: BorderRadius, dx: f32, dy: f32) -> BorderRadius {
+    BorderRadius {
+        top_left: LayoutSize::new(radii.top_left.width + dx, radii.top_left.height + dy),
+        top_right: LayoutSize::new(radii.top_right.width + dx, radii.top_right.height + dy),
+        bottom_left: LayoutSize::new(radii.bottom_left.width + dx, radii.bottom_left.height + dy),
+        bottom_right: LayoutSize::new(radii.bottom_right.width + dx, radii.bottom_right.height + dy),
+    }
+}
+
+/// Shrink every corner radius by `dx` (horizontal) and `dy` (vertical).
+fn deflate_radii(radii: BorderRadius, dx: f32, dy: f32) -> BorderRadius {
+    BorderRadius {
+        top_left: LayoutSize::new(
+            (radii.top_left.width - dx).max(0.0),
+            (radii.top_left.height - dy).max(0.0),
+        ),
+        top_right: LayoutSize::new(
+            (radii.top_right.width - dx).max(0.0),
+            (radii.top_right.height - dy).max(0.0),
+        ),
+        bottom_left: LayoutSize::new(
+            (radii.bottom_left.width - dx).max(0.0),
+            (radii.bottom_left.height - dy).max(0.0),
+        ),
+        bottom_right: LayoutSize::new(
+            (radii.bottom_right.width - dx).max(0.0),
+            (radii.bottom_right.height - dy).max(0.0),
+        ),
+    }
+}
+
 // ======================= Rect stroke =======================
 
 /// Stroke an axis-aligned rectangle using the current style's stroke properties.
@@ -440,10 +617,21 @@ pub(crate) fn stroke_rect(
         return;
     }
 
+    // An SVG stroke is painted *centered* on the shape's outline: half of its
+    // width falls inside the shape and half outside. WebRender's `push_border`
+    // paints the border *inside* the rect it is given, so the outline is
+    // inflated by half the stroke width and the full width is used as the
+    // border width — the border's inner edge then lands half a stroke width
+    // inside the outline, which is exactly the centered band.
+    let (stroke_width_x, stroke_width_y) = effective_stroke_widths(ctx, stroke.width.get());
+    let half_x = stroke_width_x / 2.0;
+    let half_y = stroke_width_y / 2.0;
+    let outer_bounds = inflate_rect(bounds, half_x, half_y);
+    let outer_radii = radii.map(|r| inflate_radii(r, half_x, half_y));
+
     if let Some(PaintServer::Solid(svg_color)) = &paint {
         let mut color = to_colorf(svg_color);
         color.a *= stroke.opacity.get() * ctx.style.opacity.get();
-        let (stroke_width_x, stroke_width_y) = effective_stroke_widths(ctx, stroke.width.get());
         let widths = LayoutSideOffsets::new(
             stroke_width_y,
             stroke_width_x,
@@ -467,7 +655,7 @@ pub(crate) fn stroke_rect(
                 color,
                 style: BorderStyle::Solid,
             },
-            radius: radii.unwrap_or(BorderRadius {
+            radius: outer_radii.unwrap_or(BorderRadius {
                 top_left: LayoutSize::zero(),
                 top_right: LayoutSize::zero(),
                 bottom_left: LayoutSize::zero(),
@@ -475,49 +663,25 @@ pub(crate) fn stroke_rect(
             }),
             do_aa: true,
         });
-        let common = make_common_props(bounds, ctx.spatial_id, ctx.clip_chain_id);
-        ctx.wr.push_border(&common, bounds, widths, details);
+        let common = make_common_props(outer_bounds, ctx.spatial_id, ctx.clip_chain_id);
+        ctx.wr.push_border(&common, outer_bounds, widths, details);
     } else if let Some(PaintServer::Gradient(def)) = &paint {
         let def = Arc::clone(def);
         // Gradient border: clip a full-rect gradient fill to a band between the
         // outer shape outline (with radii for circles/ellipses) and the inset
         // inner outline, using a Clip/ClipOut clip chain. This works on any
         // background, unlike the previous white interior "punch-out".
-        let stroke_width = effective_stroke_width(ctx, stroke.width.get());
-        let inset = stroke_width;
-        let inner_bounds = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(bounds.min.x + inset, bounds.min.y + inset),
-            LayoutSize::new(
-                (bounds.size().width - inset * 2.0).max(0.0),
-                (bounds.size().height - inset * 2.0).max(0.0),
-            ),
-        );
-        // Compute inner radii for the clip-out (outer radii shrunk by stroke).
-        let inner_radii = radii.map(|r| BorderRadius {
-            top_left: LayoutSize::new(
-                (r.top_left.width - stroke_width).max(0.0),
-                (r.top_left.height - stroke_width).max(0.0),
-            ),
-            top_right: LayoutSize::new(
-                (r.top_right.width - stroke_width).max(0.0),
-                (r.top_right.height - stroke_width).max(0.0),
-            ),
-            bottom_left: LayoutSize::new(
-                (r.bottom_left.width - stroke_width).max(0.0),
-                (r.bottom_left.height - stroke_width).max(0.0),
-            ),
-            bottom_right: LayoutSize::new(
-                (r.bottom_right.width - stroke_width).max(0.0),
-                (r.bottom_right.height - stroke_width).max(0.0),
-            ),
-        });
+        let inner_bounds = deflate_rect(bounds, half_x, half_y);
+        // Compute inner radii for the clip-out (outer radii shrunk by half the
+        // stroke width).
+        let inner_radii = radii.map(|r| deflate_radii(r, half_x, half_y));
 
         // Outer outline clip (Clip) — the gradient is confined to the shape.
-        let outer_clip = if let Some(r) = radii {
+        let outer_clip = if let Some(r) = outer_radii {
             let clip_id = ctx.wr.define_clip_rounded_rect(
                 ctx.spatial_id,
                 ComplexClipRegion {
-                    rect: bounds,
+                    rect: outer_bounds,
                     radii: r,
                     mode: ClipMode::Clip,
                 },
@@ -563,7 +727,15 @@ pub(crate) fn stroke_rect(
 
         let saved_clip = ctx.clip_chain_id;
         ctx.clip_chain_id = band_clip;
-        gradient::fill_rect_with_gradient(def.as_ref(), bounds, ctx, stroke.opacity.get());
+        // The band reaches half a stroke width beyond the shape's outline, but
+        // the gradient's own geometry still resolves against the shape's box.
+        gradient::fill_area_with_gradient(
+            def.as_ref(),
+            outer_bounds,
+            bounds,
+            ctx,
+            stroke.opacity.get(),
+        );
         ctx.clip_chain_id = saved_clip;
     }
 }
@@ -1156,10 +1328,10 @@ fn rounded_rect_outline(bounds: LayoutRect, rx: f32, ry: f32) -> Vec<LyonPoint> 
 }
 
 /// Stroke a rounded rectangle (circle/ellipse/rounded-rect) with a solid colour
-/// using crisp, aliased edges. The ring is the band between the outer outline
-/// and the outline inset by `stroke_width` — the same geometry WebRender's
-/// `push_border` produces for a rounded border, so a `crispEdges` shape matches
-/// its `geometricPrecision` twin in size and differs only in aliasing.
+/// using crisp, aliased edges. The ring is the band centered on the shape's
+/// outline — the same geometry WebRender's `push_border` produces for a rounded
+/// border, so a `crispEdges` shape matches its `geometricPrecision` twin in size
+/// and differs only in aliasing.
 fn stroke_rounded_rect_crisp(
     bounds: LayoutRect,
     radii: BorderRadius,
@@ -1170,19 +1342,17 @@ fn stroke_rounded_rect_crisp(
     // `rect_bounds_and_radii` sets all four corners to the same (rx, ry).
     let rx = radii.top_left.width;
     let ry = radii.top_left.height;
+    let half = stroke_width / 2.0;
 
-    let outer = rounded_rect_outline(bounds, rx, ry);
-    let inner_bounds = LayoutRect::from_origin_and_size(
-        LayoutPoint::new(bounds.min.x + stroke_width, bounds.min.y + stroke_width),
-        LayoutSize::new(
-            (bounds.size().width - stroke_width * 2.0).max(0.0),
-            (bounds.size().height - stroke_width * 2.0).max(0.0),
-        ),
+    let outer = rounded_rect_outline(
+        inflate_rect(bounds, half, half),
+        rx + half,
+        ry + half,
     );
     let inner = rounded_rect_outline(
-        inner_bounds,
-        (rx - stroke_width).max(0.0),
-        (ry - stroke_width).max(0.0),
+        deflate_rect(bounds, half, half),
+        (rx - half).max(0.0),
+        (ry - half).max(0.0),
     );
 
     let fill = FillStyle::Solid(color);

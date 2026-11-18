@@ -4,11 +4,18 @@
 
 //! SVG pattern fill rendering.
 
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
+
 use euclid::Transform2D;
-use webrender_api::units::{LayoutPoint, LayoutRect, LayoutTransform};
-use webrender_api::{PropertyBinding, ReferenceFrameKind, TransformStyle};
+use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize, LayoutTransform};
+use webrender_api::{
+    AlphaType, ClipChainId, ColorF, CommonItemProperties, ImageRendering, PrimitiveFlags,
+    PropertyBinding, ReferenceFrameKind, SpatialId, TransformStyle,
+};
 
 use crate::model::document::{PatternContentUnits, PatternDef, PatternUnits};
+use crate::render::effects::group::{GroupLeaf, collect_leaves, prepare_leaves, render_leaves};
 use crate::render::renderer::{
     MAX_PAINT_SERVER_DEPTH, Render, RenderContext, clip_chain_option, transform,
 };
@@ -60,18 +67,48 @@ pub(crate) fn fill_rect_with_pattern(
     };
 
     let has_transform = !def.transform.is_empty();
+    let transform_matrix = transform::compute_transform_matrix(&def.transform);
 
-    // When a patternTransform is present, the tiles may be rotated/skewed, so
-    // expand the tiling range to guarantee full coverage of the host shape.
-    let margin = if has_transform {
-        (tile_w * tile_w + tile_h * tile_h).sqrt()
+    // Determine the range of tile indices covering the host shape. The tiles
+    // live in the pattern's local coordinate system, so map the shape's bounds
+    // into that space with the inverse of `patternTransform` and take the
+    // resulting bounding box. This is required for rotated/skewed patterns: a
+    // margin around the untransformed bounds is not enough because the shape
+    // can extend arbitrarily far along the rotated axes.
+    let (start_col, start_row, end_col, end_row) = if has_transform {
+        let Some(inverse) = transform_matrix.inverse() else {
+            return;
+        };
+        let to_local =
+            |x: f32, y: f32| inverse.transform_point(euclid::Point2D::new(x - ox, y - oy));
+        let corners = [
+            to_local(bounds.min.x, bounds.min.y),
+            to_local(bounds.max.x, bounds.min.y),
+            to_local(bounds.max.x, bounds.max.y),
+            to_local(bounds.min.x, bounds.max.y),
+        ];
+        let mut min = corners[0];
+        let mut max = corners[0];
+        for corner in &corners[1..] {
+            min.x = min.x.min(corner.x);
+            min.y = min.y.min(corner.y);
+            max.x = max.x.max(corner.x);
+            max.y = max.y.max(corner.y);
+        }
+        (
+            (min.x / tile_w).floor() as i32,
+            (min.y / tile_h).floor() as i32,
+            (max.x / tile_w).ceil() as i32,
+            (max.y / tile_h).ceil() as i32,
+        )
     } else {
-        0.0
+        (
+            ((bounds.min.x - ox) / tile_w).floor() as i32,
+            ((bounds.min.y - oy) / tile_h).floor() as i32,
+            ((bounds.max.x - ox) / tile_w).ceil() as i32,
+            ((bounds.max.y - oy) / tile_h).ceil() as i32,
+        )
     };
-    let start_col = ((bounds.min.x - ox - margin) / tile_w).floor() as i32;
-    let start_row = ((bounds.min.y - oy - margin) / tile_h).floor() as i32;
-    let end_col = ((bounds.max.x - ox + margin) / tile_w).ceil() as i32;
-    let end_row = ((bounds.max.y - oy + margin) / tile_h).ceil() as i32;
 
     // Clip the entire pattern fill to the shape bounds once.
     let bounds_clip_id = ctx.wr.define_clip_rect(ctx.spatial_id, bounds);
@@ -79,23 +116,76 @@ pub(crate) fn fill_rect_with_pattern(
         .wr
         .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [bounds_clip_id]);
 
-    let scale_for_content = matches!(
-        def.pattern_content_units,
-        PatternContentUnits::ObjectBoundingBox
-    );
+    // A `viewBox` overrides `patternContentUnits` (SVG 1.1 §13.3), so only
+    // apply the objectBoundingBox scale when there is no viewBox. The scale is
+    // the bounding box of the element being filled, not the tile size.
+    let content_scale = match def.pattern_content_units {
+        PatternContentUnits::ObjectBoundingBox if def.view_box.is_none() => {
+            Some((bounds.size().width, bounds.size().height))
+        },
+        _ => None,
+    };
 
     // Apply patternTransform once (outside the tile loop) so the pattern
-    // coordinate system is transformed, then tile inside it.
-    let mut base_origin = LayoutPoint::new(ox, oy);
+    // coordinate system is transformed, then tile inside it. A single
+    // reference frame anchored at the pattern origin is used rather than one
+    // frame per operation, so the tile grid and the shape bounds share the
+    // exact same transform.
     let mut base_spatial = ctx.spatial_id;
     let mut base_pushed: u32 = 0;
-    for op in &def.transform {
-        let result = transform::apply_transform_op(op, base_origin, base_spatial, ctx.wr);
-        base_origin = result.child_origin;
-        base_spatial = result.child_spatial_id;
-        if result.pushed_frame {
-            base_pushed += 1;
+    if has_transform {
+        let lt = transform::to_layout_transform(&transform_matrix);
+        base_spatial = ctx.wr.push_reference_frame(
+            LayoutPoint::new(ox, oy),
+            ctx.spatial_id,
+            TransformStyle::Flat,
+            PropertyBinding::Value(lt),
+            ReferenceFrameKind::Transform {
+                is_2d_scale_translation: false,
+                should_snap: false,
+                paired_with_perspective: false,
+            },
+        );
+        base_pushed = 1;
+    }
+
+    // Prefer rendering the tile content once into a texture and repeating it in
+    // the pattern's (possibly rotated/skewed) coordinate system. Besides being
+    // much cheaper than drawing every tile individually, this avoids the
+    // antialiasing seams and double-compositing that per-tile drawing produces
+    // where adjacent translucent tiles meet.
+    let repeat_bounds = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(
+            if has_transform {
+                start_col as f32 * tile_w
+            } else {
+                ox + start_col as f32 * tile_w
+            },
+            if has_transform {
+                start_row as f32 * tile_h
+            } else {
+                oy + start_row as f32 * tile_h
+            },
+        ),
+        LayoutSize::new(
+            (end_col - start_col) as f32 * tile_w,
+            (end_row - start_row) as f32 * tile_h,
+        ),
+    );
+    if push_pattern_tile_image(
+        def,
+        tile_w,
+        tile_h,
+        repeat_bounds,
+        content_scale,
+        base_spatial,
+        bounds_clip,
+        ctx,
+    ) {
+        for _ in 0..base_pushed {
+            ctx.wr.pop_reference_frame();
         }
+        return;
     }
 
     for row in start_row..end_row {
@@ -112,10 +202,8 @@ pub(crate) fn fill_rect_with_pattern(
             // Clip this tile's content to its own tile bounds (in the tile's
             // local space, after patternTransform) so shapes don't bleed into
             // adjacent tiles.
-            let tile_bounds = LayoutRect::from_origin_and_size(
-                tile_origin,
-                webrender_api::units::LayoutSize::new(tile_w, tile_h),
-            );
+            let tile_bounds =
+                LayoutRect::from_origin_and_size(tile_origin, LayoutSize::new(tile_w, tile_h));
             let tile_clip_id = ctx.wr.define_clip_rect(base_spatial, tile_bounds);
             let tile_clip = ctx
                 .wr
@@ -156,10 +244,9 @@ pub(crate) fn fill_rect_with_pattern(
             }
 
             // When patternContentUnits="objectBoundingBox", shape coordinates
-            // are in a 0..1 unit space — scale by tile dimensions.
-            let (origin, spatial, pushed) = if scale_for_content && tile_w > 0.0 && tile_h > 0.0 {
-                let scale_x = tile_w;
-                let scale_y = tile_h;
+            // are in a 0..1 unit space scaled by the host element's bounding
+            // box (not the tile size).
+            let (origin, spatial, pushed) = if let Some((scale_x, scale_y)) = content_scale {
                 let fid = ctx.wr.push_reference_frame(
                     t_origin,
                     t_spatial,
@@ -212,3 +299,99 @@ pub(crate) fn fill_rect_with_pattern(
         ctx.wr.pop_reference_frame();
     }
 }
+
+/// Render the pattern's tile content once with the CPU rasterizer and push it as
+/// a repeating image in the pattern's coordinate space.
+///
+/// This matches how browsers implement patterns (rasterize one tile, then
+/// repeat the texture) and avoids both the antialiasing seams where adjacent
+/// translucent tiles meet and the soft edges that result from antialiasing every
+/// rotated tile separately. Returns `false` when the content cannot be flattened
+/// (nested patterns/images/effects), letting the caller fall back to per-tile
+/// rendering.
+#[allow(clippy::too_many_arguments)]
+fn push_pattern_tile_image(
+    def: &PatternDef,
+    tile_w: f32,
+    tile_h: f32,
+    repeat_bounds: LayoutRect,
+    content_scale: Option<(f32, f32)>,
+    spatial_id: SpatialId,
+    clip_chain_id: ClipChainId,
+    ctx: &mut RenderContext,
+) -> bool {
+    let device_scale = ctx.device_scale;
+    let w = ((tile_w * device_scale).round() as i64).max(1);
+    let h = ((tile_h * device_scale).round() as i64).max(1);
+    if w > u16::MAX as i64 || h > u16::MAX as i64 {
+        return false;
+    }
+
+    // Tile content coordinates -> tile space, including `viewBox` /
+    // patternContentUnits and any objectBoundingBox scaling.
+    let mut content = Transform2D::<f32, (), ()>::identity();
+    if let Some((scale_x, scale_y)) = content_scale {
+        content = Transform2D::<f32, (), ()>::scale(scale_x, scale_y);
+    }
+    if let Some(vb) = &def.view_box {
+        let (sx, sy, tx, ty) = compute_viewbox_transform(
+            vb.width.get(),
+            vb.height.get(),
+            tile_w,
+            tile_h,
+            def.aspect_ratio.as_ref(),
+        );
+        let view_box = Transform2D::<f32, (), ()>::translation(-vb.min_x.get(), -vb.min_y.get())
+            .then(&Transform2D::<f32, (), ()>::scale(sx, sy))
+            .then(&Transform2D::<f32, (), ()>::translation(tx, ty));
+        content = content.then(&view_box);
+    }
+
+    let mut flat = true;
+    let mut leaves: Vec<GroupLeaf> = Vec::new();
+    for child in &def.root.children {
+        collect_leaves(child, content, 1.0, ctx.defs, &mut flat, &mut leaves);
+    }
+    if !flat || leaves.is_empty() {
+        return false;
+    }
+    if prepare_leaves(&mut leaves, ctx.viewbox_scale).is_none() {
+        return false;
+    }
+
+    let rgba = render_leaves(
+        &leaves,
+        0.0,
+        0.0,
+        w as u16,
+        h as u16,
+        device_scale,
+        ctx.viewbox_scale,
+        ctx.defs,
+    );
+
+    let mut hasher = DefaultHasher::new();
+    rgba.hash(&mut hasher);
+    let Some(key) = ctx.sink.uploader.upload(hasher.finish(), rgba, w as u32, h as u32) else {
+        return false;
+    };
+
+    let common = CommonItemProperties {
+        clip_rect: repeat_bounds,
+        spatial_id,
+        clip_chain_id,
+        flags: PrimitiveFlags::default(),
+    };
+    ctx.wr.push_repeating_image(
+        &common,
+        repeat_bounds,
+        LayoutSize::new(tile_w, tile_h),
+        LayoutSize::zero(),
+        ImageRendering::Auto,
+        AlphaType::PremultipliedAlpha,
+        key,
+        ColorF::WHITE,
+    );
+    true
+}
+

@@ -42,31 +42,22 @@ pub(crate) fn build_text_run(
     if text.is_empty() {
         return None;
     }
-    let mut text = text;
     let mut x = parse_length_list("x", get, fs);
     let mut y = parse_length_list("y", get, fs);
     // Override the line origin with the computed-style x/y longhand (folded
     // from the first attribute value), so CSS/WAAPI animation of x/y moves the
-    // whole run. Merged before RTL reversal so it targets the logical first
-    // character (the line origin) in both text directions.
+    // whole run. The first value is the line origin the anchor applies to, in
+    // both text directions.
     if let Some((css_x, css_y)) = css_origin {
         merge_origin(css_x, &mut x);
         merge_origin(css_y, &mut y);
     }
-    let mut dx = parse_length_list("dx", get, fs);
-    let mut dy = parse_length_list("dy", get, fs);
+    let dx = parse_length_list("dx", get, fs);
+    let dy = parse_length_list("dy", get, fs);
     let mut rotate = parse_rotate_list(get);
     let text_length = get("textLength").and_then(|v| parse_length_token(&v, fs));
     let length_adjust = parse_length_adjust(get);
-    let rtl = apply_rtl_direction(
-        &mut text,
-        &mut x,
-        &mut y,
-        &mut dx,
-        &mut dy,
-        &mut rotate,
-        get,
-    );
+    let rtl = apply_rtl_direction(&mut rotate, get);
     Some(TextSpan {
         text,
         x,
@@ -125,16 +116,13 @@ fn parse_length_adjust(get: &dyn Fn(&str) -> Option<String>) -> LengthAdjust {
         .unwrap_or(LengthAdjust::Spacing)
 }
 
-/// If the element is `direction="rtl"`, reverse the per-character position lists
-/// (`x`/`y`/`dx`/`dy`/`rotate`) so they line up with the visual glyph order
-/// produced by RTL shaping. The text itself is left in logical order — the
-/// shaper produces the reversed glyph order for RTL.
+/// Record whether the element is `direction="rtl"`, so the shaper resolves the
+/// text's Unicode bidi levels with RTL as the paragraph embedding direction
+/// (each level run keeps its internal character order). The per-character
+/// `x`/`y`/`dx`/`dy` lists stay in logical order; only `rotate` is reversed,
+/// because the renderer indexes it by visual glyph position rather than by
+/// logical character.
 fn apply_rtl_direction(
-    _text: &mut String,
-    x: &mut Vec<f32>,
-    y: &mut Vec<f32>,
-    dx: &mut Vec<f32>,
-    dy: &mut Vec<f32>,
     rotate: &mut Vec<f32>,
     get: &dyn Fn(&str) -> Option<String>,
 ) -> bool {
@@ -143,10 +131,6 @@ fn apply_rtl_direction(
         .map(|d| d.trim().eq_ignore_ascii_case("rtl"))
         .unwrap_or(false);
     if is_rtl {
-        x.reverse();
-        y.reverse();
-        dx.reverse();
-        dy.reverse();
         rotate.reverse();
     }
     is_rtl

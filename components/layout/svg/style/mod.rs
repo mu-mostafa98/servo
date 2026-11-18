@@ -49,7 +49,13 @@ use self::stroke::apply_stroke_presentation_attrs;
 
 /// Bridge from Servo's [`ComputedValues`] to SVG engine types.
 pub(crate) trait FromComputedValues: Sized {
-    fn from_computed_values(values: &style::properties::ComputedValues) -> Option<Self>;
+    /// `current_color` is the effective `color` for `currentColor` resolution;
+    /// it may differ from the computed `color` when the SVG `color`
+    /// presentation attribute (which Stylo does not synthesize) is involved.
+    fn from_computed_values(
+        values: &style::properties::ComputedValues,
+        current_color: &SvgColor,
+    ) -> Option<Self>;
 }
 
 // ======================= ResolvedPaint =======================
@@ -71,14 +77,21 @@ pub(crate) fn absolute_to_svg_color(absolute: &AbsoluteColor) -> SvgColor {
     )
 }
 
-fn resolve_svg_paint(
-    svg_paint: &SVGPaint,
-    computed_values: &style::properties::ComputedValues,
-) -> ResolvedPaint {
+/// Convert an [`SvgColor`] back into a Servo [`AbsoluteColor`] (sRGB).
+fn svg_color_to_absolute(color: &SvgColor) -> AbsoluteColor {
+    AbsoluteColor::new(
+        ColorSpace::Srgb,
+        color.red as f32 / 255.0,
+        color.green as f32 / 255.0,
+        color.blue as f32 / 255.0,
+        color.alpha as f32 / 255.0,
+    )
+}
+
+fn resolve_svg_paint(svg_paint: &SVGPaint, current_color: &SvgColor) -> ResolvedPaint {
     match &svg_paint.kind {
         SVGPaintKind::Color(color) => {
-            let current_color = computed_values.clone_color();
-            let absolute = color.resolve_to_absolute(&current_color);
+            let absolute = color.resolve_to_absolute(&svg_color_to_absolute(current_color));
             ResolvedPaint::Color(absolute_to_svg_color(&absolute))
         },
         SVGPaintKind::None => ResolvedPaint::None,
@@ -105,7 +118,10 @@ fn resolve_svg_paint(
 // ======================= FromComputedValues impl: NodeStyle =======================
 
 impl FromComputedValues for NodeStyle {
-    fn from_computed_values(values: &style::properties::ComputedValues) -> Option<Self> {
+    fn from_computed_values(
+        values: &style::properties::ComputedValues,
+        current_color: &SvgColor,
+    ) -> Option<Self> {
         let svg_visibility = match values.get_inherited_box().visibility {
             style::computed_values::visibility::T::Visible => Visibility::Visible,
             style::computed_values::visibility::T::Hidden |
@@ -178,8 +194,8 @@ impl FromComputedValues for NodeStyle {
         Some(NodeStyle {
             visibility: svg_visibility,
             display: svg_display,
-            fill: FillParams::from_computed_values(values),
-            stroke: StrokeParams::from_computed_values(values),
+            fill: FillParams::from_computed_values(values, current_color),
+            stroke: StrokeParams::from_computed_values(values, current_color),
             // `clip-rule` is Gecko-only in Stylo, so it is never populated here;
             // `apply_clip_rule_attr` layers the raw attribute on afterwards.
             clip_rule: FillRule::NonZero,
@@ -274,18 +290,11 @@ pub(crate) fn build_style(
     // with correct cascade precedence — inline style and class rules already
     // beat the attributes. Re-applying them below would invert that precedence.
     let stylo_resolved = element.style_data().is_some();
-    let (mut style, css_transform, computed_color) = if stylo_resolved {
-        let computed = node.style(&context.style_context);
-        let style = NodeStyle::from_computed_values(&computed).unwrap_or_default();
-        let computed_color = absolute_to_svg_color(&computed.clone_color());
-        (
-            style,
-            css_transform_from_computed(&computed, view_width, view_height),
-            computed_color,
-        )
-    } else {
-        (NodeStyle::default(), Vec::new(), SvgColor::black())
-    };
+    let computed = stylo_resolved.then(|| node.style(&context.style_context));
+    let computed_color = computed
+        .as_ref()
+        .map(|computed| absolute_to_svg_color(&computed.clone_color()))
+        .unwrap_or_else(SvgColor::black);
 
     // Effective `color` for `currentColor` resolution. Stylo already resolves
     // the CSS `color` property (inline style, class rules, HTML ancestry), but
@@ -300,6 +309,14 @@ pub(crate) fn build_style(
         parse_css_color_or_current(&attr, &fallback).unwrap_or(fallback)
     } else {
         fallback
+    };
+
+    let (mut style, css_transform) = match computed.as_ref() {
+        Some(computed) => (
+            NodeStyle::from_computed_values(computed, &current_color).unwrap_or_default(),
+            css_transform_from_computed(computed, view_width, view_height),
+        ),
+        None => (NodeStyle::default(), Vec::new()),
     };
 
     let attr_ops = parse_transform_str(&get_attr(&element, "transform").unwrap_or_default());

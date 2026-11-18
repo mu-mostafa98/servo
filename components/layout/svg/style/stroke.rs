@@ -21,9 +21,12 @@ use crate::svg::primitives::attrs::{
 use crate::svg::primitives::paint::parse_paint_server;
 
 impl FromComputedValues for StrokeParams {
-    fn from_computed_values(values: &style::properties::ComputedValues) -> Option<Self> {
+    fn from_computed_values(
+        values: &style::properties::ComputedValues,
+        current_color: &SvgColor,
+    ) -> Option<Self> {
         let inherited_svg = values.get_inherited_svg();
-        let paint = resolve_svg_paint(&inherited_svg.stroke, values);
+        let paint = resolve_svg_paint(&inherited_svg.stroke, current_color);
         let opacity = match inherited_svg.stroke_opacity {
             SVGOpacity::Opacity(opacity) => Opacity::new(opacity),
             _ => Opacity::ONE,

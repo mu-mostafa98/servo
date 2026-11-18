@@ -5,7 +5,7 @@
 //! Rendering for SVG `<line>`.
 
 use crate::model::element::shape::Line;
-use crate::render::renderer::{Render, RenderContext, stroke};
+use crate::render::renderer::{Render, RenderContext, ZERO_LENGTH_EPSILON, stroke};
 
 /// Renders an SVG `<line>`.
 ///
@@ -27,12 +27,19 @@ impl Render for Line {
         }
 
         // Delegate to the shared line-segment helper with absolute coordinates.
-        stroke::stroke_line_segment(
-            ctx.svg_origin.x + self.x1.get(),
-            ctx.svg_origin.y + self.y1.get(),
-            ctx.svg_origin.x + self.x2.get(),
-            ctx.svg_origin.y + self.y2.get(),
-            ctx,
-        );
+        let x1 = ctx.svg_origin.x + self.x1.get();
+        let y1 = ctx.svg_origin.y + self.y1.get();
+        let x2 = ctx.svg_origin.x + self.x2.get();
+        let y2 = ctx.svg_origin.y + self.y2.get();
+
+        // A zero-length subpath is not stroked with a `butt` cap, but with a
+        // `round` or `square` cap it is stroked as a dot centred on the
+        // segment's point (SVG 1.1 §11.4).
+        if (x2 - x1).abs() < ZERO_LENGTH_EPSILON && (y2 - y1).abs() < ZERO_LENGTH_EPSILON {
+            stroke::stroke_zero_length_dot(x1, y1, ctx);
+            return;
+        }
+
+        stroke::stroke_line_segment(x1, y1, x2, y2, ctx);
     }
 }
