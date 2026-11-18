@@ -275,45 +275,52 @@ fn render_node(
             cur_clip_chain = wr.define_clip_chain(clip_chain_option(cur_clip_chain), [vp_clip_id]);
         }
 
-        if let Some(vb) = &vp.viewport.view_box {
-            let (sx, sy, ox, oy) = compute_viewbox_transform(
-                vb.width.get(),
-                vb.height.get(),
-                vp.viewport.width.get(),
-                vp.viewport.height.get(),
-                vp.viewport.aspect_ratio.as_ref(),
-            );
+        // Resolve the viewBox → viewport mapping, or the identity when the
+        // nested `<svg>` has no `viewBox`. Either way the nested viewport's
+        // `x`/`y` must translate its content into the parent coordinate system.
+        let (sx, sy, ox, oy, min_x, min_y) = match vp.viewport.view_box.as_ref() {
+            Some(vb) => {
+                let (sx, sy, ox, oy) = compute_viewbox_transform(
+                    vb.width.get(),
+                    vb.height.get(),
+                    vp.viewport.width.get(),
+                    vp.viewport.height.get(),
+                    vp.viewport.aspect_ratio.as_ref(),
+                );
+                (sx, sy, ox, oy, vb.min_x.get(), vb.min_y.get())
+            },
+            None => (1.0, 1.0, 0.0, 0.0, 0.0, 0.0),
+        };
 
-            // Translation that maps viewBox space → parent space:
-            //   p -> scale(p - min) + offset, then + (x, y)
-            //   = scale*p + (x + offset - scale*min)
-            let tx = vp.x.get() + ox - vb.min_x.get() * sx;
-            let ty = vp.y.get() + oy - vb.min_y.get() * sy;
-            raster_offset = LayoutPoint::new(
-                raster_offset.x + cur_viewbox_scale.0 * tx,
-                raster_offset.y + cur_viewbox_scale.1 * ty,
-            );
+        // Translation that maps nested user space → parent space:
+        //   p -> scale(p - min) + offset, then + (x, y)
+        //   = scale*p + (x + offset - scale*min)
+        let tx = vp.x.get() + ox - min_x * sx;
+        let ty = vp.y.get() + oy - min_y * sy;
+        raster_offset = LayoutPoint::new(
+            raster_offset.x + cur_viewbox_scale.0 * tx,
+            raster_offset.y + cur_viewbox_scale.1 * ty,
+        );
 
-            let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x.get(), -vb.min_y.get());
-            let s = Transform2D::<f32, (), ()>::scale(sx, sy);
-            let t2 = Transform2D::<f32, (), ()>::translation(ox, oy);
-            let combined = t1.then(&s).then(&t2);
-            let lt = transform::to_layout_transform(&combined);
-            cur_spatial_id = wr.push_reference_frame(
-                vp_origin,
-                cur_spatial_id,
-                TransformStyle::Flat,
-                PropertyBinding::Value(lt),
-                ReferenceFrameKind::Transform {
-                    is_2d_scale_translation: false,
-                    should_snap: false,
-                    paired_with_perspective: false,
-                },
-            );
-            cur_origin = LayoutPoint::new(0.0, 0.0);
-            pushed_count += 1;
-            cur_viewbox_scale = (cur_viewbox_scale.0 * sx, cur_viewbox_scale.1 * sy);
-        }
+        let t1 = Transform2D::<f32, (), ()>::translation(-min_x, -min_y);
+        let s = Transform2D::<f32, (), ()>::scale(sx, sy);
+        let t2 = Transform2D::<f32, (), ()>::translation(ox, oy);
+        let combined = t1.then(&s).then(&t2);
+        let lt = transform::to_layout_transform(&combined);
+        cur_spatial_id = wr.push_reference_frame(
+            vp_origin,
+            cur_spatial_id,
+            TransformStyle::Flat,
+            PropertyBinding::Value(lt),
+            ReferenceFrameKind::Transform {
+                is_2d_scale_translation: false,
+                should_snap: false,
+                paired_with_perspective: false,
+            },
+        );
+        cur_origin = LayoutPoint::new(0.0, 0.0);
+        pushed_count += 1;
+        cur_viewbox_scale = (cur_viewbox_scale.0 * sx, cur_viewbox_scale.1 * sy);
     }
 
     // Step 3 — Resolve effects (clip-path, mask, filter).
