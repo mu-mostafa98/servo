@@ -61,9 +61,10 @@ SVG element.
 
 ## 4. Scope
 
-**Scope in one line:** v0 renders a fixed whitelist of trusted, static SVG
-elements for pre-validated, author-controlled input. Adversarial and malicious
-SVG are explicitly out of scope; the engine is not a security boundary.
+**Scope in one line:** v0 renders a fixed whitelist of static SVG elements (the
+subset below) for pre-validated, author-controlled input. Adversarial input is
+guarded by five defensive layers; the engine is
+not a security boundary.
 
 **Biggest feature — CSS cascade and external styles.** Styles are resolved
 through Stylo's `ComputedValues`, so external stylesheets, inheritance, and the
@@ -102,17 +103,6 @@ attributes: `fill`, `fill-opacity`, `fill-rule`, `stroke`, `stroke-width`,
 | Paint | `<radialGradient>` | `cx`, `cy`, `r`, `fx`, `fy`, `gradientUnits`, `gradientTransform`, `spreadMethod` |
 | Paint | `<stop>` | `offset`, `stop-color`, `stop-opacity` |
 | Paint | `<pattern>` | `x`, `y`, `width`, `height`, `patternUnits`, `patternContentUnits`, `patternTransform`, `viewBox`, `preserveAspectRatio` |
-| Effect | `<clipPath>` | `clipPathUnits` |
-| Effect | `<mask>` | — (masking shapes are its children) |
-| Effect | `<filter>` | `x`, `y`, `width`, `height` |
-| Effect | `<feGaussianBlur>` | `stdDeviation` |
-| Effect | `<feDropShadow>` | `dx`, `dy`, `stdDeviation`, `flood-color`, `flood-opacity` |
-| Effect | `<feColorMatrix>` | `type`, `values` |
-| Effect | `<feOffset>` | `dx`, `dy` |
-| Effect | `<feFlood>` | `flood-color`, `flood-opacity` |
-| Effect | `<feComposite>` | `operator`, `k1`–`k4` (arithmetic + Porter-Duff) |
-| Effect | `<feTile>` | — |
-| Effect | `<feImage>` | `href` / `xlink:href` (node emitted; image loading not yet wired) |
 | Text | `<text>` | `x`, `y`, `dx`, `dy`, `rotate`, `text-anchor`, `dominant-baseline`, `direction`, `textLength`, `lengthAdjust` |
 | Text | `<tspan>` | `x`, `y`, `dx`, `dy`, `rotate`, `text-anchor`, `dominant-baseline`, `direction` |
 | Text | `<textPath>` | `href` / `xlink:href`, `startOffset`, `text-anchor` — text placed along a referenced `<path>` |
@@ -135,9 +125,12 @@ host — is out of scope:
 
 The engine is **not a security boundary**: no guarantee it terminates, stays
 within memory/CPU bounds, avoids panics/stack-overflow/OOM, or preserves host
-integrity. Excluding adversarial input is the caller's responsibility; the
-engine **must not** be exposed to untrusted input (user uploads, multi-tenant,
-network-facing) unless the deployer provides that exclusion.
+integrity. Five defensive layers cap specific
+resource-exhaustion and data-exfiltration vectors, but they are limits rather
+than a complete sandbox. Excluding adversarial input is the caller's
+responsibility; the engine **must not** be exposed to untrusted input (user
+uploads, multi-tenant, network-facing) unless the deployer provides that
+exclusion.
 
 **Constraints**
 
@@ -232,13 +225,10 @@ flowchart TB
 
 | Module | Responsibility |
 |--------|----------------|
-| [`tree`](src/model/tree.rs) | Data model — tree and node types |
-| [`shapes`](src/shapes/mod.rs) | Data model — shape types |
-| [`style`](src/style/mod.rs) | Data model — paint and style parameters |
-| [`text`](src/text.rs) | Data model — text |
-| [`image`](src/image.rs) | Data model — image |
-| [`traversal`](src/traversal.rs) | recursive walk |
-| [`renderer`](src/renderer/mod.rs) | shape rendering |
+| [`model`](model/) | Pure data model (no WebRender / `vello_cpu`): `document` (`SvgTree`, viewport, `defs`), `element` (`SvgNode`, `SvgTag`), `style` (computed paint), `geometry`, `transform`, `units`, `resource`, `error` |
+| [`render`](render/) | Rendering: `traversal` (`render_svg_tree` walk), `geometry`, `hit_test`, `tessellator` |
+| [`render/effects`](render/effects/) | Effect wrapping: `clip`, `filter`, `group`, `mask` |
+| [`render/renderer`](render/renderer/) | Per-shape drawing: `rect` / `circle` / `ellipse` / `line` / `path` / `polygon` / `polyline` / `image` / `text`, plus `gradient` / `pattern` / `fill` / `stroke` / `transform` / `util` / `render_trait` |
 
 ### 5.4 Data flow
 
@@ -380,11 +370,14 @@ Dependencies declared in [Cargo.toml](Cargo.toml):
 | `lyon` | Polygon tessellation: `FillTessellator` triangulates polygons into triangles emitted as per-scanline `push_rect` bands, used to fill shapes inside `<pattern>` content |
 | `svgtypes` | Spec-compliant SVG parsing: `Length`/`LengthUnit`, `PointsParser`, `ViewBox`, `Color`, and `TransformListParser` — backing `attr_parsers`, `tree`, `transform_ops` |
 | `vello_cpu` | Software rasterization — takes a `BezPath` and produces an RGBA `Pixmap` |
+| `webrender_api` | Render backend types — `DisplayListBuilder`, `SpatialId` / `ClipChainId`, `ImageKey`, color types; the display list the engine emits into |
+| `log` | Diagnostic logging (dropped geometry, guard trips) |
+| `malloc_size_of` / `malloc_size_of_derive` | Memory accounting for `SvgTree` / node types in Servo's `MallocSizeOf` framework |
 
-`euclid`, `kurbo`, and `vello_cpu` are already dependencies of existing
-components (the canvas and layout crates); the engine introduces only two new
-third-party crates — `lyon` (polygon tessellation) and `svgtypes` (SVG value
-parsing).
+`euclid`, `kurbo`, `vello_cpu`, `webrender_api`, `log`, and `malloc_size_of` are
+already dependencies of existing components (the canvas, layout, and display
+crates); the engine introduces only two new third-party crates — `lyon` (polygon
+tessellation) and `svgtypes` (SVG value parsing).
 
 **Build-system impact**
 
@@ -398,7 +391,7 @@ parsing).
 
 | API | Description | Input parameters | Return type |
 |-----|-------------|------------------|-------------|
-| `build_svg_tree` (components/layout/svg) | Builds the `SvgTree` from the DOM subtree and resolved CSS values. | `node: ServoLayoutNode<'dom>`, `context: &LayoutContext` | `Option<Arc<SvgTree>>` |
+| `build_svg_tree` (components/layout/svg) | Builds the `SvgTree` from the DOM subtree, resolved CSS values, and the viewport size. | `node: ServoLayoutNode<'dom>`, `context: &LayoutContext`, `viewport_width: f32`, `viewport_height: f32` | `Option<Arc<SvgTree>>` |
 | `render_svg_tree` (components/svg) | Renders an entire `SvgTree` into a rendering backend display list. | `tree: &SvgTree`, `svg_origin: &LayoutPoint`, `svg_size: LayoutSize`, `device_scale: f32`, `spatial_id: SpatialId`, `clip_chain_id: ClipChainId`, `sink: &RasterSink`, `wr: &mut DisplayListBuilder` | No return — pushes display commands directly into `wr` (`&mut DisplayListBuilder`) |
 
 ## 8. Complexity and resource usage
@@ -440,7 +433,7 @@ Rendering diverges into two paths with very different costs.
 | `stroke_line_segment` | `<line>` | O(1) | none (GPU) |
 | `push_text` | `<text>` / `<tspan>` glyphs | O(glyphs) | none (GPU) |
 | `push_image` | `<image>` | O(1) | none (GPU) |
-| `rasterize_bez` (`vello_cpu`) | `<path>`, `<polyline>`, `<polygon>`, dashed, unsupported gradients, patterns | O(segments) + O(pixels) | w × h × 4 bytes |
+| `rasterize_bez` (`vello_cpu`) | `<path>`, `<polyline>`, `<polygon>`, dashed, unsupported gradients | O(segments) + O(pixels) | w × h × 4 bytes |
 
 #### 8.3.2 Software path breakdown (`rasterize_bez`)
 

@@ -68,6 +68,11 @@ layer 2 and unauthorized remote fetch at layer 3.
 **Solution:** blocks XXE and entity-expansion bombs, and limits nesting depth
 and element count during tokenization.
 
+| Name | Value | File | What it does |
+| --- | --- | --- | --- |
+| `MAX_PARSE_ELEMENT_COUNT` | `1_000_000` | `components/script/dom/servoparser/mod.rs` | Caps the number of elements created during tokenization; inserts past the cap are dropped |
+| `MAX_PARSE_DEPTH` | `512` | `components/script/dom/servoparser/mod.rs` | Caps nesting depth during tokenization (matches Chromium's `kMaximumHTMLParserDOMTreeDepth`) |
+
 ### CSS injection guard (Stage 2 — Style)
 **Category:** data exfiltration — CSS attribute-selector leak
 **Example:**
@@ -102,6 +107,19 @@ Security Policy (CSP) before sending it. A URL not allowed by the policy, like
 **Solution:** limits `<use>` fan-out and extreme `viewBox`, blur, path, and
 stroke values before the render tree is built.
 
+| Name | Value | File | What it does |
+| --- | --- | --- | --- |
+| `MAX_USE_DEPTH` | `64` | `components/layout/svg/builder/resolve.rs` | Caps `<use>` reference depth, breaking mutual recursion |
+| `MAX_TOTAL_NODES` | `1_000_000` | `components/layout/svg/builder/resolve.rs` | Caps the total nodes the SVG builder may expand, bounding fan-out |
+| `MAX_VIEWPORT_DIMENSION` | `1.0e7` | `components/layout/svg/limits.rs` | Max `viewBox`/viewport width or height in user units |
+| `MAX_PATH_SEGMENTS` | `1_000_000` | `components/layout/svg/limits.rs` | Max `d` path segments; larger paths render nothing |
+| `MAX_POINTS` | `1_000_000` | `components/layout/svg/limits.rs` | Max coordinate pairs in a `points` list; extras dropped |
+| `MAX_STROKE_WIDTH` | `1.0e7` | `components/layout/svg/limits.rs` | Max stroke width in user units |
+| `MAX_MITER_LIMIT` | `1000.0` | `components/layout/svg/limits.rs` | Max `stroke-miterlimit` |
+| `MAX_DASH_COUNT` | `1024` | `components/layout/svg/limits.rs` | Max `stroke-dasharray` entries; extras dropped |
+| `MAX_DASH_LENGTH` | `1.0e7` | `components/layout/svg/limits.rs` | Max magnitude of a dash length or offset |
+| `MAX_STD_DEVIATION` | `1024.0` | `components/layout/svg/limits.rs` | Max `feGaussianBlur`/`feDropShadow` `stdDeviation` |
+
 ### Render safety guard (Stage 5 — Render)
 **Category:** resource exhaustion — self-referencing pattern
 **Example:**
@@ -111,3 +129,8 @@ stroke values before the render tree is built.
 ```
 **Solution:** validates geometry and text and limits self-referencing patterns
 before drawing, so crafted input can't crash the renderer or execute code.
+
+| Name | Value | File | What it does |
+| --- | --- | --- | --- |
+| `MAX_PAINT_SERVER_DEPTH` | `32` | `components/svg/render/renderer/render_trait.rs` | Caps recursive paint-server (gradient/pattern) reference depth, breaking cycles |
+| `MAX_MASK_DEPTH` | `16` | `components/svg/render/effects/mask.rs` | Caps nested `<mask>` resolution depth |
