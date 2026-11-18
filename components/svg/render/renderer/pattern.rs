@@ -116,10 +116,15 @@ pub(crate) fn fill_rect_with_pattern(
         .wr
         .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [bounds_clip_id]);
 
-    let scale_for_content = matches!(
-        def.pattern_content_units,
-        PatternContentUnits::ObjectBoundingBox
-    );
+    // A `viewBox` overrides `patternContentUnits` (SVG 1.1 §13.3), so only
+    // apply the objectBoundingBox scale when there is no viewBox. The scale is
+    // the bounding box of the element being filled, not the tile size.
+    let content_scale = match def.pattern_content_units {
+        PatternContentUnits::ObjectBoundingBox if def.view_box.is_none() => {
+            Some((bounds.size().width, bounds.size().height))
+        },
+        _ => None,
+    };
 
     // Apply patternTransform once (outside the tile loop) so the pattern
     // coordinate system is transformed, then tile inside it. A single
@@ -172,7 +177,7 @@ pub(crate) fn fill_rect_with_pattern(
         tile_w,
         tile_h,
         repeat_bounds,
-        scale_for_content,
+        content_scale,
         base_spatial,
         bounds_clip,
         ctx,
@@ -239,10 +244,9 @@ pub(crate) fn fill_rect_with_pattern(
             }
 
             // When patternContentUnits="objectBoundingBox", shape coordinates
-            // are in a 0..1 unit space — scale by tile dimensions.
-            let (origin, spatial, pushed) = if scale_for_content && tile_w > 0.0 && tile_h > 0.0 {
-                let scale_x = tile_w;
-                let scale_y = tile_h;
+            // are in a 0..1 unit space scaled by the host element's bounding
+            // box (not the tile size).
+            let (origin, spatial, pushed) = if let Some((scale_x, scale_y)) = content_scale {
                 let fid = ctx.wr.push_reference_frame(
                     t_origin,
                     t_spatial,
@@ -311,7 +315,7 @@ fn push_pattern_tile_image(
     tile_w: f32,
     tile_h: f32,
     repeat_bounds: LayoutRect,
-    scale_for_content: bool,
+    content_scale: Option<(f32, f32)>,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     ctx: &mut RenderContext,
@@ -326,8 +330,8 @@ fn push_pattern_tile_image(
     // Tile content coordinates -> tile space, including `viewBox` /
     // patternContentUnits and any objectBoundingBox scaling.
     let mut content = Transform2D::<f32, (), ()>::identity();
-    if scale_for_content {
-        content = Transform2D::<f32, (), ()>::scale(tile_w, tile_h);
+    if let Some((scale_x, scale_y)) = content_scale {
+        content = Transform2D::<f32, (), ()>::scale(scale_x, scale_y);
     }
     if let Some(vb) = &def.view_box {
         let (sx, sy, tx, ty) = compute_viewbox_transform(
