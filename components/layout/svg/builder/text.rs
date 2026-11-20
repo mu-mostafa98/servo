@@ -74,7 +74,13 @@ pub(crate) fn build_text_node<'dom>(
     // a <text> with no element children). Fall back to the legacy single-span
     // path so existing simple <text> usage keeps working.
     if runs.is_empty() {
-        let mut span = build_text(node, &get, fs, css_line_origin(node, context, view_width, view_height))?;
+        let mut span = build_text(
+            node,
+            &get,
+            fs,
+            css_line_origin(node, context, view_width, view_height),
+            css_text_anchor(node, context),
+        )?;
         shape_text_span(&mut span, node, context);
         let (style, transforms, _color) = build_style(node, context, css_rules, None, None, view_width, view_height);
         let id = extract_id(&element);
@@ -139,14 +145,9 @@ pub(crate) fn build_text_node<'dom>(
     // x starts a new chunk; runs without x flow on within the current chunk.
     // `text-anchor` shifts each chunk as a whole relative to its anchor point
     // (the chunk's x, or the line origin for the leading chunk).
-    let line_anchor = get("text-anchor")
-        .as_deref()
-        .map(|v| match v.trim() {
-            "middle" => -0.5,
-            "end" => -1.0,
-            _ => 0.0,
-        })
-        .unwrap_or(0.0);
+    let line_anchor = css_text_anchor(node, context)
+        .unwrap_or_else(|| parse_text_anchor(get("text-anchor")))
+        .alignment_offset();
     // Per run: the chunk's anchor shift when the run starts a chunk, 0.0
     // otherwise.
     let mut chunk_shift_at = vec![0.0f32; shaped.len()];
@@ -304,7 +305,7 @@ fn collect_text_runs<'dom>(
         if let Some(child_elem) = child.as_element() {
             if child_elem.local_name() == &local_name!("tspan") {
                 let get = |n: &str| get_attr(&child_elem, n);
-                if let Some(mut span) = build_text(*child, &get, fs, None) {
+                if let Some(mut span) = build_text(*child, &get, fs, None, css_text_anchor(*child, context)) {
                     // Inherit the <text>'s baseline when the <tspan> does not
                     // set y explicitly.
                     if get_attr(&child_elem, "y").is_none() {
@@ -339,7 +340,7 @@ fn collect_text_runs<'dom>(
                 // target, unparseable `d`), the placement is `None` and the run
                 // falls back to a normal horizontal run.
                 let get = |n: &str| get_attr(&child_elem, n);
-                if let Some(mut span) = build_text(*child, &get, fs, None) {
+                if let Some(mut span) = build_text(*child, &get, fs, None, css_text_anchor(*child, context)) {
                     // The text is written on its own line with surrounding
                     // indentation/newlines; trim leading/trailing whitespace so
                     // it neither advances the pen nor shapes into `.notdef`
@@ -358,10 +359,12 @@ fn collect_text_runs<'dom>(
                     span.rotate.clear();
                     // `text-anchor`: the textPath's own value, else the one it
                     // inherits from the containing `<text>`.
-                    let anchor = parse_text_anchor(
-                        get_attr(&child_elem, "text-anchor")
-                            .or_else(|| get_attr(&parent_elem, "text-anchor")),
-                    );
+                    let anchor = css_text_anchor(*child, context).unwrap_or_else(|| {
+                        parse_text_anchor(
+                            get_attr(&child_elem, "text-anchor")
+                                .or_else(|| get_attr(&parent_elem, "text-anchor")),
+                        )
+                    });
                     let placement =
                         resolve_text_path_placement(&child_elem, fs, element_ids, anchor);
                     runs.push((span, *child, placement));
@@ -384,7 +387,9 @@ fn collect_text_runs<'dom>(
                 });
                 if seen_content && followed_by_content && !pending_space {
                     let get = |n: &str| get_attr(&parent_elem, n);
-                    if let Some(mut span) = build_text_run(" ".to_owned(), &get, fs, css_origin) {
+                    if let Some(mut span) =
+                        build_text_run(" ".to_owned(), &get, fs, css_origin, css_text_anchor(node, context))
+                    {
                         // A space run always flows; it never carries an
                         // absolute x of its own.
                         span.x.clear();
@@ -422,7 +427,9 @@ fn collect_text_runs<'dom>(
             };
             // Bare-text runs always use the <text>'s y (no own attributes).
             let get = |n: &str| get_attr(&parent_elem, n);
-            if let Some(mut span) = build_text_run(text, &get, fs, css_origin) {
+            if let Some(mut span) =
+                build_text_run(text, &get, fs, css_origin, css_text_anchor(node, context))
+            {
                 // Later bare runs flow on from the current pen; the <text>'s x
                 // only positions the line's first content run.
                 if seen_content {
@@ -455,6 +462,22 @@ fn css_line_origin(
     let x = svg.clone_x().resolve(CssLength::new(vw)).px();
     let y = svg.clone_y().resolve(CssLength::new(vh)).px();
     Some((x, y))
+}
+
+/// Resolve a `<text>`/`<tspan>`/`<textPath>` node's computed-style
+/// `text-anchor` to a [`TextAnchor`]. Returns `None` when the node has no
+/// computed style, so the caller falls back to the raw attribute.
+fn css_text_anchor(node: ServoLayoutNode, context: &LayoutContext) -> Option<TextAnchor> {
+    let element = node.as_element()?;
+    if element.style_data().is_none() {
+        return None;
+    }
+    let computed = node.style(&context.style_context);
+    Some(match computed.get_inherited_svg().text_anchor {
+        style::computed_values::text_anchor::T::Middle => TextAnchor::Middle,
+        style::computed_values::text_anchor::T::End => TextAnchor::End,
+        _ => TextAnchor::Start,
+    })
 }
 
 /// Resolve a `<textPath>`'s referenced `<path>` into a placement. Returns

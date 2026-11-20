@@ -26,8 +26,9 @@ pub(crate) fn build_text(
     get: &dyn Fn(&str) -> Option<String>,
     fs: f32,
     css_origin: Option<(f32, f32)>,
+    css_anchor: Option<TextAnchor>,
 ) -> Option<TextSpan> {
-    build_text_run(extract_direct_text(node), get, fs, css_origin)
+    build_text_run(extract_direct_text(node), get, fs, css_origin, css_anchor)
 }
 
 /// Build a text span from a raw string, for bare text-node runs inside a
@@ -38,6 +39,7 @@ pub(crate) fn build_text_run(
     get: &dyn Fn(&str) -> Option<String>,
     fs: f32,
     css_origin: Option<(f32, f32)>,
+    css_anchor: Option<TextAnchor>,
 ) -> Option<TextSpan> {
     if text.is_empty() {
         return None;
@@ -65,7 +67,7 @@ pub(crate) fn build_text_run(
         dx,
         dy,
         rotate,
-        text_anchor: parse_text_anchor(get),
+        text_anchor: css_anchor.unwrap_or_else(|| parse_text_anchor(get)),
         rtl,
         dominant_baseline: parse_dominant_baseline(get),
         glyphs: vec![],

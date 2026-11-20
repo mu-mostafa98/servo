@@ -163,6 +163,7 @@ impl VirtualMethods for SVGElement {
                 &local_name!("width") |
                 &local_name!("height") |
                 &local_name!("d") |
+                &local_name!("text-anchor") |
                 &local_name!("font-size") |
                 &local_name!("font-family") |
                 &local_name!("font-style") |
@@ -391,6 +392,17 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             &parser_context,
             "font-weight",
             longhands::font_weight::parse_declared,
+            push,
+        );
+
+        // Text anchoring (§11.6): `text-anchor` is read by the SVG text builder
+        // from the computed `inherited_svg` value, so the presentation attribute
+        // must reach the cascade as a presentational hint (otherwise only the
+        // raw attribute — never CSS `style="text-anchor: …"` — would be seen).
+        self.parse_svg_attribute(
+            &parser_context,
+            "text-anchor",
+            longhands::text_anchor::parse_declared,
             push,
         );
 
