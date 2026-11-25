@@ -184,7 +184,7 @@ fn resolve_use_children<'dom>(
     // Extract href reference.
     let ref_id = element
         .attribute_as_str(&ns!(), &local_name!("href"))
-        .or_else(|| element.attribute_as_str(&ns!(), &local_name!("xlink:href")))
+        .or_else(|| element.attribute_as_str(&ns!(xlink), &local_name!("href")))
         .and_then(|h| {
             let t = h.trim_start_matches('#');
             if t.is_empty() {
