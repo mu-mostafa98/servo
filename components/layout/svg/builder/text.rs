@@ -18,6 +18,7 @@ use unicode_bidi::BidiInfo;
 
 use super::{CrossRef, extract_id, font_key_to_resource};
 use crate::context::LayoutContext;
+use crate::svg::limits::MAX_FONT_SIZE;
 use crate::svg::primitives::attrs::{extract_url_fragment, get_attr, parse_length_token};
 use crate::svg::primitives::text::{build_text, build_text_run, merge_origin, parse_length_list};
 use crate::svg::style::build_style;
@@ -657,19 +658,25 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
         }
         let computed = node.style(&context.style_context);
         let font_style = computed.clone_font();
-        let font_size = font_style.font_size.computed_size().px();
+        let mut font_size = font_style.font_size.computed_size().px();
         if font_size <= 0.0 {
             return None;
         }
+        // Clamp the resolved size before it reaches the font subsystem. A huge
+        // `font-size` (e.g. `1e6`) makes the font instance rasterize each glyph
+        // at that size and lets the ascent/descent inflate the glyph bounds
+        // without bound; capping here keeps the font group, shaping advances,
+        // glyph outlines, and the recorded span size all on one bounded value.
+        font_size = font_size.min(MAX_FONT_SIZE);
         // Resolve `letter-spacing` / `word-spacing` to device pixels so HarfBuzz
         // shaping applies them per glyph. `em`/`%` units resolve against the
         // font size, mirroring `text_run.rs`.
-        let font_size_au: Au = font_style.font_size.computed_size().into();
+        let font_size_au: Au = Au::from_f32_px(font_size);
         let inherited_text = computed.get_inherited_text().clone();
         let letter_spacing = inherited_text.letter_spacing.0.to_used_value(font_size_au);
         let word_spacing = inherited_text.word_spacing.to_used_value(font_size_au);
         Some((
-            context.font_context.font_group(font_style),
+            context.font_context.font_group_with_size(font_style, font_size_au),
             font_size,
             letter_spacing,
             word_spacing,

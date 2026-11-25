@@ -243,6 +243,35 @@ pub(crate) fn rasterize_bez(
             bbox.y1 + inset,
         );
     }
+    // Clamp the raster bounds to the visible sub-viewport so off-screen
+    // geometry (huge coordinates / stroke widths) can't size an enormous
+    // pixmap. `bbox` lives in the rasterized path's local space while
+    // `clip_rect` lives in the same space as `svg_origin` (see the crop
+    // below), so translate `bbox` by `svg_origin` to intersect, then back.
+    if let Some(clip) = clip_rect {
+        let l = kurbo::Rect::new(
+            svg_origin.x as f64 + bbox.x0,
+            svg_origin.y as f64 + bbox.y0,
+            svg_origin.x as f64 + bbox.x1,
+            svg_origin.y as f64 + bbox.y1,
+        );
+        let c = kurbo::Rect::new(
+            clip.min.x as f64,
+            clip.min.y as f64,
+            clip.max.x as f64,
+            clip.max.y as f64,
+        );
+        let inter = l.intersect(c);
+        if inter.width() <= 0.0 || inter.height() <= 0.0 {
+            return; // fully outside the viewport — nothing to draw
+        }
+        bbox = kurbo::Rect::new(
+            inter.x0 - svg_origin.x as f64,
+            inter.y0 - svg_origin.y as f64,
+            inter.x1 - svg_origin.x as f64,
+            inter.y1 - svg_origin.y as f64,
+        );
+    }
     if bbox.width() <= 0.0 || bbox.height() <= 0.0 {
         return;
     }

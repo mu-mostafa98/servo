@@ -66,6 +66,16 @@ pub fn render_svg_tree(
         .as_ref()
         .map(|v| LayoutPoint::new(v.ox - v.min_x * v.sx, v.oy - v.min_y * v.sy))
         .unwrap_or(LayoutPoint::zero());
+    // The root viewport clips its content to `svg_size` (unless overflow is
+    // visible). Native primitives are clipped by `svg_clip_chain` at composite
+    // time, but CPU-rasterized shapes are sized from their own bounding box —
+    // they need the same rect as `clip_rect` so off-screen geometry (huge
+    // coordinates / stroke widths) can't size an enormous pixmap.
+    let root_clip = if tree.viewport.overflow_visible {
+        None
+    } else {
+        Some(LayoutRect::from_origin_and_size(LayoutPoint::zero(), svg_size))
+    };
     let defs = tree.defs();
     render_node(
         &tree.root,
@@ -78,7 +88,7 @@ pub fn render_svg_tree(
         viewbox_scale,
         device_scale,
         root_raster_offset,
-        None,
+        root_clip,
         Transform2D::<f32, (), ()>::identity(),
         sink,
         None,
@@ -1387,6 +1397,13 @@ fn push_filter_context(
 
 // ======================= Non-Geometric Rendering =======================
 
+/// WebRender's glyph-rasterization limit (`wr_glyph_rasterizer::FONT_SIZE_LIMIT`).
+/// `push_text` rasterizes any glyph whose device font size exceeds this at
+/// 320 px and upscales it, which magnifies the antialiasing into visible
+/// banding. Text larger than this is instead outlined and rasterized via the
+/// vello CPU path, which stays solid at any size.
+const WR_FONT_SIZE_LIMIT: f32 = 320.0;
+
 /// Emit a leaf element (text, image) with filter and mask support.
 fn emit_leaf<T: crate::render::renderer::Render>(
     item: &T,
@@ -1412,40 +1429,53 @@ fn emit_leaf<T: crate::render::renderer::Render>(
     // Apply filter stacking context if filter ops are present.
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, clip_chain_id, wr);
 
-    // A raster (luminance/alpha) mask must be multiplied into the content's
-    // alpha at raster time, the same way `emit_shape` does it via
-    // `rasterize_bez`. Text does that here by rasterizing its glyph outlines
-    // into a bez path. Images have no CPU-side pixels (they live only as a
-    // WebRender `ImageKey`), so a raster mask on an image cannot be applied and
-    // falls through to unmasked native rendering below.
-    if let (Some(ResolvedMask::Raster(raster)), SvgTag::Text(span)) = (&params.mask, &node.tag) {
-        if let Some(bez) = text_to_bez_path(span) {
-            let mut style = node.style.clone();
-            style.opacity = Opacity::new(opacity);
-            rasterize_bez(
-                &bez,
-                style.fill.as_ref(),
-                style.stroke.as_ref(),
-                style.opacity.get(),
-                &raster_offset,
-                viewbox_scale,
-                device_scale,
-                node_xform,
-                non_scaling_stroke_style(&style),
-                clip_rect,
-                params.complex_clips,
-                wr,
-                sink,
-                Some(raster.as_ref()),
-                None,
-                defs,
-                color_interpolation_of_style(&style),
-            );
-            if pushed_filter {
-                wr.pop_stacking_context();
-            }
-            return;
+    // Text is rasterized through its glyph outlines (the vello CPU path) in two
+    // cases:
+    //   1. A raster (luminance/alpha) mask must be multiplied into the
+    //      content's alpha at raster time, the same way `emit_shape` does it
+    //      via `rasterize_bez` — `push_text` cannot do that.
+    //   2. The font size exceeds WebRender's glyph-rasterization limit, where
+    //      `push_text` would rasterize the glyph at 320 px and upscale it,
+    //      banding the antialiasing; outlining and rasterizing it directly
+    //      stays solid at any size.
+    // Images have no CPU-side pixels (they live only as a WebRender
+    // `ImageKey`), so a raster mask on an image cannot be applied and falls
+    // through to unmasked native rendering below.
+    let alpha_mask = match &params.mask {
+        Some(ResolvedMask::Raster(raster)) => Some(raster.as_ref()),
+        _ => None,
+    };
+    let huge_font = matches!(&node.tag, SvgTag::Text(span) if span.font_size > WR_FONT_SIZE_LIMIT);
+    let text_bez = match &node.tag {
+        SvgTag::Text(span) if alpha_mask.is_some() || huge_font => text_to_bez_path(span),
+        _ => None,
+    };
+    if let Some(bez) = text_bez {
+        let mut style = node.style.clone();
+        style.opacity = Opacity::new(opacity);
+        rasterize_bez(
+            &bez,
+            style.fill.as_ref(),
+            style.stroke.as_ref(),
+            style.opacity.get(),
+            &raster_offset,
+            viewbox_scale,
+            device_scale,
+            node_xform,
+            non_scaling_stroke_style(&style),
+            clip_rect,
+            params.complex_clips,
+            wr,
+            sink,
+            alpha_mask,
+            None,
+            defs,
+            color_interpolation_of_style(&style),
+        );
+        if pushed_filter {
+            wr.pop_stacking_context();
         }
+        return;
     }
 
     let effective_clip = match &params.mask {
