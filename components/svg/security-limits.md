@@ -13,6 +13,7 @@ Every numeric guard, its value, and a minimal trigger example.
 | `MAX_PATH_SEGMENTS` | `1_000_000` | 4 · Build | `d` path segments; larger paths render nothing | `<path d="M0 0 L1 1 … 1,000,001 segments">` |
 | `MAX_POINTS` | `1_000_000` | 4 · Build | Coordinate pairs in a `points` list; extras dropped | `<polygon points="0,0 1,1 … 1,000,001 pairs">` |
 | `MAX_STROKE_WIDTH` | `1.0e7` | 4 · Build | Stroke width (user units) | `<rect stroke-width="99999999">` |
+| `MAX_FONT_SIZE` | `10000.0` | 4 · Build | Resolved `font-size` (CSS px); matches Chrome's ~10000 clamp. Glyphs above WebRender's 320 px `FONT_SIZE_LIMIT` are rendered via glyph outlines (vello CPU), never rasterized-then-upscaled (which would band the antialiasing) | `<text font-size="1e6">A</text>` |
 | `MAX_MITER_LIMIT` | `1000.0` | 4 · Build | `stroke-miterlimit` | `<path stroke-miterlimit="999999">` |
 | `MAX_DASH_COUNT` | `1024` | 4 · Build | `stroke-dasharray` entries; extras dropped | `<path stroke-dasharray="1 2 3 … 1025 entries">` |
 | `MAX_DASH_LENGTH` | `1.0e7` | 4 · Build | Magnitude of a dash length or offset | `<path stroke-dashoffset="99999999">` |

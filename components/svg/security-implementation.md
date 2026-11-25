@@ -125,7 +125,7 @@ where relevant.
 <svg><g id="l1"><use href="#l2"/></g><g id="l2"><use href="#l1"/></g></svg>
 ```
 
-(also extreme `viewBox`, path, points, stroke, and filter values)
+(also extreme `viewBox`, path, points, stroke, text `font-size`, and filter values)
 
 **Fix**
 
@@ -139,8 +139,8 @@ where relevant.
 - `components/layout/svg/builder/resolve.rs` — `MAX_USE_DEPTH`, `MAX_TOTAL_NODES`
 - `components/layout/svg/builder/mod.rs` — node budget enforcement
 - `components/layout/svg/limits.rs` — `MAX_VIEWPORT_DIMENSION`,
-  `MAX_PATH_SEGMENTS`, `MAX_POINTS`, `MAX_STROKE_WIDTH`, `MAX_MITER_LIMIT`,
-  `MAX_DASH_COUNT`, `MAX_DASH_LENGTH`, `MAX_STD_DEVIATION`
+  `MAX_PATH_SEGMENTS`, `MAX_POINTS`, `MAX_STROKE_WIDTH`, `MAX_FONT_SIZE`,
+  `MAX_MITER_LIMIT`, `MAX_DASH_COUNT`, `MAX_DASH_LENGTH`, `MAX_STD_DEVIATION`
 
 ---
 
