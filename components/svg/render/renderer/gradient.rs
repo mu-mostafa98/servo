@@ -429,6 +429,24 @@ pub(crate) fn fill_area_with_gradient(
 ) {
     match def {
         GradientDef::Linear(lg) => {
+            // SVG 1.1 §13.2.2 / SVG 2: if the gradient vector is degenerate
+            // (`x1 == x2` and `y1 == y2`), the area is painted as a single
+            // color using the last stop's color and opacity — not the first
+            // stop's, which is what projecting onto a zero-length line would
+            // otherwise yield.
+            let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
+            if (start.x - end.x).abs() < ZERO_LENGTH_EPSILON &&
+                (start.y - end.y).abs() < ZERO_LENGTH_EPSILON
+            {
+                let mut color = lg
+                    .stops
+                    .last()
+                    .map(|stop| to_colorf(&stop.color))
+                    .unwrap_or(ColorF::new(0.0, 0.0, 0.0, 1.0));
+                color.a *= opacity;
+                draw_cell(&area, 0.0, 0.0, area.size().width, area.size().height, color, ctx);
+                return;
+            }
             if !push_linear_native(lg, area, geometry_bounds, ctx, opacity) {
                 render_linear(lg, area, geometry_bounds, ctx, opacity);
             }
