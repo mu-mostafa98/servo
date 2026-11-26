@@ -466,17 +466,51 @@ fn spread_to_extend(spread: SpreadMethod) -> Option<webrender_api::ExtendMode> {
     }
 }
 
+/// Pad a stop list out to the full `[0, 1]` gradient vector with the clamped
+/// end colors.
+///
+/// WebRender's `GradientBuilder` normalizes stops so they span `[0, 1]` and then
+/// shortens the gradient line to the original stop range. That is harmless for
+/// `pad` (which clamps anyway), but it also shrinks the *repeat period*: SVG
+/// repeats over the whole gradient vector, not just the span covered by the
+/// stops. Padding the list out to offsets 0 and 1 keeps the gradient line at
+/// full length, so WebRender's repeat tile matches the vector.
+fn pad_stops_to_unit_range(mut stops: Vec<(f32, ColorF)>) -> Vec<(f32, ColorF)> {
+    let Some(&(first_offset, first_color)) = stops.first() else {
+        return stops;
+    };
+    if first_offset > 0.0 {
+        stops.insert(0, (0.0, first_color));
+    }
+    let Some(&(last_offset, last_color)) = stops.last() else {
+        return stops;
+    };
+    if last_offset < 1.0 {
+        stops.push((1.0, last_color));
+    }
+    stops
+}
+
 /// Convert SVG gradient stops to WebRender stops, folding `opacity` into each
 /// stop's alpha (native gradient items have no item-level opacity).
 ///
 /// WebRender always interpolates in sRGB, so `linearRGB` gradients are converted
 /// to an equivalent dense sRGB stop list (see [`stops_for_srgb_interpolation`]).
+///
+/// For `repeat`, the stops are padded to the full `[0, 1]` vector so WebRender
+/// does not shrink the repeat period to the stop range (see
+/// [`pad_stops_to_unit_range`]).
 fn stops_to_webrender(
     stops: &[GradientStop],
     color_interpolation: ColorInterpolation,
     opacity: f32,
+    spread: SpreadMethod,
 ) -> Vec<webrender_api::GradientStop> {
-    stops_for_srgb_interpolation(stops, color_interpolation)
+    let mut stops = stops_for_srgb_interpolation(stops, color_interpolation);
+    if matches!(spread, SpreadMethod::Repeat) {
+        stops = pad_stops_to_unit_range(stops);
+    }
+    stops
         .into_iter()
         .map(|(offset, mut color)| {
             color.a *= opacity;
@@ -638,7 +672,8 @@ pub(crate) fn resolve_gradient(
     match def {
         GradientDef::Linear(lg) => {
             let extend_mode = spread_to_extend(lg.spread_method)?;
-            let stops = stops_to_webrender(&lg.stops, color_interpolation, opacity);
+            let stops =
+                stops_to_webrender(&lg.stops, color_interpolation, opacity, lg.spread_method);
             let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
             Some(crate::GradientKind::Linear {
                 start,
@@ -657,7 +692,8 @@ pub(crate) fn resolve_gradient(
                 return None;
             }
             let extend_mode = spread_to_extend(rg.spread_method)?;
-            let stops = stops_to_webrender(&rg.stops, color_interpolation, opacity);
+            let stops =
+                stops_to_webrender(&rg.stops, color_interpolation, opacity, rg.spread_method);
             let (center, radius) = resolve_radial_center_radius(rg, bounds, ctx)?;
             Some(crate::GradientKind::Radial {
                 center,
@@ -685,6 +721,7 @@ fn push_linear_native(
         &lg.stops,
         resolve_color_interpolation(lg.color_interpolation, ctx),
         opacity,
+        lg.spread_method,
     );
     let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
     // WebRender stores gradient geometry relative to the primitive origin (it
@@ -734,6 +771,7 @@ fn push_radial_native(
         &rg.stops,
         resolve_color_interpolation(rg.color_interpolation, ctx),
         opacity,
+        rg.spread_method,
     );
     let Some((center, radius)) = resolve_radial_center_radius(rg, geometry_bounds, ctx) else {
         return false;
