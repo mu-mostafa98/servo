@@ -743,7 +743,8 @@ fn resolve_radial_focal(
 }
 
 /// Resolve a gradient definition to a native WebRender gradient, or `None` when
-/// it cannot be expressed natively (reflect spread or an offset-focal radial).
+/// it cannot be expressed natively (reflect spread, an offset-focal radial, or
+/// a diagonal linear gradient).
 /// `linearRGB` interpolation is supported by converting the stops to an
 /// equivalent sRGB stop list (see [`stops_for_srgb_interpolation`]).
 pub(crate) fn resolve_gradient(
@@ -759,6 +760,17 @@ pub(crate) fn resolve_gradient(
             let stops =
                 stops_to_webrender(&lg.stops, color_interpolation, opacity, lg.spread_method);
             let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
+            // A non-axis-aligned gradient must be rasterized by vello: the native
+            // WebRender path projects in the raw scaled bounding box, which skews
+            // diagonals (non-uniform bbox scaling does not preserve perpendicular
+            // projection). Returning `None` here routes the shape to the vello
+            // raster fallback, which projects in the normalized
+            // object-bounding-box space (see [`object_bbox_linear_fractions`]).
+            let horizontal = (start.y - end.y).abs() < ZERO_LENGTH_EPSILON;
+            let vertical = (start.x - end.x).abs() < ZERO_LENGTH_EPSILON;
+            if !horizontal && !vertical {
+                return None;
+            }
             Some(crate::GradientKind::Linear {
                 start,
                 end,
