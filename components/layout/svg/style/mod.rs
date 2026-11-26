@@ -43,7 +43,7 @@ use self::basic_shape::basic_shape_clip_from_computed;
 use self::fill::apply_fill_presentation_attrs;
 use self::filter::apply_filter_attribute;
 use self::marker::apply_marker_presentation_attrs;
-use self::stroke::apply_stroke_presentation_attrs;
+use self::stroke::{apply_stroke_presentation_attrs, correct_invalid_stroke_width};
 
 // ======================= FromComputedValues Trait =======================
 
@@ -323,6 +323,9 @@ pub(crate) fn build_style(
     let transforms: Vec<TransformOp> = [css_transform, attr_ops].concat();
     apply_css_class_rules(&element, css_rules, &mut style, &current_color);
     apply_presentation_attrs(&element, &mut style, &current_color, stylo_resolved);
+    if stylo_resolved {
+        correct_invalid_stroke_width(&element, &mut style);
+    }
     apply_render_hints_from_attrs(&element, &mut style);
     apply_clip_rule_attr(&element, &mut style);
     if let Some(inherited) = inherited {

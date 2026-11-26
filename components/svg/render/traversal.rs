@@ -1123,7 +1123,31 @@ fn is_native_solid_shape(
 
     match shape {
         Shape::Line(_) => true,
-        Shape::Rect(_) | Shape::Circle(_) | Shape::Ellipse(_) => !has_dash,
+        Shape::Rect(rect) => {
+            if has_dash {
+                return false;
+            }
+            // WebRender's native border renderer snaps a rect's edges and
+            // border widths to whole device pixels. A centred stroke only lands
+            // on the pixel grid when the rect edges and half the stroke width
+            // are integers; otherwise Chrome antialiases the sub-pixel edges
+            // while Servo would render them crisp and shifted. Route those
+            // rects through the antialiased vello raster path instead.
+            if let Some(stroke) = &style.stroke {
+                let on_grid = |v: f32| (v - v.round()).abs() < 1e-4;
+                let half_width = stroke.width.get() / 2.0;
+                if !on_grid(half_width) ||
+                    !on_grid(rect.x.get()) ||
+                    !on_grid(rect.y.get()) ||
+                    !on_grid(rect.x.get() + rect.width.get()) ||
+                    !on_grid(rect.y.get() + rect.height.get())
+                {
+                    return false;
+                }
+            }
+            true
+        },
+        Shape::Circle(_) | Shape::Ellipse(_) => !has_dash,
         _ => false,
     }
 }
