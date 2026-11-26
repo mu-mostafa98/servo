@@ -280,10 +280,21 @@ struct LinearStrategy<'a> {
     gx2: f32,
     gy2: f32,
     /// Offset to add to (x, y) pixel positions before computing gradient
-    /// projection.  This converts render_gradient's relative coordinates
-    /// into the absolute coordinate space that the gradient line uses.
+    /// projection. This converts render_gradient's area-relative coordinates
+    /// into absolute layout coordinates.
     offset_x: f32,
     offset_y: f32,
+    /// Normalization applied to the absolute point before projection: the
+    /// point is mapped to `((px - norm_origin_x) * inv_scale_x,
+    /// (py - norm_origin_y) * inv_scale_y)`. For `objectBoundingBox` this maps
+    /// the point into the reference box's normalized unit-square space (the
+    /// space the gradient fractions live in, matching Chrome); for
+    /// `userSpaceOnUse` it is the identity (origin 0, scale 1), so the point
+    /// is projected directly in absolute space.
+    norm_origin_x: f32,
+    norm_origin_y: f32,
+    inv_scale_x: f32,
+    inv_scale_y: f32,
 }
 
 impl GradientStrategy for LinearStrategy<'_> {
@@ -297,14 +308,9 @@ impl GradientStrategy for LinearStrategy<'_> {
     }
 
     fn compute_t(&self, x: f32, y: f32, _bw: f32, _bh: f32) -> f32 {
-        gradient_projection(
-            x + self.offset_x,
-            y + self.offset_y,
-            self.gx1,
-            self.gy1,
-            self.gx2,
-            self.gy2,
-        )
+        let px = (x + self.offset_x - self.norm_origin_x) * self.inv_scale_x;
+        let py = (y + self.offset_y - self.norm_origin_y) * self.inv_scale_y;
+        gradient_projection(px, py, self.gx1, self.gy1, self.gx2, self.gy2)
     }
 }
 
@@ -552,6 +558,66 @@ fn gradient_lengths_equal(
     }
 }
 
+/// Resolve a linear gradient's `objectBoundingBox` endpoints in the normalized
+/// unit-square space: the raw `x1/y1/x2/y2` fractions with `gradientTransform`
+/// applied (in fraction space, before the bounding box is scaled onto them).
+///
+/// Chrome projects object-bounding-box linear gradients in this normalized
+/// space rather than the actual (non-uniformly scaled) bounding box — a
+/// non-uniform scale does not preserve perpendicular projection, so projecting
+/// in the raw scaled box skews diagonal gradients.
+pub(crate) fn object_bbox_linear_fractions(
+    lg: &crate::model::document::LinearGradient,
+) -> (f32, f32, f32, f32) {
+    let mut x1 = lg.x1.to_object_bbox();
+    let mut y1 = lg.y1.to_object_bbox();
+    let mut x2 = lg.x2.to_object_bbox();
+    let mut y2 = lg.y2.to_object_bbox();
+    apply_grad_transform(&mut x1, &mut y1, &lg.transform);
+    apply_grad_transform(&mut x2, &mut y2, &lg.transform);
+    (x1, y1, x2, y2)
+}
+
+/// Compute absolute-space endpoints whose standard perpendicular projection
+/// reproduces the *normalized* object-bounding-box projection (Chrome's
+/// behavior). Used by backends (vello/peniko) that take absolute endpoints and
+/// perform the projection themselves.
+///
+/// `x1..y2` are the fraction-space endpoints (see
+/// [`object_bbox_linear_fractions`]); `(bx, by, bw, bh)` is the reference box
+/// (the object bounding box, in the backend's coordinate space).
+pub(crate) fn object_bbox_linear_endpoints(
+    x1: f32,
+    y1: f32,
+    x2: f32,
+    y2: f32,
+    bx: f32,
+    by: f32,
+    bw: f32,
+    bh: f32,
+) -> (f32, f32, f32, f32) {
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+    let len_sq = dx * dx + dy * dy;
+    // Degenerate vector: fall back to the plain scaled endpoints; the caller
+    // handles the degenerate gradient.
+    if len_sq <= ZERO_LENGTH_EPSILON {
+        return (bx + x1 * bw, by + y1 * bh, bx + x2 * bw, by + y2 * bh);
+    }
+    // The normalized-space projection is an affine function of the absolute
+    // point: t(P) = A·P + C. Rewrite it as a standard projection
+    // t(P) = (P - S)·D / |D|² with D = A/|A|² and S = -C·D.
+    let ax = dx / (bw * len_sq);
+    let ay = dy / (bh * len_sq);
+    let c = -(bx * ax + by * ay) - (x1 * dx + y1 * dy) / len_sq;
+    let a_len_sq = ax * ax + ay * ay;
+    let ddx = ax / a_len_sq;
+    let ddy = ay / a_len_sq;
+    let sx = -c * ddx;
+    let sy = -c * ddy;
+    (sx, sy, sx + ddx, sy + ddy)
+}
+
 /// Resolve a linear gradient's endpoints to absolute layout coordinates,
 /// applying `gradientTransform` in gradient coordinate space.
 fn resolve_linear_geometry(
@@ -742,6 +808,18 @@ fn push_linear_native(
         lg.spread_method,
     );
     let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
+    // Route non-axis-aligned (diagonal) linear gradients through the software
+    // renderer, which projects in the *normalized* object-bounding-box space
+    // (see [`object_bbox_linear_fractions`]) — the reference-correct behavior.
+    // The native WebRender path projects in the raw scaled bounding box, which
+    // skews diagonals (non-uniform bbox scaling does not preserve perpendicular
+    // projection). The check runs on the resolved geometry, so it also catches
+    // a `gradientTransform` that turns an axis-aligned gradient diagonal.
+    let horizontal = (start.y - end.y).abs() < ZERO_LENGTH_EPSILON;
+    let vertical = (start.x - end.x).abs() < ZERO_LENGTH_EPSILON;
+    if !horizontal && !vertical {
+        return false;
+    }
     // WebRender stores gradient geometry relative to the primitive origin (it
     // adds `bounds.min` back in the shader), while `resolve_*_geometry` returns
     // absolute layout coordinates. Subtract the primitive origin to avoid the
@@ -826,16 +904,41 @@ fn render_linear(
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
-    let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
+    // For `objectBoundingBox`, project in the normalized unit-square space of
+    // the reference box (Chrome's behavior); see [`object_bbox_linear_fractions`].
+    let (gx1, gy1, gx2, gy2, norm_origin_x, norm_origin_y, inv_scale_x, inv_scale_y) =
+        match lg.units {
+            GradientUnits::ObjectBoundingBox => {
+                let (gx1, gy1, gx2, gy2) = object_bbox_linear_fractions(lg);
+                (
+                    gx1,
+                    gy1,
+                    gx2,
+                    gy2,
+                    geometry_bounds.min.x,
+                    geometry_bounds.min.y,
+                    1.0 / geometry_bounds.size().width,
+                    1.0 / geometry_bounds.size().height,
+                )
+            },
+            GradientUnits::UserSpaceOnUse => {
+                let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
+                (start.x, start.y, end.x, end.y, 0.0, 0.0, 1.0, 1.0)
+            },
+        };
 
     let strategy = LinearStrategy {
         stops: &lg.stops,
-        gx1: start.x,
-        gy1: start.y,
-        gx2: end.x,
-        gy2: end.y,
+        gx1,
+        gy1,
+        gx2,
+        gy2,
         offset_x: area.min.x,
         offset_y: area.min.y,
+        norm_origin_x,
+        norm_origin_y,
+        inv_scale_x,
+        inv_scale_y,
     };
     render_gradient(
         area,

@@ -667,12 +667,16 @@ fn linear_to_peniko(
     shape_ci: ColorInterpolation,
 ) -> Gradient {
     let (x1, y1, x2, y2) = match lg.units {
-        GradientUnits::ObjectBoundingBox => (
-            lg.x1.to_object_bbox() * w,
-            lg.y1.to_object_bbox() * h,
-            lg.x2.to_object_bbox() * w,
-            lg.y2.to_object_bbox() * h,
-        ),
+        GradientUnits::ObjectBoundingBox => {
+            // Project in the normalized object-bounding-box space (Chrome's
+            // behavior): non-uniform bbox scaling does not preserve perpendicular
+            // projection, so projecting in the raw scaled box skews diagonals.
+            let (x1, y1, x2, y2) =
+                crate::render::renderer::gradient::object_bbox_linear_fractions(lg);
+            crate::render::renderer::gradient::object_bbox_linear_endpoints(
+                x1, y1, x2, y2, 0.0, 0.0, w, h,
+            )
+        },
         GradientUnits::UserSpaceOnUse => (
             lg.x1.to_user_space(w) * viewbox_scale.0 - bbox.x0 as f32,
             lg.y1.to_user_space(h) * viewbox_scale.1 - bbox.y0 as f32,
