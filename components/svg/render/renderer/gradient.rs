@@ -742,9 +742,24 @@ fn resolve_radial_focal(
     }
 }
 
+/// Whether every stop shares the same alpha.
+///
+/// WebRender's native gradients interpolate stop colors in premultiplied alpha
+/// space, whereas SVG (and Chrome/Skia) interpolate them unpremultiplied — the
+/// vello raster path encodes this via `InterpolationAlphaSpace::Unpremultiplied`
+/// (see `path.rs`). When alpha varies between stops the two spaces produce
+/// different colors, so such gradients must be rasterized by vello instead of
+/// pushed as native WebRender gradients.
+fn stops_have_uniform_alpha(stops: &[GradientStop]) -> bool {
+    let Some(first) = stops.first() else {
+        return true;
+    };
+    stops.iter().all(|stop| stop.color.alpha == first.color.alpha)
+}
+
 /// Resolve a gradient definition to a native WebRender gradient, or `None` when
-/// it cannot be expressed natively (reflect spread, an offset-focal radial, or
-/// a diagonal linear gradient).
+/// it cannot be expressed natively (reflect spread, an offset-focal radial, a
+/// diagonal linear gradient, or stops whose alpha varies).
 /// `linearRGB` interpolation is supported by converting the stops to an
 /// equivalent sRGB stop list (see [`stops_for_srgb_interpolation`]).
 pub(crate) fn resolve_gradient(
@@ -756,6 +771,9 @@ pub(crate) fn resolve_gradient(
     let color_interpolation = resolve_color_interpolation(def.color_interpolation(), ctx);
     match def {
         GradientDef::Linear(lg) => {
+            if !stops_have_uniform_alpha(&lg.stops) {
+                return None;
+            }
             let extend_mode = spread_to_extend(lg.spread_method)?;
             let stops =
                 stops_to_webrender(&lg.stops, color_interpolation, opacity, lg.spread_method);
@@ -783,7 +801,8 @@ pub(crate) fn resolve_gradient(
             // and have no focal radius (`fr`), so fall back when either is set.
             if !gradient_lengths_equal(rg.fx, rg.cx) ||
                 !gradient_lengths_equal(rg.fy, rg.cy) ||
-                !rg.fr.is_zero()
+                !rg.fr.is_zero() ||
+                !stops_have_uniform_alpha(&rg.stops)
             {
                 return None;
             }
@@ -813,6 +832,12 @@ fn push_linear_native(
     let Some(extend_mode) = spread_to_extend(lg.spread_method) else {
         return false;
     };
+    // Native gradients interpolate premultiplied; SVG needs unpremultiplied
+    // stop alpha (see `stops_have_uniform_alpha`). Let the software renderer,
+    // which interpolates straight alpha, handle varying-alpha stops.
+    if !stops_have_uniform_alpha(&lg.stops) {
+        return false;
+    }
     let stops = stops_to_webrender(
         &lg.stops,
         resolve_color_interpolation(lg.color_interpolation, ctx),
@@ -868,7 +893,8 @@ fn push_radial_native(
 ) -> bool {
     if !gradient_lengths_equal(rg.fx, rg.cx) ||
         !gradient_lengths_equal(rg.fy, rg.cy) ||
-        !rg.fr.is_zero()
+        !rg.fr.is_zero() ||
+        !stops_have_uniform_alpha(&rg.stops)
     {
         return false;
     }
