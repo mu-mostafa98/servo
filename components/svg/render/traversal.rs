@@ -21,6 +21,7 @@ use webrender_api::{
 use crate::RasterSink;
 use crate::model::document::*;
 use crate::model::element::*;
+use crate::model::style::paint_servers::PaintServer;
 use crate::model::units::Opacity;
 use crate::render::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::render::effects::filter::{get_filter_ops, node_local_bounds, FilterOps};
@@ -1470,8 +1471,20 @@ fn emit_leaf<T: crate::render::renderer::Render>(
         _ => None,
     };
     let huge_font = matches!(&node.tag, SvgTag::Text(span) if span.font_size > WR_FONT_SIZE_LIMIT);
+    // `push_text` takes a single color, so a gradient fill cannot be painted
+    // through it. Rasterize the glyph outlines instead, letting the path
+    // pipeline map the gradient over the text's bounding box.
+    let gradient_fill = node
+        .style
+        .fill
+        .as_ref()
+        .and_then(|fill| fill.paint_server.as_ref())
+        .and_then(|paint| defs.resolve_paint_server(paint))
+        .is_some_and(|paint| matches!(paint, PaintServer::Gradient(_)));
     let text_bez = match &node.tag {
-        SvgTag::Text(span) if alpha_mask.is_some() || huge_font => text_to_bez_path(span),
+        SvgTag::Text(span) if alpha_mask.is_some() || huge_font || gradient_fill => {
+            text_to_bez_path(span)
+        },
         _ => None,
     };
     if let Some(bez) = text_bez {
