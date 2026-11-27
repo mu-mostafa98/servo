@@ -280,10 +280,21 @@ struct LinearStrategy<'a> {
     gx2: f32,
     gy2: f32,
     /// Offset to add to (x, y) pixel positions before computing gradient
-    /// projection.  This converts render_gradient's relative coordinates
-    /// into the absolute coordinate space that the gradient line uses.
+    /// projection. This converts render_gradient's area-relative coordinates
+    /// into absolute layout coordinates.
     offset_x: f32,
     offset_y: f32,
+    /// Normalization applied to the absolute point before projection: the
+    /// point is mapped to `((px - norm_origin_x) * inv_scale_x,
+    /// (py - norm_origin_y) * inv_scale_y)`. For `objectBoundingBox` this maps
+    /// the point into the reference box's normalized unit-square space (the
+    /// space the gradient fractions live in, matching Chrome); for
+    /// `userSpaceOnUse` it is the identity (origin 0, scale 1), so the point
+    /// is projected directly in absolute space.
+    norm_origin_x: f32,
+    norm_origin_y: f32,
+    inv_scale_x: f32,
+    inv_scale_y: f32,
 }
 
 impl GradientStrategy for LinearStrategy<'_> {
@@ -297,14 +308,9 @@ impl GradientStrategy for LinearStrategy<'_> {
     }
 
     fn compute_t(&self, x: f32, y: f32, _bw: f32, _bh: f32) -> f32 {
-        gradient_projection(
-            x + self.offset_x,
-            y + self.offset_y,
-            self.gx1,
-            self.gy1,
-            self.gx2,
-            self.gy2,
-        )
+        let px = (x + self.offset_x - self.norm_origin_x) * self.inv_scale_x;
+        let py = (y + self.offset_y - self.norm_origin_y) * self.inv_scale_y;
+        gradient_projection(px, py, self.gx1, self.gy1, self.gx2, self.gy2)
     }
 }
 
@@ -429,6 +435,24 @@ pub(crate) fn fill_area_with_gradient(
 ) {
     match def {
         GradientDef::Linear(lg) => {
+            // SVG 1.1 §13.2.2 / SVG 2: if the gradient vector is degenerate
+            // (`x1 == x2` and `y1 == y2`), the area is painted as a single
+            // color using the last stop's color and opacity — not the first
+            // stop's, which is what projecting onto a zero-length line would
+            // otherwise yield.
+            let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
+            if (start.x - end.x).abs() < ZERO_LENGTH_EPSILON &&
+                (start.y - end.y).abs() < ZERO_LENGTH_EPSILON
+            {
+                let mut color = lg
+                    .stops
+                    .last()
+                    .map(|stop| to_colorf(&stop.color))
+                    .unwrap_or(ColorF::new(0.0, 0.0, 0.0, 1.0));
+                color.a *= opacity;
+                draw_cell(&area, 0.0, 0.0, area.size().width, area.size().height, color, ctx);
+                return;
+            }
             if !push_linear_native(lg, area, geometry_bounds, ctx, opacity) {
                 render_linear(lg, area, geometry_bounds, ctx, opacity);
             }
@@ -466,17 +490,51 @@ fn spread_to_extend(spread: SpreadMethod) -> Option<webrender_api::ExtendMode> {
     }
 }
 
+/// Pad a stop list out to the full `[0, 1]` gradient vector with the clamped
+/// end colors.
+///
+/// WebRender's `GradientBuilder` normalizes stops so they span `[0, 1]` and then
+/// shortens the gradient line to the original stop range. That is harmless for
+/// `pad` (which clamps anyway), but it also shrinks the *repeat period*: SVG
+/// repeats over the whole gradient vector, not just the span covered by the
+/// stops. Padding the list out to offsets 0 and 1 keeps the gradient line at
+/// full length, so WebRender's repeat tile matches the vector.
+fn pad_stops_to_unit_range(mut stops: Vec<(f32, ColorF)>) -> Vec<(f32, ColorF)> {
+    let Some(&(first_offset, first_color)) = stops.first() else {
+        return stops;
+    };
+    if first_offset > 0.0 {
+        stops.insert(0, (0.0, first_color));
+    }
+    let Some(&(last_offset, last_color)) = stops.last() else {
+        return stops;
+    };
+    if last_offset < 1.0 {
+        stops.push((1.0, last_color));
+    }
+    stops
+}
+
 /// Convert SVG gradient stops to WebRender stops, folding `opacity` into each
 /// stop's alpha (native gradient items have no item-level opacity).
 ///
 /// WebRender always interpolates in sRGB, so `linearRGB` gradients are converted
 /// to an equivalent dense sRGB stop list (see [`stops_for_srgb_interpolation`]).
+///
+/// For `repeat`, the stops are padded to the full `[0, 1]` vector so WebRender
+/// does not shrink the repeat period to the stop range (see
+/// [`pad_stops_to_unit_range`]).
 fn stops_to_webrender(
     stops: &[GradientStop],
     color_interpolation: ColorInterpolation,
     opacity: f32,
+    spread: SpreadMethod,
 ) -> Vec<webrender_api::GradientStop> {
-    stops_for_srgb_interpolation(stops, color_interpolation)
+    let mut stops = stops_for_srgb_interpolation(stops, color_interpolation);
+    if matches!(spread, SpreadMethod::Repeat) {
+        stops = pad_stops_to_unit_range(stops);
+    }
+    stops
         .into_iter()
         .map(|(offset, mut color)| {
             color.a *= opacity;
@@ -498,6 +556,66 @@ fn gradient_lengths_equal(
         (GradientLength::Percentage(x), GradientLength::Percentage(y)) => (x - y).abs() < 1e-6,
         _ => false,
     }
+}
+
+/// Resolve a linear gradient's `objectBoundingBox` endpoints in the normalized
+/// unit-square space: the raw `x1/y1/x2/y2` fractions with `gradientTransform`
+/// applied (in fraction space, before the bounding box is scaled onto them).
+///
+/// Chrome projects object-bounding-box linear gradients in this normalized
+/// space rather than the actual (non-uniformly scaled) bounding box — a
+/// non-uniform scale does not preserve perpendicular projection, so projecting
+/// in the raw scaled box skews diagonal gradients.
+pub(crate) fn object_bbox_linear_fractions(
+    lg: &crate::model::document::LinearGradient,
+) -> (f32, f32, f32, f32) {
+    let mut x1 = lg.x1.to_object_bbox();
+    let mut y1 = lg.y1.to_object_bbox();
+    let mut x2 = lg.x2.to_object_bbox();
+    let mut y2 = lg.y2.to_object_bbox();
+    apply_grad_transform(&mut x1, &mut y1, &lg.transform);
+    apply_grad_transform(&mut x2, &mut y2, &lg.transform);
+    (x1, y1, x2, y2)
+}
+
+/// Compute absolute-space endpoints whose standard perpendicular projection
+/// reproduces the *normalized* object-bounding-box projection (Chrome's
+/// behavior). Used by backends (vello/peniko) that take absolute endpoints and
+/// perform the projection themselves.
+///
+/// `x1..y2` are the fraction-space endpoints (see
+/// [`object_bbox_linear_fractions`]); `(bx, by, bw, bh)` is the reference box
+/// (the object bounding box, in the backend's coordinate space).
+pub(crate) fn object_bbox_linear_endpoints(
+    x1: f32,
+    y1: f32,
+    x2: f32,
+    y2: f32,
+    bx: f32,
+    by: f32,
+    bw: f32,
+    bh: f32,
+) -> (f32, f32, f32, f32) {
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+    let len_sq = dx * dx + dy * dy;
+    // Degenerate vector: fall back to the plain scaled endpoints; the caller
+    // handles the degenerate gradient.
+    if len_sq <= ZERO_LENGTH_EPSILON {
+        return (bx + x1 * bw, by + y1 * bh, bx + x2 * bw, by + y2 * bh);
+    }
+    // The normalized-space projection is an affine function of the absolute
+    // point: t(P) = A·P + C. Rewrite it as a standard projection
+    // t(P) = (P - S)·D / |D|² with D = A/|A|² and S = -C·D.
+    let ax = dx / (bw * len_sq);
+    let ay = dy / (bh * len_sq);
+    let c = -(bx * ax + by * ay) - (x1 * dx + y1 * dy) / len_sq;
+    let a_len_sq = ax * ax + ay * ay;
+    let ddx = ax / a_len_sq;
+    let ddy = ay / a_len_sq;
+    let sx = -c * ddx;
+    let sy = -c * ddy;
+    (sx, sy, sx + ddx, sy + ddy)
 }
 
 /// Resolve a linear gradient's endpoints to absolute layout coordinates,
@@ -624,8 +742,24 @@ fn resolve_radial_focal(
     }
 }
 
+/// Whether every stop shares the same alpha.
+///
+/// WebRender's native gradients interpolate stop colors in premultiplied alpha
+/// space, whereas SVG (and Chrome/Skia) interpolate them unpremultiplied — the
+/// vello raster path encodes this via `InterpolationAlphaSpace::Unpremultiplied`
+/// (see `path.rs`). When alpha varies between stops the two spaces produce
+/// different colors, so such gradients must be rasterized by vello instead of
+/// pushed as native WebRender gradients.
+fn stops_have_uniform_alpha(stops: &[GradientStop]) -> bool {
+    let Some(first) = stops.first() else {
+        return true;
+    };
+    stops.iter().all(|stop| stop.color.alpha == first.color.alpha)
+}
+
 /// Resolve a gradient definition to a native WebRender gradient, or `None` when
-/// it cannot be expressed natively (reflect spread or an offset-focal radial).
+/// it cannot be expressed natively (reflect spread, an offset-focal radial, a
+/// diagonal linear gradient, or stops whose alpha varies).
 /// `linearRGB` interpolation is supported by converting the stops to an
 /// equivalent sRGB stop list (see [`stops_for_srgb_interpolation`]).
 pub(crate) fn resolve_gradient(
@@ -637,9 +771,24 @@ pub(crate) fn resolve_gradient(
     let color_interpolation = resolve_color_interpolation(def.color_interpolation(), ctx);
     match def {
         GradientDef::Linear(lg) => {
+            if !stops_have_uniform_alpha(&lg.stops) {
+                return None;
+            }
             let extend_mode = spread_to_extend(lg.spread_method)?;
-            let stops = stops_to_webrender(&lg.stops, color_interpolation, opacity);
+            let stops =
+                stops_to_webrender(&lg.stops, color_interpolation, opacity, lg.spread_method);
             let (start, end) = resolve_linear_geometry(lg, bounds, ctx);
+            // A non-axis-aligned gradient must be rasterized by vello: the native
+            // WebRender path projects in the raw scaled bounding box, which skews
+            // diagonals (non-uniform bbox scaling does not preserve perpendicular
+            // projection). Returning `None` here routes the shape to the vello
+            // raster fallback, which projects in the normalized
+            // object-bounding-box space (see [`object_bbox_linear_fractions`]).
+            let horizontal = (start.y - end.y).abs() < ZERO_LENGTH_EPSILON;
+            let vertical = (start.x - end.x).abs() < ZERO_LENGTH_EPSILON;
+            if !horizontal && !vertical {
+                return None;
+            }
             Some(crate::GradientKind::Linear {
                 start,
                 end,
@@ -652,12 +801,14 @@ pub(crate) fn resolve_gradient(
             // and have no focal radius (`fr`), so fall back when either is set.
             if !gradient_lengths_equal(rg.fx, rg.cx) ||
                 !gradient_lengths_equal(rg.fy, rg.cy) ||
-                !rg.fr.is_zero()
+                !rg.fr.is_zero() ||
+                !stops_have_uniform_alpha(&rg.stops)
             {
                 return None;
             }
             let extend_mode = spread_to_extend(rg.spread_method)?;
-            let stops = stops_to_webrender(&rg.stops, color_interpolation, opacity);
+            let stops =
+                stops_to_webrender(&rg.stops, color_interpolation, opacity, rg.spread_method);
             let (center, radius) = resolve_radial_center_radius(rg, bounds, ctx)?;
             Some(crate::GradientKind::Radial {
                 center,
@@ -681,12 +832,31 @@ fn push_linear_native(
     let Some(extend_mode) = spread_to_extend(lg.spread_method) else {
         return false;
     };
+    // Native gradients interpolate premultiplied; SVG needs unpremultiplied
+    // stop alpha (see `stops_have_uniform_alpha`). Let the software renderer,
+    // which interpolates straight alpha, handle varying-alpha stops.
+    if !stops_have_uniform_alpha(&lg.stops) {
+        return false;
+    }
     let stops = stops_to_webrender(
         &lg.stops,
         resolve_color_interpolation(lg.color_interpolation, ctx),
         opacity,
+        lg.spread_method,
     );
     let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
+    // Route non-axis-aligned (diagonal) linear gradients through the software
+    // renderer, which projects in the *normalized* object-bounding-box space
+    // (see [`object_bbox_linear_fractions`]) — the reference-correct behavior.
+    // The native WebRender path projects in the raw scaled bounding box, which
+    // skews diagonals (non-uniform bbox scaling does not preserve perpendicular
+    // projection). The check runs on the resolved geometry, so it also catches
+    // a `gradientTransform` that turns an axis-aligned gradient diagonal.
+    let horizontal = (start.y - end.y).abs() < ZERO_LENGTH_EPSILON;
+    let vertical = (start.x - end.x).abs() < ZERO_LENGTH_EPSILON;
+    if !horizontal && !vertical {
+        return false;
+    }
     // WebRender stores gradient geometry relative to the primitive origin (it
     // adds `bounds.min` back in the shader), while `resolve_*_geometry` returns
     // absolute layout coordinates. Subtract the primitive origin to avoid the
@@ -723,7 +893,8 @@ fn push_radial_native(
 ) -> bool {
     if !gradient_lengths_equal(rg.fx, rg.cx) ||
         !gradient_lengths_equal(rg.fy, rg.cy) ||
-        !rg.fr.is_zero()
+        !rg.fr.is_zero() ||
+        !stops_have_uniform_alpha(&rg.stops)
     {
         return false;
     }
@@ -734,6 +905,7 @@ fn push_radial_native(
         &rg.stops,
         resolve_color_interpolation(rg.color_interpolation, ctx),
         opacity,
+        rg.spread_method,
     );
     let Some((center, radius)) = resolve_radial_center_radius(rg, geometry_bounds, ctx) else {
         return false;
@@ -770,16 +942,41 @@ fn render_linear(
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
-    let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
+    // For `objectBoundingBox`, project in the normalized unit-square space of
+    // the reference box (Chrome's behavior); see [`object_bbox_linear_fractions`].
+    let (gx1, gy1, gx2, gy2, norm_origin_x, norm_origin_y, inv_scale_x, inv_scale_y) =
+        match lg.units {
+            GradientUnits::ObjectBoundingBox => {
+                let (gx1, gy1, gx2, gy2) = object_bbox_linear_fractions(lg);
+                (
+                    gx1,
+                    gy1,
+                    gx2,
+                    gy2,
+                    geometry_bounds.min.x,
+                    geometry_bounds.min.y,
+                    1.0 / geometry_bounds.size().width,
+                    1.0 / geometry_bounds.size().height,
+                )
+            },
+            GradientUnits::UserSpaceOnUse => {
+                let (start, end) = resolve_linear_geometry(lg, geometry_bounds, ctx);
+                (start.x, start.y, end.x, end.y, 0.0, 0.0, 1.0, 1.0)
+            },
+        };
 
     let strategy = LinearStrategy {
         stops: &lg.stops,
-        gx1: start.x,
-        gy1: start.y,
-        gx2: end.x,
-        gy2: end.y,
+        gx1,
+        gy1,
+        gx2,
+        gy2,
         offset_x: area.min.x,
         offset_y: area.min.y,
+        norm_origin_x,
+        norm_origin_y,
+        inv_scale_x,
+        inv_scale_y,
     };
     render_gradient(
         area,
