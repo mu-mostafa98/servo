@@ -46,3 +46,13 @@ pub(crate) const MAX_DASH_LENGTH: f32 = 1.0e7;
 /// the Gaussian kernel is effectively a solid blur, so the value is clamped
 /// rather than letting it grow the rasterization cost unboundedly.
 pub(crate) const MAX_STD_DEVIATION: f32 = 1024.0;
+
+/// Maximum resolved `font-size`, in CSS pixels. Chrome (Skia) empirically
+/// clamps huge font sizes to ~10000 — glyphs at 10000/20000/40000/100000 all
+/// rasterize identically — so this matches that ceiling. Glyphs above
+/// WebRender's `FONT_SIZE_LIMIT` (320 px) are still routed through the glyph
+/// outline (vello CPU) path by the renderer instead of `push_text`, so they
+/// never hit the 320 px rasterize-then-upscale banding. The clamp here bounds
+/// the font instance, shaping advances, glyph outlines and ascent/descent to a
+/// fixed size regardless of the authored `font-size`.
+pub(crate) const MAX_FONT_SIZE: f32 = 10000.0;

@@ -596,6 +596,10 @@ pub(crate) fn stroke_rect(
     let Some(stroke) = &ctx.style.stroke else {
         return;
     };
+    // A zero-width stroke paints nothing (SVG 2 stroke-width semantics).
+    if stroke.width.get() <= 0.0 {
+        return;
+    }
 
     let paint = stroke
         .paint_server

@@ -21,6 +21,7 @@ use webrender_api::{
 use crate::RasterSink;
 use crate::model::document::*;
 use crate::model::element::*;
+use crate::model::style::paint_servers::PaintServer;
 use crate::model::units::Opacity;
 use crate::render::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::render::effects::filter::{get_filter_ops, node_local_bounds, FilterOps};
@@ -66,6 +67,16 @@ pub fn render_svg_tree(
         .as_ref()
         .map(|v| LayoutPoint::new(v.ox - v.min_x * v.sx, v.oy - v.min_y * v.sy))
         .unwrap_or(LayoutPoint::zero());
+    // The root viewport clips its content to `svg_size` (unless overflow is
+    // visible). Native primitives are clipped by `svg_clip_chain` at composite
+    // time, but CPU-rasterized shapes are sized from their own bounding box —
+    // they need the same rect as `clip_rect` so off-screen geometry (huge
+    // coordinates / stroke widths) can't size an enormous pixmap.
+    let root_clip = if tree.viewport.overflow_visible {
+        None
+    } else {
+        Some(LayoutRect::from_origin_and_size(LayoutPoint::zero(), svg_size))
+    };
     let defs = tree.defs();
     render_node(
         &tree.root,
@@ -78,7 +89,7 @@ pub fn render_svg_tree(
         viewbox_scale,
         device_scale,
         root_raster_offset,
-        None,
+        root_clip,
         Transform2D::<f32, (), ()>::identity(),
         sink,
         None,
@@ -1113,7 +1124,31 @@ fn is_native_solid_shape(
 
     match shape {
         Shape::Line(_) => true,
-        Shape::Rect(_) | Shape::Circle(_) | Shape::Ellipse(_) => !has_dash,
+        Shape::Rect(rect) => {
+            if has_dash {
+                return false;
+            }
+            // WebRender's native border renderer snaps a rect's edges and
+            // border widths to whole device pixels. A centred stroke only lands
+            // on the pixel grid when the rect edges and half the stroke width
+            // are integers; otherwise Chrome antialiases the sub-pixel edges
+            // while Servo would render them crisp and shifted. Route those
+            // rects through the antialiased vello raster path instead.
+            if let Some(stroke) = &style.stroke {
+                let on_grid = |v: f32| (v - v.round()).abs() < 1e-4;
+                let half_width = stroke.width.get() / 2.0;
+                if !on_grid(half_width) ||
+                    !on_grid(rect.x.get()) ||
+                    !on_grid(rect.y.get()) ||
+                    !on_grid(rect.x.get() + rect.width.get()) ||
+                    !on_grid(rect.y.get() + rect.height.get())
+                {
+                    return false;
+                }
+            }
+            true
+        },
+        Shape::Circle(_) | Shape::Ellipse(_) => !has_dash,
         _ => false,
     }
 }
@@ -1387,6 +1422,13 @@ fn push_filter_context(
 
 // ======================= Non-Geometric Rendering =======================
 
+/// WebRender's glyph-rasterization limit (`wr_glyph_rasterizer::FONT_SIZE_LIMIT`).
+/// `push_text` rasterizes any glyph whose device font size exceeds this at
+/// 320 px and upscales it, which magnifies the antialiasing into visible
+/// banding. Text larger than this is instead outlined and rasterized via the
+/// vello CPU path, which stays solid at any size.
+const WR_FONT_SIZE_LIMIT: f32 = 320.0;
+
 /// Emit a leaf element (text, image) with filter and mask support.
 fn emit_leaf<T: crate::render::renderer::Render>(
     item: &T,
@@ -1412,40 +1454,65 @@ fn emit_leaf<T: crate::render::renderer::Render>(
     // Apply filter stacking context if filter ops are present.
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, clip_chain_id, wr);
 
-    // A raster (luminance/alpha) mask must be multiplied into the content's
-    // alpha at raster time, the same way `emit_shape` does it via
-    // `rasterize_bez`. Text does that here by rasterizing its glyph outlines
-    // into a bez path. Images have no CPU-side pixels (they live only as a
-    // WebRender `ImageKey`), so a raster mask on an image cannot be applied and
-    // falls through to unmasked native rendering below.
-    if let (Some(ResolvedMask::Raster(raster)), SvgTag::Text(span)) = (&params.mask, &node.tag) {
-        if let Some(bez) = text_to_bez_path(span) {
-            let mut style = node.style.clone();
-            style.opacity = Opacity::new(opacity);
-            rasterize_bez(
-                &bez,
-                style.fill.as_ref(),
-                style.stroke.as_ref(),
-                style.opacity.get(),
-                &raster_offset,
-                viewbox_scale,
-                device_scale,
-                node_xform,
-                non_scaling_stroke_style(&style),
-                clip_rect,
-                params.complex_clips,
-                wr,
-                sink,
-                Some(raster.as_ref()),
-                None,
-                defs,
-                color_interpolation_of_style(&style),
-            );
-            if pushed_filter {
-                wr.pop_stacking_context();
-            }
-            return;
+    // Text is rasterized through its glyph outlines (the vello CPU path) in two
+    // cases:
+    //   1. A raster (luminance/alpha) mask must be multiplied into the
+    //      content's alpha at raster time, the same way `emit_shape` does it
+    //      via `rasterize_bez` — `push_text` cannot do that.
+    //   2. The font size exceeds WebRender's glyph-rasterization limit, where
+    //      `push_text` would rasterize the glyph at 320 px and upscale it,
+    //      banding the antialiasing; outlining and rasterizing it directly
+    //      stays solid at any size.
+    // Images have no CPU-side pixels (they live only as a WebRender
+    // `ImageKey`), so a raster mask on an image cannot be applied and falls
+    // through to unmasked native rendering below.
+    let alpha_mask = match &params.mask {
+        Some(ResolvedMask::Raster(raster)) => Some(raster.as_ref()),
+        _ => None,
+    };
+    let huge_font = matches!(&node.tag, SvgTag::Text(span) if span.font_size > WR_FONT_SIZE_LIMIT);
+    // `push_text` takes a single color, so a gradient fill cannot be painted
+    // through it. Rasterize the glyph outlines instead, letting the path
+    // pipeline map the gradient over the text's bounding box.
+    let gradient_fill = node
+        .style
+        .fill
+        .as_ref()
+        .and_then(|fill| fill.paint_server.as_ref())
+        .and_then(|paint| defs.resolve_paint_server(paint))
+        .is_some_and(|paint| matches!(paint, PaintServer::Gradient(_)));
+    let text_bez = match &node.tag {
+        SvgTag::Text(span) if alpha_mask.is_some() || huge_font || gradient_fill => {
+            text_to_bez_path(span)
+        },
+        _ => None,
+    };
+    if let Some(bez) = text_bez {
+        let mut style = node.style.clone();
+        style.opacity = Opacity::new(opacity);
+        rasterize_bez(
+            &bez,
+            style.fill.as_ref(),
+            style.stroke.as_ref(),
+            style.opacity.get(),
+            &raster_offset,
+            viewbox_scale,
+            device_scale,
+            node_xform,
+            non_scaling_stroke_style(&style),
+            clip_rect,
+            params.complex_clips,
+            wr,
+            sink,
+            alpha_mask,
+            None,
+            defs,
+            color_interpolation_of_style(&style),
+        );
+        if pushed_filter {
+            wr.pop_stacking_context();
         }
+        return;
     }
 
     let effective_clip = match &params.mask {

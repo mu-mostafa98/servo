@@ -567,7 +567,6 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
         if element.downcast::<SVGPathElement>().is_some() {
             // The d CSS property only accepts `none` or `path(<string>)`,
             // but the SVG presentation attribute uses raw path data (e.g. "M0,0 L1,1").
-            // Wrap the raw path data in `path("...")` so the CSS parser can handle it.
             if let Some(value) = element.get_attr_val_for_layout(&ns!(), &local_name!("d")) {
                 if value.eq_ignore_ascii_case("none") {
                     let mut parser = cssparser::Parser::new(value);
@@ -577,12 +576,17 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
                         push(property);
                     }
                 } else {
-                    let wrapped = format!("path(\"{}\")", value);
-                    let mut parser = cssparser::Parser::new(&wrapped);
-                    if let Ok(property) = parser.parse_entirely(|parse_input| {
-                        longhands::d::parse_declared(&parser_context, parse_input)
-                    }) {
-                        push(property);
+                    // Parse the raw path data directly instead of wrapping it in
+                    // `path("...")`: SVG path error handling parses until the first
+                    // error and keeps every command parsed before it, so e.g.
+                    // d="M40 70 L 320 70 L garbage" still renders its valid prefix
+                    // (matching Chrome). The strict CSS `path()` parser drops the
+                    // whole attribute instead. An empty partial (the error precedes
+                    // any valid command, e.g. d="banana") pushes no declaration, so
+                    // the element is not rendered.
+                    let (path, _ok) = specified::SVGPathData::parse_bytes(value.as_bytes());
+                    if !path.commands().is_empty() {
+                        push(PropertyDeclaration::D(specified::DProperty::Path(path)));
                     }
                 }
             }

@@ -37,6 +37,7 @@ impl FromComputedValues for StrokeParams {
             },
             _ => 1.0,
         }
+        .max(0.0)
         .min(MAX_STROKE_WIDTH);
         let line_cap = match inherited_svg.stroke_linecap {
             style::computed_values::stroke_linecap::T::Butt => LineCap::Butt,
@@ -74,9 +75,6 @@ impl FromComputedValues for StrokeParams {
             _ => 0.0,
         }
         .min(MAX_DASH_LENGTH);
-        if width <= 0.0 {
-            return None;
-        }
         match paint {
             ResolvedPaint::Color(color) => Some(StrokeParams {
                 paint_server: Some(PaintServer::Solid(color)),
@@ -144,12 +142,14 @@ pub(crate) fn apply_stroke_presentation_attrs(
 
     stroke.paint_server = parse_paint_server(&stroke_value, current_color);
     if let Some(v) = read_attr("stroke-width") {
-        stroke.width = Length::new(
-            parse_length_token(&v, SVG_DEFAULT_FONT_SIZE)
-                .unwrap_or(1.0)
-                .max(0.0)
-                .min(MAX_STROKE_WIDTH),
-        );
+        // A negative `stroke-width` is an error: the declaration is ignored and
+        // the initial value (1) applies. Zero is valid and means "do not
+        // render the stroke".
+        let width = match parse_length_token(&v, SVG_DEFAULT_FONT_SIZE) {
+            Some(w) if w >= 0.0 => w.min(MAX_STROKE_WIDTH),
+            _ => 1.0,
+        };
+        stroke.width = Length::new(width);
     }
     if let Some(v) = read_attr("stroke-opacity") {
         stroke.opacity = Opacity::new(v.parse::<f32>().unwrap_or(1.0));
@@ -202,5 +202,34 @@ pub(crate) fn apply_stroke_presentation_attrs(
         stroke.dash_offset = parse_length_token(&v, SVG_DEFAULT_FONT_SIZE)
             .unwrap_or(0.0)
             .min(MAX_DASH_LENGTH);
+    }
+}
+
+/// Reject a negative `stroke-width` that reached the computed style.
+///
+/// Stylo's `<length-percentage>` parser clamps negative values to zero when it
+/// synthesizes SVG presentation attributes (out-of-range values are normally
+/// clamped for SVG), so a `stroke-width="-10"` becomes a computed `0`. Per the
+/// SVG spec a negative stroke width is an *error*, not a value to clamp: the
+/// declaration must be ignored and the initial value (1) used instead. The
+/// clamped computed value can no longer tell the two apart, so re-read the
+/// effective specified value (inline `style` beats the presentation attribute)
+/// and restore the initial width when it was negative.
+pub(crate) fn correct_invalid_stroke_width(element: &ServoLayoutElement, style: &mut NodeStyle) {
+    let style_attr = get_attr(element, "style");
+    let specified = style_attr
+        .as_ref()
+        .and_then(|s| parse_inline_style_prop(s, "stroke-width"))
+        .or_else(|| get_attr(element, "stroke-width"));
+    let Some(value) = specified else {
+        return;
+    };
+    let Some(width) = parse_length_token(&value, SVG_DEFAULT_FONT_SIZE) else {
+        return;
+    };
+    if width < 0.0 {
+        if let Some(stroke) = &mut style.stroke {
+            stroke.width = Length::new(1.0);
+        }
     }
 }
