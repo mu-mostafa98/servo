@@ -19,7 +19,7 @@ use crate::model::style::paint_servers::PaintServer;
 use crate::model::style::{ColorInterpolation, FillParams, FillRule, LineCap, LineJoin, StrokeParams};
 use crate::render::geometry::{ComplexClip, path_data_to_bez};
 use crate::render::renderer::{
-    Render, RenderContext, color_interpolation, fill_rule, non_scaling_stroke,
+    Render, RenderContext, color_interpolation, fill_rule, non_scaling_stroke, transform,
 };
 use crate::{RasterSink, RasterizedImage};
 
@@ -35,7 +35,9 @@ pub(crate) enum ResolvedPaint {
     /// `objectBoundingBox` units become elliptical under a non-uniform bounding
     /// box (§13.2.2), but peniko's `Gradient` models only circular radii — the
     /// ellipse is encoded as a circle plus a non-uniform paint transform (see
-    /// [`radial_to_peniko`]).
+    /// [`radial_to_peniko`]).  A radial gradient with a `gradientTransform` is
+    /// likewise a circle in its own coordinate space plus the paint transform
+    /// that places it (see [`transformed_radial_to_peniko`]).
     Gradient(Gradient, Option<vello_cpu::kurbo::Affine>),
 }
 
@@ -621,7 +623,7 @@ fn resolve_paint(
     match &resolved {
         Some(PaintServer::Gradient(def)) => {
             let (mut gradient, transform) =
-                gradient_def_to_peniko(def.as_ref(), w, h, viewbox_scale, bbox, shape_ci);
+                gradient_def_to_peniko(def.as_ref(), w, h, viewbox_scale, bbox, shape_ci)?;
             // Gradients carry their alpha in the stop colors, so `fill-opacity`/
             // `stroke-opacity`/`opacity` must be folded in by scaling every
             // stop's premultiplied components (mirrors the solid-paint branch).
@@ -642,7 +644,8 @@ fn resolve_paint(
     }
 }
 
-/// Convert a [`GradientDef`] to a [`Gradient`] in pixmap-local coordinates.
+/// Convert a [`GradientDef`] to a [`Gradient`] for rasterization.  `None`
+/// means the gradient paints nothing (non-invertible `gradientTransform`).
 fn gradient_def_to_peniko(
     def: &GradientDef,
     w: f32,
@@ -650,9 +653,12 @@ fn gradient_def_to_peniko(
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
     shape_ci: ColorInterpolation,
-) -> (Gradient, Option<vello_cpu::kurbo::Affine>) {
+) -> Option<(Gradient, Option<vello_cpu::kurbo::Affine>)> {
     match def {
-        GradientDef::Linear(lg) => (linear_to_peniko(lg, w, h, viewbox_scale, bbox, shape_ci), None),
+        GradientDef::Linear(lg) => Some((
+            linear_to_peniko(lg, w, h, viewbox_scale, bbox, shape_ci),
+            None,
+        )),
         GradientDef::Radial(rg) => radial_to_peniko(rg, w, h, viewbox_scale, bbox, shape_ci),
     }
 }
@@ -701,7 +707,12 @@ fn linear_to_peniko(
     g
 }
 
-/// Convert a radial gradient to a [`Gradient`] in pixmap-local coordinates.
+/// Convert a radial gradient to a [`Gradient`]: in pixmap-local coordinates,
+/// or — when it carries a `gradientTransform` — in its own coordinate space
+/// plus the paint transform that places it (see [`transformed_radial_to_peniko`]).
+///
+/// Returns `None` when the gradient paints nothing (a non-invertible
+/// `gradientTransform`).
 fn radial_to_peniko(
     rg: &crate::model::document::RadialGradient,
     w: f32,
@@ -709,7 +720,15 @@ fn radial_to_peniko(
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
     shape_ci: ColorInterpolation,
-) -> (Gradient, Option<vello_cpu::kurbo::Affine>) {
+) -> Option<(Gradient, Option<vello_cpu::kurbo::Affine>)> {
+    // `gradientTransform` is a general affine: under it the gradient circle can
+    // become a rotated ellipse, which the circle-plus-axis-aligned-scale
+    // encoding below cannot express.  Transformed gradients therefore stay in
+    // their own coordinate space instead.
+    if !rg.transform.is_empty() {
+        return transformed_radial_to_peniko(rg, w, h, viewbox_scale, bbox, shape_ci);
+    }
+
     // Resolve the center, focal point, outer radii, and focal radius into the
     // pixmap-local (bbox-relative) space.  For `objectBoundingBox` units the
     // outer radius resolves against *both* bbox dimensions (§13.2.2): a
@@ -762,11 +781,103 @@ fn radial_to_peniko(
         (fx, fy)
     };
 
-    let mut g = Gradient::new_two_point_radial(
+    Some(radial_gradient(
+        rg,
         vello_cpu::kurbo::Point::new(focal_x as f64, focal_y as f64),
-        fr.max(0.0), // focal radius (fr); clamp negative to 0 per SVG 2
+        fr,
         vello_cpu::kurbo::Point::new(cx as f64, cy as f64),
         rx,
+        shape_ci,
+        paint_transform,
+    ))
+}
+
+/// [`radial_to_peniko`] for a gradient carrying a `gradientTransform`.
+///
+/// The geometry stays in the gradient's own coordinate space — the unit
+/// bounding-box square for `objectBoundingBox`, user space for
+/// `userSpaceOnUse` — where it is still a circle, and the paint transform
+/// carries the whole placement: `gradientTransform` first, then the
+/// bounding-box scale, or the viewBox scale and the bbox origin.
+fn transformed_radial_to_peniko(
+    rg: &crate::model::document::RadialGradient,
+    w: f32,
+    h: f32,
+    viewbox_scale: (f32, f32),
+    bbox: &kurbo::Rect,
+    shape_ci: ColorInterpolation,
+) -> Option<(Gradient, Option<vello_cpu::kurbo::Affine>)> {
+    let gradient_transform =
+        transform_to_affine(&transform::compute_transform_matrix(&rg.transform));
+    let ((cx, cy, r), (fx, fy, fr), placement) = match rg.units {
+        GradientUnits::ObjectBoundingBox => (
+            (
+                rg.cx.to_object_bbox(),
+                rg.cy.to_object_bbox(),
+                rg.r.to_object_bbox(),
+            ),
+            (
+                rg.fx.to_object_bbox(),
+                rg.fy.to_object_bbox(),
+                rg.fr.to_object_bbox(),
+            ),
+            vello_cpu::kurbo::Affine::scale_non_uniform(w as f64, h as f64) * gradient_transform,
+        ),
+        GradientUnits::UserSpaceOnUse => {
+            let nd = crate::render::renderer::gradient::normalized_diagonal(w, h);
+            (
+                (
+                    rg.cx.to_user_space(w),
+                    rg.cy.to_user_space(h),
+                    rg.r.to_user_space(nd),
+                ),
+                (
+                    rg.fx.to_user_space(w),
+                    rg.fy.to_user_space(h),
+                    rg.fr.to_user_space(nd),
+                ),
+                vello_cpu::kurbo::Affine::translate((-bbox.x0, -bbox.y0))
+                    * vello_cpu::kurbo::Affine::scale_non_uniform(
+                        viewbox_scale.0 as f64,
+                        viewbox_scale.1 as f64,
+                    )
+                    * gradient_transform,
+            )
+        },
+    };
+    // A non-invertible placement leaves no gradient space to sample from; as in
+    // Chrome, such a gradient paints nothing.
+    if !placement.is_finite() || placement.determinant() == 0.0 {
+        return None;
+    }
+    Some(radial_gradient(
+        rg,
+        vello_cpu::kurbo::Point::new(fx as f64, fy as f64),
+        fr,
+        vello_cpu::kurbo::Point::new(cx as f64, cy as f64),
+        r,
+        shape_ci,
+        Some(placement),
+    ))
+}
+
+/// Build the peniko [`Gradient`] whose radial geometry — focal point, focal
+/// radius, center and outer radius — is given in the space the gradient is
+/// evaluated in, with `paint_transform` mapping that space to the pixmap.
+fn radial_gradient(
+    rg: &crate::model::document::RadialGradient,
+    focal: vello_cpu::kurbo::Point,
+    fr: f32,
+    center: vello_cpu::kurbo::Point,
+    r: f32,
+    shape_ci: ColorInterpolation,
+    paint_transform: Option<vello_cpu::kurbo::Affine>,
+) -> (Gradient, Option<vello_cpu::kurbo::Affine>) {
+    let mut g = Gradient::new_two_point_radial(
+        focal,
+        fr.max(0.0), // focal radius (fr); clamp negative to 0 per SVG 2
+        center,
+        r,
     );
     g.extend = spread_to_extend(rg.spread_method);
     g.stops = stops_to_colorstops(&rg.stops);
@@ -882,4 +993,156 @@ fn flatten_subpaths(path: &BezPath) -> Vec<Vec<KurboPoint>> {
     }
 
     subpaths
+}
+
+// ======================= Tests =======================
+
+#[cfg(test)]
+mod tests {
+    use vello_cpu::kurbo::{Point, Rect};
+    use vello_cpu::peniko::{GradientKind, RadialGradientPosition};
+
+    use super::*;
+    use crate::model::document::{GradientExplicit, GradientLength, RadialGradient};
+    use crate::model::transform::TransformOp;
+
+    /// A concentric `<radialGradient>` centered at (50%, 50%) with `r="30%"`.
+    fn radial(units: GradientUnits, transform: Vec<TransformOp>) -> RadialGradient {
+        RadialGradient {
+            id: "g".into(),
+            href: None,
+            cx: GradientLength::Percentage(50.0),
+            cy: GradientLength::Percentage(50.0),
+            r: GradientLength::Percentage(30.0),
+            fx: GradientLength::Percentage(50.0),
+            fy: GradientLength::Percentage(50.0),
+            fr: GradientLength::Number(0.0),
+            units,
+            stops: vec![],
+            transform,
+            spread_method: SpreadMethod::Reflect,
+            color_interpolation: ColorInterpolation::Auto,
+            explicit: GradientExplicit::default(),
+        }
+    }
+
+    /// The radial position peniko recorded for `g`.
+    fn radial_position(g: &Gradient) -> RadialGradientPosition {
+        assert_eq!(g.extend, Extend::Reflect);
+        let GradientKind::Radial(pos) = &g.kind else {
+            panic!("expected a radial gradient");
+        };
+        *pos
+    }
+
+    /// Resolve `rg` against a 240x80 box at the origin, without a viewBox
+    /// scale, into its radial position and paint transform.
+    fn resolve(
+        rg: &RadialGradient,
+    ) -> Option<(RadialGradientPosition, Option<vello_cpu::kurbo::Affine>)> {
+        let bbox = Rect::new(0.0, 0.0, 240.0, 80.0);
+        let (g, paint_transform) =
+            radial_to_peniko(rg, 240.0, 80.0, (1.0, 1.0), &bbox, ColorInterpolation::Srgb)?;
+        Some((radial_position(&g), paint_transform))
+    }
+
+    fn assert_point_approx(got: Point, want: (f64, f64)) {
+        assert!(
+            (got.x - want.0).abs() < 1e-4 && (got.y - want.1).abs() < 1e-4,
+            "point {got:?} != {want:?}"
+        );
+    }
+
+    /// Without a `gradientTransform` the gradient lives in pixmap-local space:
+    /// the ellipse of a 240x80 box is a 72px circle squeezed by 1/3 in `y`.
+    #[test]
+    fn radial_without_transform_stays_in_pixmap_space() {
+        let (pos, paint_transform) =
+            resolve(&radial(GradientUnits::ObjectBoundingBox, vec![])).expect("gradient paints");
+        assert_point_approx(pos.start_center, (120.0, 40.0));
+        assert_point_approx(pos.end_center, (120.0, 40.0));
+        assert!(pos.start_radius == 0.0 && (pos.end_radius - 72.0).abs() < 1e-4);
+        let squeeze = paint_transform.expect("ellipse carries a paint transform");
+        assert_point_approx(squeeze * Point::new(120.0, 112.0), (120.0, 64.0));
+        assert_point_approx(squeeze * Point::new(192.0, 40.0), (192.0, 40.0));
+    }
+
+    /// `gradientTransform` is applied before the bounding-box scale: with
+    /// `scale(0.5)` the unit square maps onto the first quarter of a 240x80
+    /// box, so the circle stays at (0.5, 0.5) r=0.3 in gradient space while the
+    /// paint transform scales it by (120, 40).
+    #[test]
+    fn radial_object_bbox_transform_scales_gradient_space() {
+        let rg = radial(
+            GradientUnits::ObjectBoundingBox,
+            vec![TransformOp::Scale(0.5, 0.5)],
+        );
+        let (pos, paint_transform) = resolve(&rg).expect("gradient paints");
+        assert_point_approx(pos.start_center, (0.5, 0.5));
+        assert_point_approx(pos.end_center, (0.5, 0.5));
+        assert!(pos.start_radius == 0.0 && (pos.end_radius - 0.3).abs() < 1e-6);
+        let placement = paint_transform.expect("transformed gradient carries a paint transform");
+        assert_point_approx(placement * Point::new(0.5, 0.5), (60.0, 20.0));
+        assert_point_approx(placement * Point::new(0.8, 0.5), (96.0, 20.0));
+        assert_point_approx(placement * Point::new(0.5, 0.8), (60.0, 32.0));
+    }
+
+    /// A rotation turns the circle into a tilted ellipse that no
+    /// circle-plus-axis-aligned scale could express; the circle itself is left
+    /// untouched and only the placement is rotated.
+    #[test]
+    fn radial_object_bbox_rotation_only_rotates_placement() {
+        let rg = radial(
+            GradientUnits::ObjectBoundingBox,
+            vec![TransformOp::Rotate(90.0, 0.0, 0.0)],
+        );
+        let (pos, paint_transform) = resolve(&rg).expect("gradient paints");
+        assert_point_approx(pos.end_center, (0.5, 0.5));
+        let placement = paint_transform.expect("transformed gradient carries a paint transform");
+        assert_point_approx(placement * Point::new(0.5, 0.5), (-120.0, 40.0));
+    }
+
+    /// `userSpaceOnUse`: the gradient stays in user space and the placement
+    /// applies the transform first, then the viewBox scale and bbox origin.
+    #[test]
+    fn radial_user_space_transform_precedes_viewbox_scale() {
+        let mut rg = radial(
+            GradientUnits::UserSpaceOnUse,
+            vec![TransformOp::Translate(10.0, 20.0)],
+        );
+        rg.cx = GradientLength::Number(100.0);
+        rg.cy = GradientLength::Number(50.0);
+        rg.r = GradientLength::Number(20.0);
+        rg.fx = GradientLength::Number(100.0);
+        rg.fy = GradientLength::Number(50.0);
+        let bbox = Rect::new(300.0, 400.0, 700.0, 480.0);
+        let (g, paint_transform) = radial_to_peniko(
+            &rg,
+            400.0,
+            80.0,
+            (2.0, 2.0),
+            &bbox,
+            ColorInterpolation::Srgb,
+        )
+        .expect("gradient paints");
+        let placement = paint_transform.expect("transformed gradient carries a paint transform");
+        let pos = radial_position(&g);
+        assert_point_approx(pos.end_center, (100.0, 50.0));
+        assert!((pos.end_radius - 20.0).abs() < 1e-5);
+        // (100, 50) → +10,+20 → ×2 → −(300, 400)
+        assert_point_approx(placement * Point::new(100.0, 50.0), (-80.0, -260.0));
+    }
+
+    /// A non-invertible `gradientTransform` has no gradient space to sample
+    /// from and paints nothing.
+    #[test]
+    fn radial_non_invertible_transform_paints_nothing() {
+        for transform in [
+            vec![TransformOp::Scale(0.0, 1.0)],
+            vec![TransformOp::Matrix([1.0, 0.0, 1.0, 0.0, 0.0, 0.0])],
+        ] {
+            let rg = radial(GradientUnits::ObjectBoundingBox, transform);
+            assert!(resolve(&rg).is_none());
+        }
+    }
 }
